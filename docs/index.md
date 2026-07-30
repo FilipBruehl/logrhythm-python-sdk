@@ -21,6 +21,9 @@ LogRhythm SIEM REST APIs.
 - [SPEC-001 — SDK Client](specifications/sdk-client.md) — the `LogRhythmClient`
   composition root: responsibilities, public shape, ownership, and lifecycle
   (currently `Draft`, not implemented).
+- [SPEC-002 — Configuration](specifications/configuration.md) — the `Configuration`
+  component: sources, validation, secrets handling, and integration with
+  `LogRhythmClient` (currently `Draft`, not implemented).
 - [API Coverage Matrix](coverage/api-coverage.md) — tracks, per LogRhythm API area,
   how far each endpoint has progressed from not-yet-inventoried to implemented.
 - [Development: Contributing](development/contributing.md) — local setup and quality checks.

@@ -24,10 +24,11 @@ order of creation, and never reused or renumbered, so it stays a stable way to
 reference a specification regardless of later title or filename changes. Current
 specifications:
 
-| ID | Title | File |
-|---|---|---|
-| SPEC-000 | Design Principles | [design-principles.md](design-principles.md) |
-| SPEC-001 | SDK Client | [sdk-client.md](sdk-client.md) |
+| ID | Title | Status | File |
+|---|---|---|---|
+| SPEC-000 | Design Principles | Draft | [design-principles.md](design-principles.md) |
+| SPEC-001 | SDK Client | Draft | [sdk-client.md](sdk-client.md) |
+| SPEC-002 | Configuration | Draft | [configuration.md](configuration.md) |
 
 ## Where this fits
 

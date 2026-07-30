@@ -59,9 +59,10 @@ of this is implemented yet beyond the package skeleton — see
 [docs/architecture/components.md](docs/architecture/components.md) for a component
 diagram, and [docs/specifications/](docs/specifications/) for the numbered Design
 Specifications that govern how these components are designed — starting with
-[SPEC-000 — Design Principles](docs/specifications/design-principles.md) and
-[SPEC-001 — SDK Client](docs/specifications/sdk-client.md) (both currently `Draft`,
-not implemented). Per-endpoint progress is tracked in
+[SPEC-000 — Design Principles](docs/specifications/design-principles.md),
+[SPEC-001 — SDK Client](docs/specifications/sdk-client.md), and
+[SPEC-002 — Configuration](docs/specifications/configuration.md) (all currently
+`Draft`, not implemented). Per-endpoint progress is tracked in
 [docs/coverage/api-coverage.md](docs/coverage/api-coverage.md), which is currently an
 empty structure — nothing has been inventoried or implemented yet.
 
