@@ -60,8 +60,9 @@ of this is implemented yet beyond the package skeleton — see
 diagram, and [docs/specifications/](docs/specifications/) for the numbered Design
 Specifications that govern how these components are designed — starting with
 [SPEC-000 — Design Principles](docs/specifications/design-principles.md),
-[SPEC-001 — SDK Client](docs/specifications/sdk-client.md), and
-[SPEC-002 — Configuration](docs/specifications/configuration.md) (all currently
+[SPEC-001 — SDK Client](docs/specifications/sdk-client.md),
+[SPEC-002 — Configuration](docs/specifications/configuration.md), and
+[SPEC-003 — Authentication](docs/specifications/authentication.md) (all currently
 `Draft`, not implemented). Per-endpoint progress is tracked in
 [docs/coverage/api-coverage.md](docs/coverage/api-coverage.md), which is currently an
 empty structure — nothing has been inventoried or implemented yet.
