@@ -11,6 +11,14 @@ LogRhythm SIEM REST APIs.
 
 - [Vision](vision.md) — long-term goals, target audience, and design philosophy.
 - [Architecture Overview](architecture/overview.md) — the planned target architecture.
+- [Component Model](architecture/components.md) — the planned components and how they
+  depend on each other, as a diagram.
+- [Design Principles](specifications/design-principles.md) — project-wide
+  architecture and implementation rules that future specifications build on.
+- [Design Specifications](specifications/README.md) — how "why" (ADRs), "how"
+  (specifications), "implementation" (code), and user documentation relate.
+- [API Coverage Matrix](coverage/api-coverage.md) — tracks, per LogRhythm API area,
+  how far each endpoint has progressed from not-yet-inventoried to implemented.
 - [Development: Contributing](development/contributing.md) — local setup and quality checks.
 - [Development: Testing](development/testing.md) — how the test suite is organized.
 - [API Implementation Workflow](development/api-implementation-workflow.md) — the process

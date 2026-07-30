@@ -10,6 +10,10 @@
 
 Describe the intended shape of the SDK so that later implementation phases build
 toward a consistent target, rather than each API module inventing its own structure.
+For a component-level diagram of this same target, see
+[Component Model](components.md). For the concrete architecture and implementation
+rules that follow from this shape, see
+[Design Principles](../specifications/design-principles.md).
 
 ## High-level shape
 

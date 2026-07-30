@@ -55,7 +55,12 @@ The SDK is designed around a central high-level facade backed by a shared `core`
 (transport, configuration, authentication, TLS, logging) and a set of API modules,
 each following the same internal structure (models, filters, resources, client). None
 of this is implemented yet beyond the package skeleton — see
-[docs/architecture/overview.md](docs/architecture/overview.md) for details.
+[docs/architecture/overview.md](docs/architecture/overview.md) for the full picture,
+[docs/architecture/components.md](docs/architecture/components.md) for a component
+diagram, and [docs/specifications/design-principles.md](docs/specifications/design-principles.md)
+for the rules that govern how these components are designed. Per-endpoint progress is
+tracked in [docs/coverage/api-coverage.md](docs/coverage/api-coverage.md), which is
+currently an empty structure — nothing has been inventoried or implemented yet.
 
 ## Security principles
 

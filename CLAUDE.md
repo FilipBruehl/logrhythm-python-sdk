@@ -13,12 +13,16 @@ by consistently structured API modules. See [docs/vision.md](docs/vision.md) and
 
 ## Current development phase
 
-**Phase A.1 — Repository Foundation.** Only project scaffolding exists: package
-skeleton, tooling configuration, documentation structure, and minimal tests. There is
-no HTTP transport, authentication, TLS logic, configuration loader, Pydantic models,
+**Phase A.2.1 — Architecture Framework (documentation only).** Beyond the Phase A.1
+repository scaffolding, the project now also has a documented target architecture:
+a [Component Model](docs/architecture/components.md), project-wide
+[Design Principles](docs/specifications/design-principles.md), a
+[Design Specifications](docs/specifications/README.md) process, and an (empty)
+[API Coverage Matrix](docs/coverage/api-coverage.md). There is still no HTTP
+transport, authentication, TLS logic, configuration loader, Pydantic models,
 YAML/JSON/TOML handling, logging handlers, API clients, resources, filters, or
-concrete LogRhythm endpoints yet. Do not add these until the task at hand explicitly
-calls for that phase of work.
+concrete LogRhythm endpoints in code. Do not add these until the task at hand
+explicitly calls for that phase of work.
 
 ## Target architecture
 
@@ -30,7 +34,10 @@ calls for that phase of work.
 - Each API module (once implemented) follows the same internal shape: `models`,
   `filters`, `resources`, `client`. API-specific logic lives only there.
 - Composition over inheritance; avoid deep or unnecessary class hierarchies.
-- Full details: [docs/architecture/overview.md](docs/architecture/overview.md).
+- Full details: [docs/architecture/overview.md](docs/architecture/overview.md) and the
+  [Component Model](docs/architecture/components.md). Project-wide architecture and
+  implementation rules are collected in
+  [Design Principles](docs/specifications/design-principles.md).
 
 ## Directory and module conventions
 
@@ -109,6 +116,13 @@ gap with an assumption. See
   change that introduces them.
 - Significant architecture decisions require a new ADR under `docs/adr/`, following
   the existing format and numbering.
+- Before implementing a component, prefer designing it as a Design Specification
+  under `docs/specifications/` first — see
+  [docs/specifications/README.md](docs/specifications/README.md) for the status model
+  and how specifications relate to ADRs, code, and user documentation.
+- Per-endpoint implementation progress belongs in
+  [docs/coverage/api-coverage.md](docs/coverage/api-coverage.md), not invented ahead
+  of the actual documentation inventory.
 
 ## Change discipline
 
