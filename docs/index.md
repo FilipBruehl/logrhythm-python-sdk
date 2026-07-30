@@ -13,10 +13,14 @@ LogRhythm SIEM REST APIs.
 - [Architecture Overview](architecture/overview.md) — the planned target architecture.
 - [Component Model](architecture/components.md) — the planned components and how they
   depend on each other, as a diagram.
-- [Design Principles](specifications/design-principles.md) — project-wide
-  architecture and implementation rules that future specifications build on.
 - [Design Specifications](specifications/README.md) — how "why" (ADRs), "how"
-  (specifications), "implementation" (code), and user documentation relate.
+  (specifications), "implementation" (code), and user documentation relate, plus the
+  numbering scheme, status model, and review criteria specifications follow.
+- [SPEC-000 — Design Principles](specifications/design-principles.md) — project-wide
+  architecture and implementation rules that future specifications build on.
+- [SPEC-001 — SDK Client](specifications/sdk-client.md) — the `LogRhythmClient`
+  composition root: responsibilities, public shape, ownership, and lifecycle
+  (currently `Draft`, not implemented).
 - [API Coverage Matrix](coverage/api-coverage.md) — tracks, per LogRhythm API area,
   how far each endpoint has progressed from not-yet-inventoried to implemented.
 - [Development: Contributing](development/contributing.md) — local setup and quality checks.
