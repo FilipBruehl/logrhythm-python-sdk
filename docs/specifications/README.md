@@ -12,9 +12,22 @@ how it composes with `core` and other components, and what its behavior is for t
 cases that matter. Specifications exist so that implementation work has a reviewed
 target to build toward, instead of being designed ad hoc while writing code.
 
-[Design Principles](design-principles.md) is the one specification that applies
-project-wide rather than to a single component; every other specification is expected
-to follow it.
+[SPEC-000 — Design Principles](design-principles.md) is the one specification that
+applies project-wide rather than to a single component; every other specification is
+expected to follow it.
+
+## Numbering
+
+Every specification is assigned a stable, sequential ID — `SPEC-000`, `SPEC-001`, and
+so on — stated in its title (`# SPEC-NNN — <Title>`). The ID is assigned once, in
+order of creation, and never reused or renumbered, so it stays a stable way to
+reference a specification regardless of later title or filename changes. Current
+specifications:
+
+| ID | Title | File |
+|---|---|---|
+| SPEC-000 | Design Principles | [design-principles.md](design-principles.md) |
+| SPEC-001 | SDK Client | [sdk-client.md](sdk-client.md) |
 
 ## Where this fits
 
@@ -64,7 +77,7 @@ be marked `Accepted` until all of the following are satisfied:
 - **Scope is fully defined.** What the specification covers — and, just as
   importantly, what it explicitly does not cover — is stated unambiguously.
 - **Responsibilities are clearly described.** It is unambiguous which component owns
-  which behavior, consistent with [Design Principles](design-principles.md) (Single
+  which behavior, consistent with [SPEC-000](design-principles.md) (Single
   Responsibility, separation of concerns).
 - **The public interface is documented.** Anything a consumer of the SDK will see —
   signatures, types, exceptions raised — is specified, not left to be decided during
@@ -72,7 +85,7 @@ be marked `Accepted` until all of the following are satisfied:
 - **Non-goals are documented.** What the specification deliberately leaves out is
   stated explicitly, so implementers do not scope-creep beyond what was reviewed.
 - **Security aspects are addressed.** Where relevant, the specification states how it
-  upholds the project's [security principles](design-principles.md#security-principles)
+  upholds [SPEC-000's security principles](design-principles.md#security-principles)
   (e.g. secret handling, TLS behavior) rather than leaving them implicit.
 - **A test strategy is described.** How the design will be verified — unit tests,
   mocked infrastructure, integration tests where applicable — is part of the
@@ -86,9 +99,9 @@ be marked `Accepted` until all of the following are satisfied:
   applicable decision in [docs/adr/](../adr/README.md). A specification that needs to
   contradict an ADR must instead propose a new or updated ADR first.
 - **No contradictions with the Design Principles.** The specification is consistent
-  with [Design Principles](design-principles.md); a specification that needs an
-  exception to a principle states the exception and its reasoning explicitly, rather
-  than silently diverging.
+  with [SPEC-000](design-principles.md); a specification that needs an exception to a
+  principle states the exception and its reasoning explicitly, rather than silently
+  diverging.
 
 A specification missing any of these is not ready for `Accepted` — it stays `Draft`
 or `In Review` until the gap is closed.
