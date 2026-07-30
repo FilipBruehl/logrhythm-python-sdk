@@ -30,6 +30,7 @@ specifications:
 | SPEC-001 | SDK Client | Draft | [sdk-client.md](sdk-client.md) |
 | SPEC-002 | Configuration | Draft | [configuration.md](configuration.md) |
 | SPEC-003 | Authentication | Draft | [authentication.md](authentication.md) |
+| SPEC-004 | TLS | Draft | [tls.md](tls.md) |
 
 ## Where this fits
 

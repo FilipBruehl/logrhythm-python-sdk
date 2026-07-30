@@ -27,6 +27,9 @@ LogRhythm SIEM REST APIs.
 - [SPEC-003 — Authentication](specifications/authentication.md) — how authentication
   information is represented, its integration with `Configuration` and
   `LogRhythmClient`, and secret handling (currently `Draft`, not implemented).
+- [SPEC-004 — TLS](specifications/tls.md) — secure defaults, certificate and
+  hostname verification, and trust store configuration (currently `Draft`, not
+  implemented).
 - [API Coverage Matrix](coverage/api-coverage.md) — tracks, per LogRhythm API area,
   how far each endpoint has progressed from not-yet-inventoried to implemented.
 - [Development: Contributing](development/contributing.md) — local setup and quality checks.
