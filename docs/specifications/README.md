@@ -32,6 +32,7 @@ specifications:
 | SPEC-003 | Authentication | Draft | [authentication.md](authentication.md) |
 | SPEC-004 | TLS | Draft | [tls.md](tls.md) |
 | SPEC-005 | Transport | Draft | [transport.md](transport.md) |
+| SPEC-006 | Logging | Draft | [logging.md](logging.md) |
 
 ## Where this fits
 
