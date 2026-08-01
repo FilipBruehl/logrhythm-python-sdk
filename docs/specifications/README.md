@@ -36,6 +36,7 @@ specifications:
 | SPEC-007 | Exception Handling | Draft | [exceptions.md](exceptions.md) |
 | SPEC-008 | Models | Draft | [models.md](models.md) |
 | SPEC-009 | Filters, Pagination, Sorting and Options | Draft | [filters-and-options.md](filters-and-options.md) |
+| SPEC-010 | API Modules | Draft | [api-modules.md](api-modules.md) |
 
 ## Where this fits
 

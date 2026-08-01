@@ -15,11 +15,12 @@ used to talk to a LogRhythm instance at this time.
 The SDK is intended to eventually support:
 
 1. Administration API
-2. AI Engine API
+2. AI Engine Cache Drilldown API
 3. Metrics API
-4. Alarm API
-5. Search API
-6. Further APIs, added in later phases
+4. AI Engine API
+5. Alarm API
+6. Case API
+7. Search API
 
 See [docs/vision.md](docs/vision.md) for the full long-term vision and
 [docs/architecture/overview.md](docs/architecture/overview.md) for the planned target
@@ -67,9 +68,12 @@ Specifications that govern how these components are designed — starting with
 [SPEC-005 — Transport](docs/specifications/transport.md),
 [SPEC-006 — Logging](docs/specifications/logging.md),
 [SPEC-007 — Exception Handling](docs/specifications/exceptions.md),
-[SPEC-008 — Models](docs/specifications/models.md), and
-[SPEC-009 — Filters, Pagination, Sorting and Options](docs/specifications/filters-and-options.md)
-(all currently `Draft`, not implemented). Per-endpoint progress is tracked in
+[SPEC-008 — Models](docs/specifications/models.md),
+[SPEC-009 — Filters, Pagination, Sorting and Options](docs/specifications/filters-and-options.md),
+and [SPEC-010 — API Modules](docs/specifications/api-modules.md) (all currently
+`Draft`, not implemented; see
+[docs/specifications/README.md](docs/specifications/README.md) for the full,
+linked index). Per-endpoint progress is tracked in
 [docs/coverage/api-coverage.md](docs/coverage/api-coverage.md), which is currently an
 empty structure — nothing has been inventoried or implemented yet.
 

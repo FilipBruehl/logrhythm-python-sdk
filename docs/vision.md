@@ -10,11 +10,12 @@ response parsing for every project.
 The SDK is intended to eventually cover, at minimum:
 
 1. Administration API
-2. AI Engine API
+2. AI Engine Cache Drilldown API
 3. Metrics API
-4. Alarm API
-5. Search API
-6. Further APIs as they are implemented in later phases
+4. AI Engine API
+5. Alarm API
+6. Case API
+7. Search API
 
 ## Target audience
 

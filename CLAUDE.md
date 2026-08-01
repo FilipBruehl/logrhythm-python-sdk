@@ -6,9 +6,10 @@ Read it before making changes.
 ## Project vision
 
 `logrhythm-python-sdk` is a typed Python SDK for the LogRhythm SIEM REST APIs. It will
-eventually cover the Administration, AI Engine, Metrics, Alarm, and Search APIs, plus
-further APIs added later, all exposed through a single high-level entry point backed
-by consistently structured API modules. See [docs/vision.md](docs/vision.md) and
+eventually cover seven API areas — Administration, AI Engine Cache Drilldown,
+Metrics, AI Engine, Alarm, Case, and Search — all exposed through a single
+high-level entry point backed by consistently structured API modules. See
+[docs/vision.md](docs/vision.md) and
 [docs/architecture/overview.md](docs/architecture/overview.md) for the full picture.
 
 ## Current development phase

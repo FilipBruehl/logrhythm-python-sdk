@@ -35,9 +35,11 @@ flowchart TD
 
     subgraph APIModules["API Modules"]
         Admin["Administration API"]
-        AIEngine["AI Engine API"]
+        Drilldown["AI Engine Cache<br/>Drilldown API"]
         Metrics["Metrics API"]
+        AIEngine["AI Engine API"]
         Alarm["Alarm API"]
+        Cases["Case API"]
         Search["Search API"]
     end
 
@@ -54,17 +56,21 @@ flowchart TD
     ExternalInfra -. "or: supplied by caller (DI) — ownership stays with caller" .-> Client
 
     Client -- "injects dependencies into" --> Admin
-    Client -- "injects dependencies into" --> AIEngine
+    Client -- "injects dependencies into" --> Drilldown
     Client -- "injects dependencies into" --> Metrics
+    Client -- "injects dependencies into" --> AIEngine
     Client -- "injects dependencies into" --> Alarm
+    Client -- "injects dependencies into" --> Cases
     Client -- "injects dependencies into" --> Search
 
     APIModules -. "uses only injected dependencies" .-> Core
 
     Admin --> Resources
-    AIEngine --> Resources
+    Drilldown --> Resources
     Metrics --> Resources
+    AIEngine --> Resources
     Alarm --> Resources
+    Cases --> Resources
     Search --> Resources
     Resources --> Models
     Resources --> Filters
@@ -74,7 +80,7 @@ flowchart TD
 
 - `Resources`, `Models`, and `Filters` are drawn once to represent a **repeated
   shape**, not shared instances. Each API module owns its own `Resources`, `Models`,
-  and `Filters` — the diagram would otherwise need five parallel copies of the same
+  and `Filters` — the diagram would otherwise need seven parallel copies of the same
   three boxes.
 - Solid arrows from `LogRhythmClient` express creation/ownership and dependency
   injection. The two dashed arrows express two different things: the one from
@@ -102,7 +108,9 @@ flowchart TD
   owned by the caller: `LogRhythmClient` uses them but never creates, closes, or
   otherwise manages their lifecycle.
 
-**API clients (Administration, AI Engine, Metrics, Alarm, Search):**
+**API clients (Administration, AI Engine Cache Drilldown, Metrics, AI Engine,
+Alarm, Case, Search — see
+[SPEC-010, Supported APIs](../specifications/api-modules.md#supported-apis)):**
 
 - own no infrastructure of their own.
 - never configure a logger themselves.
