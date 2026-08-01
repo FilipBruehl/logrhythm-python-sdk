@@ -544,8 +544,11 @@ pagination and sorting-direction components, where genuinely shared, live in
 `core`, consistent with [SPEC-008](models.md#model-organisation)'s "no large
 collection files" principle applied to this category of model as well.
 
-The exact package/module layout beneath these locations is not further specified
-here — see [Open Questions](#open-questions).
+The folder-level layout beneath a resource is shown concretely in
+[SPEC-010 — Resource Hierarchy](api-modules.md#resource-hierarchy) (e.g.
+`resource.py`, `models/`, `filters/`, `sorting/`, `options/`); finer detail below
+that (module contents, class/file naming) is not decided here — see
+[Open Questions](#open-questions).
 
 ## Public API
 
@@ -637,8 +640,11 @@ significant, an ADR) before it can move out of this list.
 - **Exact class and module names for the base types.** The concrete names behind
   `FilterModel`, `PaginationModel`, `SortingModel`, and `OptionsModel` (see
   [Base Models](#base-models)).
-- **Exact package structure** for filters, pagination, sorting, and options beneath
-  a resource (see [Model Organisation](#model-organisation)).
+- **Module/file layout within each resource's `filters/`, `sorting/`, and
+  `options/` folders.** The folder-level structure itself is decided (see
+  [Model Organisation](#model-organisation) and
+  [SPEC-010 — Resource Hierarchy](api-modules.md#resource-hierarchy)); what is not
+  decided is the finer-grained layout within those folders.
 - **Exact manufacturer values for the shared sort-direction enum**, where not
   already documented (see [Sorting](#sorting)).
 - **Documented exceptions to the shared pagination model** — which specific

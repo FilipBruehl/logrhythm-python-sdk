@@ -19,21 +19,28 @@ rules that follow from this shape, see
 
 ```text
 logrhythm_sdk/
-├── __init__.py         Public, high-level facade (e.g. a future LogRhythmClient)
-├── core/                Shared infrastructure used by every API module
-│   └── models           Shared/internal SDK-wide models (see SPEC-008)
-└── <api_module>/        One package per LogRhythm API area (added when implemented)
-    ├── <resource>/        One subpackage per resource within that API area
-    │   └── models          Typed data structures for that resource (see SPEC-008)
-    ├── filters.py         Typed query/filter builders for that API
-    ├── resources.py        Resource-oriented wrappers over the API client
-    └── client.py            Thin client binding transport + endpoints for that API
+├── __init__.py          Public, high-level facade (e.g. a future LogRhythmClient)
+├── core/                 Shared infrastructure used by every API module
+│   └── models/            Shared/internal SDK-wide models (see SPEC-008)
+└── <api_module>/         One package per LogRhythm API area (added when implemented)
+    ├── client.py           Thin client grouping that API area's resources
+    └── <resource>/         One subpackage per resource within that API area
+        ├── resource.py       Endpoint methods for that resource
+        ├── models/            Typed data structures for that resource (see SPEC-008)
+        ├── filters/            Filter models for that resource (see SPEC-009)
+        ├── sorting/             Sorting models for that resource (see SPEC-009)
+        └── options/              Functional options for that resource (see SPEC-009)
 ```
 
-Model placement (nesting `models` under a per-resource subpackage rather than one
-`models.py` per API module) follows
-[SPEC-008 — Models](../specifications/models.md#model-organisation); the rest of
-this shape is unaffected by that specification.
+This nesting is resource-first, not file-type-first: models, filters, sorting, and
+options each live inside the resource subpackage they belong to, rather than in one
+collection file per API module. Model placement follows
+[SPEC-008 — Models](../specifications/models.md#model-organisation); filters,
+sorting, and options follow
+[SPEC-009](../specifications/filters-and-options.md#model-organisation); the
+`client.py` / `resource.py` split follows
+[SPEC-010 — Client Hierarchy](../specifications/api-modules.md#client-hierarchy)
+and [Resource Hierarchy](../specifications/api-modules.md#resource-hierarchy).
 
 ### Central high-level facade
 
@@ -58,16 +65,26 @@ API modules depend on `core`; `core` never depends on a specific API module.
 
 ### API modules
 
-Each supported LogRhythm API area (Administration, AI Engine, Metrics, Alarm, Search,
-and others added later) becomes its own package with the same internal shape:
+The SDK supports seven LogRhythm API areas, in this implementation order —
+Administration, AI Engine Cache Drilldown, Metrics, AI Engine, Alarm, Case, and
+Search (see
+[SPEC-010 — Supported APIs](../specifications/api-modules.md#supported-apis)).
 
-- **Models** — typed representations of the resources that API returns or accepts.
-- **Filters** — typed helpers for building query parameters specific to that API.
-- **Resources** — resource-oriented operations built on top of the API's client.
-- **API client** — binds `core` transport/configuration to that API's endpoints.
+Each becomes its own package with the same internal shape (see
+[High-level shape](#high-level-shape) above):
 
-Keeping this structure identical across API modules is a deliberate choice: once a
-developer understands one API module, they understand the shape of all of them.
+- **API client** (`client.py`) — groups that API area's resources; binds `core`
+  transport/configuration to them.
+- **Resource** (`resource.py`) — resource-oriented endpoint methods, one
+  subpackage per resource.
+- **Models** — typed representations of the resources that resource returns or
+  accepts.
+- **Filters, sorting, options** — typed helpers for that resource's query
+  parameters (see [SPEC-009](../specifications/filters-and-options.md)).
+
+Keeping this structure identical across API modules — and across resources within
+an API module — is a deliberate choice: once a developer understands one resource,
+they understand the shape of all of them.
 
 ### Separation of concerns
 

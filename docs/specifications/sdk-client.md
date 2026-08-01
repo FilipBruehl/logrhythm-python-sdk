@@ -255,18 +255,20 @@ These are explicitly undecided. They must not be resolved silently by
 implementation; each requires an explicit decision (and, where architecturally
 significant, an ADR) before it can move out of this list.
 
-- **Additional factory methods.** Whether `LogRhythmClient` will offer factory
-  methods beyond `from_config(...)` — for example, constructing directly from a file
-  path or from environment variables.
 - **Thread safety.** Whether `LogRhythmClient` and/or the shared components it
   manages are safe to use concurrently from multiple threads.
 - **`close()` idempotency.** Whether calling `close()` more than once is safe (a
   no-op on subsequent calls) or an error.
 - **Reuse after `close()`.** Whether a closed client can be reused/reopened, or must
   be discarded and replaced with a new instance.
-- **Lazy vs. eager API module creation.** Whether API module objects (e.g. the
-  object behind `client.search`) are created eagerly when the client is constructed,
-  or lazily on first access.
+
+Two questions previously listed here have since been settled or superseded by
+later specifications and are tracked there instead, not duplicated here:
+"additional factory methods beyond `from_config(...)`" is now
+[SPEC-002](configuration.md#open-questions)'s "Additional factory/loader methods"
+open question; "lazy vs. eager API module creation" is decided —
+[SPEC-010](api-modules.md#lifecycle) establishes that every API client is
+constructed eagerly.
 
 ## Future Extensions (non-binding)
 

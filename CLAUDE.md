@@ -14,16 +14,24 @@ high-level entry point backed by consistently structured API modules. See
 
 ## Current development phase
 
-**Phase A.2.1 — Architecture Framework (documentation only).** Beyond the Phase A.1
-repository scaffolding, the project now also has a documented target architecture:
-a [Component Model](docs/architecture/components.md), project-wide
+**Phase A.2 — Architecture & Specification (documentation only) — complete.** The
+project now has a complete architecture and specification basis: a
+[Component Model](docs/architecture/components.md), project-wide
 [Design Principles](docs/specifications/design-principles.md), a
-[Design Specifications](docs/specifications/README.md) process, and an (empty)
-[API Coverage Matrix](docs/coverage/api-coverage.md). There is still no HTTP
-transport, authentication, TLS logic, configuration loader, Pydantic models,
-YAML/JSON/TOML handling, logging handlers, API clients, resources, filters, or
-concrete LogRhythm endpoints in code. Do not add these until the task at hand
-explicitly calls for that phase of work.
+[Design Specifications](docs/specifications/README.md) process, and the full,
+numbered Design Specification series from
+[SPEC-000](docs/specifications/design-principles.md) through
+[SPEC-010](docs/specifications/api-modules.md) — covering Design Principles, SDK
+Client, Configuration, Authentication, TLS, Transport, Logging, Exception
+Handling, Models, Filters/Pagination/Sorting/Options, and API Modules. The
+[API Coverage Matrix](docs/coverage/api-coverage.md) exists as a structure only —
+no endpoint has been inventoried yet.
+
+**None of this is implemented in runtime code yet.** `src/logrhythm_sdk` remains
+the Phase A.1 package skeleton: there is still no HTTP transport, authentication,
+TLS logic, configuration loader, Pydantic models, YAML/JSON/TOML handling, logging
+handlers, API clients, resources, filters, or concrete LogRhythm endpoints in code.
+Do not add these until the task at hand explicitly calls for that phase of work.
 
 ## Target architecture
 
@@ -32,8 +40,9 @@ explicitly calls for that phase of work.
 - `logrhythm_sdk.core` holds everything shared across API modules: transport,
   configuration, authentication, TLS, logging. It never depends on a specific API
   module.
-- Each API module (once implemented) follows the same internal shape: `models`,
-  `filters`, `resources`, `client`. API-specific logic lives only there.
+- Each API module (once implemented) follows the same internal shape: a `client.py`
+  per API area, with `resource.py`, models, filters, sorting, and options organized
+  per resource beneath it. API-specific logic lives only there.
 - Composition over inheritance; avoid deep or unnecessary class hierarchies.
 - Full details: [docs/architecture/overview.md](docs/architecture/overview.md) and the
   [Component Model](docs/architecture/components.md). Project-wide architecture and

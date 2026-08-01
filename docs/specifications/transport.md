@@ -478,14 +478,17 @@ significant, an ADR) before it can move out of this list.
 
 - **Concrete timeout default values.** The actual numeric defaults for connect,
   read, write, and pool timeouts (see [Timeout Handling](#timeout-handling)).
-- **Request-ID strategy.** How a correlation/request ID is determined when
-  LogRhythm does not supply one itself (see [Logging Metadata](#logging-metadata)).
 - **Response size limits.** Whether `Transport` enforces any limit on response body
   size.
 - **Maximum redirect count.** Only relevant if/when configurable redirect-following
   becomes a supported [Future Extension](#future-extensions) — not applicable to
   version 1, which does not follow redirects at all (see
   [Response Handling](#response-handling)).
+
+The "how is a correlation/request ID determined" question previously listed here
+is settled by [SPEC-006](logging.md#request-ids): the SDK always generates its own
+request ID locally, regardless of whether LogRhythm supplies one; a server-supplied
+ID is tracked separately, and optionally, as `server_request_id`.
 
 ## Future Extensions
 
