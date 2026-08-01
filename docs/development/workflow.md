@@ -11,13 +11,13 @@ This workflow is the binding basis for every following development phase,
 per [CLAUDE.md](../../CLAUDE.md). It reflects the project's existing
 architecture ([SPEC-000 through SPEC-010](../specifications/README.md)),
 existing [ADRs](../adr/README.md), and the repository structure and working
-style already established in Phases A.1–A.2.
+style already established in Phases A.1–A.3.
 
 ## Where to start
 
 - **New to the repository?** Start with
   [Contributing](contributing.md) for local setup and the required quality
-  commands.
+  commands, then [Pre-Commit](pre-commit.md) to install the local git hooks.
 - **About to start implementation work?** Check
   [Definition of Ready](definition-of-ready.md) first.
 - **About to open a branch?** See
@@ -49,12 +49,15 @@ style already established in Phases A.1–A.2.
 | [ADR Policy](../adr/README.md#when-an-adr-is-required) | When a new ADR is required, and when it isn't. |
 | [Dependencies & Tooling](dependencies.md) | Runtime dependency baseline, dependency placement/versioning, and the upgrade process. |
 | [Contributing](contributing.md) | Local setup and required quality commands. |
+| [Pre-Commit & Local Code Quality Automation](pre-commit.md) | Local git hooks (pre-commit/pre-push), secret detection, the `uv-lock` hook, and the local quality check (`pre-commit run --all-files`). |
 | [API Implementation Workflow](api-implementation-workflow.md) | The process for implementing a new LogRhythm API area. |
 
-## What this phase does not cover
+## What is and isn't automated yet
 
-Per its own scope, this documentation phase does not introduce pre-commit
-hooks, GitHub Actions, PR/issue templates, Claude Code settings, runtime
-dependencies, runtime code, or runtime configuration. The rules above are,
-for now, applied manually and reviewed by hand; automated enforcement is a
-later phase.
+As of [Pre-Commit & Local Code Quality Automation](pre-commit.md), formatting,
+linting, type checking, basic file hygiene, secret detection, and lockfile
+freshness are enforced locally via git hooks, and the full test suite runs
+before every push. What remains manual, applied by hand rather than enforced by
+tooling: GitHub Actions/CI, PR and issue templates, Claude Code settings,
+commit-message linting, Markdown linting, and release automation — these
+remain later phases.

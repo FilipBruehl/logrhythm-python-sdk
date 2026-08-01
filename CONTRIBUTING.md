@@ -9,7 +9,13 @@ Requirements: Python 3.13+ and [uv](https://docs.astral.sh/uv/).
 
 ```powershell
 uv sync
+uv run pre-commit install
+uv run pre-commit install --hook-type pre-push
 ```
+
+The last two commands install the local git hooks (formatting/linting/type
+checks + secret detection on commit, the test suite on push) — see
+[docs/development/pre-commit.md](docs/development/pre-commit.md).
 
 ## Quality checks
 
@@ -21,6 +27,12 @@ uv run ruff check .
 uv run mypy src/logrhythm_sdk
 uv run pytest
 ```
+
+The official local quality check — formatting, linting, and type checking,
+without the test suite — is `uv run pre-commit run --all-files`; see
+[docs/development/pre-commit.md](docs/development/pre-commit.md#local-quality-check).
+The local git hooks (see [Workflow](#workflow) below) run the same checks
+automatically at commit and push time.
 
 ## Guidelines
 
@@ -50,5 +62,6 @@ uv run pytest
 - **Before calling it done:** check [Definition of Done](docs/development/definition-of-done.md).
 
 For more detail, see [docs/development/contributing.md](docs/development/contributing.md),
-[docs/development/testing.md](docs/development/testing.md), and the full
+[docs/development/testing.md](docs/development/testing.md),
+[docs/development/pre-commit.md](docs/development/pre-commit.md), and the full
 [Developer Workflow](docs/development/workflow.md) index.

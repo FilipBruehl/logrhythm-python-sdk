@@ -35,10 +35,15 @@ architecture.
 
 ```powershell
 uv sync
+uv run pre-commit install
+uv run pre-commit install --hook-type pre-push
 ```
 
 This installs the project along with its development dependencies (Ruff, mypy,
-pytest, pytest-cov) into a local virtual environment.
+pytest, pytest-cov, pre-commit) into a local virtual environment, then installs
+the local git hooks that run formatting/linting/type-checks and secret
+detection on every commit, and the test suite on every push — see
+[docs/development/pre-commit.md](docs/development/pre-commit.md).
 
 ## Dependencies
 
@@ -60,6 +65,10 @@ uv run ruff check .            # linting
 uv run mypy src/logrhythm_sdk  # static type checking
 uv run pytest                  # tests + coverage
 ```
+
+These same checks (minus `pytest`) run automatically at commit time, and
+`pytest` runs automatically at push time, via the local git hooks — see
+[docs/development/pre-commit.md](docs/development/pre-commit.md).
 
 ## Contributing
 

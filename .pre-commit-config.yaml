@@ -1,0 +1,78 @@
+# Local code-quality automation for logrhythm-python-sdk.
+# See docs/development/pre-commit.md for installation, usage, and troubleshooting.
+#
+# Hooks are explicitly pinned to the `pre-commit` git-hook stage unless noted
+# otherwise, so that `pre-commit install` (commit-time) and
+# `pre-commit install --hook-type pre-push` (push-time) each run only the
+# hooks intended for that stage.
+
+repos:
+  # Formatting and linting (Ruff) — mirrors the project's required quality
+  # commands (`ruff format --check .`, `ruff check .`).
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.1
+    hooks:
+      - id: ruff-format
+        stages: [pre-commit]
+      - id: ruff-check
+        stages: [pre-commit]
+
+  # General file hygiene.
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+        stages: [pre-commit]
+      - id: end-of-file-fixer
+        stages: [pre-commit]
+      - id: mixed-line-ending
+        stages: [pre-commit]
+      - id: check-merge-conflict
+        stages: [pre-commit]
+      - id: check-added-large-files
+        stages: [pre-commit]
+      - id: check-yaml
+        stages: [pre-commit]
+      - id: check-toml
+        stages: [pre-commit]
+      - id: debug-statements
+        stages: [pre-commit]
+
+  # Secret detection — established default gitleaks configuration, no
+  # project-specific rules or exceptions.
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
+        stages: [pre-commit]
+
+  # Official uv/pre-commit integration: keeps uv.lock from being committed out
+  # of date with pyproject.toml.
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.12.1
+    hooks:
+      - id: uv-lock
+        stages: [pre-commit]
+
+  # mypy runs against the project's own environment (via `uv run`) rather than
+  # an isolated mirror environment, so it sees the actual installed runtime
+  # dependencies (e.g. Pydantic) without duplicating them as
+  # `additional_dependencies`.
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: uv run mypy src/logrhythm_sdk
+        language: system
+        types: [python]
+        pass_filenames: false
+        stages: [pre-commit]
+
+      # Pre-push only: the full test suite. No other checks run at this stage.
+      - id: pytest
+        name: pytest
+        entry: uv run pytest
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]

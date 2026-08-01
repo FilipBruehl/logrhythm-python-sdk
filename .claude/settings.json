@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s \"https://raw.githubusercontent.com/astral-sh/uv/main/docs/reference/settings.md\")",
+      "Bash(grep -rn \"quality command\\\\|Quality Command\\\\|local quality\\\\|Local quality\\\\|Name:.*check\\\\|the \\\\`check\\\\` command\\\\|shorthand for this exact\" docs/development/pre-commit.md README.md CONTRIBUTING.md CLAUDE.md docs/development/workflow.md docs/development/contributing.md docs/index.md)",
+      "Bash(grep -rn \"local-quality-command\\\\|Name:.*\\\\`check\\\\`\\\\|the \\\\`check\\\\` command\" . --include=\"*.md\")"
+    ]
+  }
+}

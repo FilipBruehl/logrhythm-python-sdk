@@ -47,6 +47,14 @@ declared: Pydantic v2, HTTPX, and PyYAML (see
 plugin is enabled. SPEC-002's previously open configuration-file-format question
 is now closed by ADR-0007.
 
+**Phase A.3.3 — Pre-Commit & Code Quality Automation (local tooling only) —
+complete.** Local git hooks now enforce part of this automatically: Ruff
+format/check, mypy, basic file hygiene, and gitleaks secret detection run at
+commit time; the full test suite runs at push time — see
+[Pre-Commit & Local Code Quality Automation](docs/development/pre-commit.md).
+No GitHub Actions, CI, or PR/issue templates exist yet — this remains local-only
+automation.
+
 **None of this is implemented in runtime code yet.** `src/logrhythm_sdk` remains
 the Phase A.1 package skeleton: there is still no HTTP transport, authentication,
 TLS logic, configuration loader, Pydantic models, YAML/JSON/TOML handling, logging
@@ -227,7 +235,11 @@ operation: `git reset --hard`, `git clean`, force push (including
 run `git status` first; existing user changes are never discarded or overwritten
 without asking. Stage only the files relevant to the approved change (avoid
 `git add -A`/`git add .`); review `git status` and `git diff` before every
-commit. Full detail:
+commit. Local git hooks now run automatically at commit/push time (see
+[Required quality commands](#required-quality-commands)) — never bypass them
+with `git commit --no-verify`, `git push --no-verify`, or `SKIP=<hook-id>`
+without the same explicit approval any other safety-rule exception would need.
+Full detail:
 [Git Safety Rules](docs/development/claude-workflow.md#git-safety-rules).
 
 ## Required quality commands
@@ -243,3 +255,11 @@ uv run pytest
 
 Formatting issues and lint/type errors within the scope of the current task should be
 fixed before reporting the task as done.
+
+The first three commands also run automatically as local pre-commit hooks, and
+`pytest` runs automatically as a pre-push hook — see
+[Pre-Commit & Local Code Quality Automation](docs/development/pre-commit.md).
+Running `uv run pre-commit run --all-files` (the
+[official local quality check](docs/development/pre-commit.md#local-quality-check))
+first is still expected; the hooks are a backstop, not a substitute for
+checking before reporting a task done.
