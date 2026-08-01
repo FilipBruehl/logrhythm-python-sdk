@@ -46,6 +46,9 @@ LogRhythm SIEM REST APIs.
 - [SPEC-009 — Filters, Pagination, Sorting and Options](specifications/filters-and-options.md) —
   filter/pagination/sorting/options models, query and header serialization, and
   conflict handling (currently `Draft`, not implemented).
+- [SPEC-010 — API Modules](specifications/api-modules.md) — the seven API modules,
+  the client/resource hierarchy, dependency injection, and the high-level vs. Raw
+  API split (currently `Draft`, not implemented).
 - [API Coverage Matrix](coverage/api-coverage.md) — tracks, per LogRhythm API area,
   how far each endpoint has progressed from not-yet-inventoried to implemented.
 - [Development: Contributing](development/contributing.md) — local setup and quality checks.
