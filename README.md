@@ -50,6 +50,14 @@ uv run mypy src/logrhythm_sdk  # static type checking
 uv run pytest                  # tests + coverage
 ```
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the short version, and the
+[Developer Workflow](docs/development/workflow.md) for the full, binding
+development workflow — branch types and strategy, commit strategy, pull
+requests, and the Definition of Ready / Definition of Done every change is
+checked against.
+
 ## Architecture (planned)
 
 The SDK is designed around a central high-level facade backed by a shared `core`

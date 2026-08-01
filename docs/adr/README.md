@@ -13,12 +13,49 @@ Each ADR contains:
 - **Decision** — what was decided
 - **Consequences** — the resulting tradeoffs, positive and negative
 
-## When to write one
+## When an ADR is required
 
-A new ADR is required for any decision that materially shapes the SDK's public API,
-its module structure, its dependency footprint, or its quality/security posture — for
-example, choosing a transport library, a configuration format, or an authentication
-strategy. Routine implementation details do not need an ADR.
+An ADR is required, before the decision is acted on, whenever a change involves any
+of the following:
+
+- **A new core/runtime library**, or replacing one already in use (e.g. choosing
+  `httpx`, Pydantic, or swapping either out) — unless that exact choice is already
+  fixed as a binding decision in an `Accepted` [Design Specification](../specifications/README.md),
+  in which case implementing it is not a new decision.
+- **A security-relevant default or mechanism** — TLS verification behavior, secret
+  handling/redaction, or the supported authentication mechanism.
+- **The Public API's shape or compatibility contract** — client methods, models, or
+  exceptions actually exported, once something has shipped as public.
+- **Ownership** of a shared component — who creates, holds, or releases it.
+- **Lifecycle** of a shared component — creation, closing, or reuse rules.
+- **A dependency change** with structural consequences — adding, removing, or
+  changing the constraints on a dependency in a way that affects the public surface
+  or supported environment (e.g. raising the minimum Python version, as in
+  [ADR-0001](0001-python-313.md)).
+- **A long-term architectural decision** that reverses or materially changes a
+  decision already recorded in a SPEC or a previous ADR.
+
+In general: any decision that materially shapes the SDK's public API, module
+structure, dependency footprint, or quality/security posture needs an ADR; routine
+implementation details do not.
+
+See [Architecture Governance](../development/claude-workflow.md#architecture-governance)
+for what happens when this is discovered mid-implementation: work stops until the
+ADR (and any dependent SPEC update) exists.
+
+## When an ADR is not required
+
+- The change is purely an internal implementation detail with no effect on the
+  public surface, security posture, ownership/lifecycle rules, or dependency
+  footprint.
+- The change follows a decision already recorded in an `Accepted` SPEC or an
+  existing ADR — implementing an already-decided design does not need a new ADR,
+  only the SPEC/code itself.
+- Routine bugfixes, refactors, documentation edits, or test additions that do not
+  change an already-decided architectural rule.
+- Adding a new resource or endpoint to an already-decided API module, following the
+  shape [SPEC-010](../specifications/api-modules.md) already establishes — this
+  implements an existing decision rather than making a new one.
 
 ## Index
 

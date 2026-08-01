@@ -51,12 +51,31 @@ LogRhythm SIEM REST APIs.
   API split (currently `Draft`, not implemented).
 - [API Coverage Matrix](coverage/api-coverage.md) — tracks, per LogRhythm API area,
   how far each endpoint has progressed from not-yet-inventoried to implemented.
+- [Developer Workflow](development/workflow.md) — the binding development workflow:
+  branching, commits, pull requests, readiness/completion criteria, testing rules,
+  and Claude Code governance.
+- [Branch Types & Branch Strategy](development/branching.md) — `main`,
+  `integration/*`, `feature/*`, `fix/*`; creation, updates, merge order, and
+  deletion.
+- [Commit Strategy](development/commits.md) — Conventional Commits, allowed types
+  and scopes, and the linear-history (rebase-and-merge) decision.
+- [Pull Requests](development/pull-requests.md) — when a PR is required, required
+  content, Definition of Review, merge prerequisites, and Branch Protection
+  (conceptual).
+- [Definition of Ready](development/definition-of-ready.md) — when an
+  implementation task may begin.
+- [Definition of Done](development/definition-of-done.md) — when a work package is
+  complete.
 - [Development: Contributing](development/contributing.md) — local setup and quality checks.
-- [Development: Testing](development/testing.md) — how the test suite is organized.
+- [Development: Testing](development/testing.md) — how the test suite is organized,
+  and testing rules by change type.
+- [Claude Workflow & Architecture Governance](development/claude-workflow.md) — why
+  Claude never makes architecture decisions alone, Claude's branch/commit/push/PR
+  permissions, and Git Safety Rules.
 - [API Implementation Workflow](development/api-implementation-workflow.md) — the process
   used to add support for a new LogRhythm API.
 - [Architecture Decision Records](adr/README.md) — recorded, significant architecture
-  decisions and their rationale.
+  decisions and their rationale, and the policy for when a new ADR is required.
 
 ## Project layout
 

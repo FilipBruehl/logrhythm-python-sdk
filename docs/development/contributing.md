@@ -4,6 +4,12 @@ This page covers local setup and the quality checks expected to pass before any
 change is considered done. See also the repository root [CONTRIBUTING.md](../../CONTRIBUTING.md)
 for the short version, and [testing.md](testing.md) for test-suite conventions.
 
+For the full development workflow — branching, commits, pull requests,
+readiness/completion criteria, and how Claude Code operates in this repository —
+see [Developer Workflow](workflow.md). This page stays focused on local setup and
+day-to-day conventions; [Developer Workflow](workflow.md) and its linked pages are
+the binding process documentation.
+
 ## Prerequisites
 
 - Python 3.13 or newer
@@ -45,4 +51,11 @@ uv run ruff format .
   own API module.
 - Prefer composition over inheritance.
 - New public components require tests and documentation in the same change.
-- Significant architecture decisions are recorded as an ADR under `docs/adr/`.
+- Significant architecture decisions are recorded as an ADR under `docs/adr/`
+  (see [ADR Policy](../adr/README.md#when-an-adr-is-required)).
+
+## See also
+
+- [Developer Workflow](workflow.md) — branching, commits, pull requests.
+- [Definition of Ready](definition-of-ready.md) / [Definition of Done](definition-of-done.md)
+- [Claude Workflow & Architecture Governance](claude-workflow.md)

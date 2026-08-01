@@ -36,5 +36,19 @@ uv run pytest
   [docs/development/api-implementation-workflow.md](docs/development/api-implementation-workflow.md).
 - Never commit real secrets (tokens, credentials) in code, tests, examples, or logs.
 
-For more detail, see [docs/development/contributing.md](docs/development/contributing.md)
-and [docs/development/testing.md](docs/development/testing.md).
+## Workflow
+
+- **Branching:** `main` is always stable; work happens on `feature/*`/`fix/*`
+  branches, with `integration/*` branches for larger, multi-resource efforts. See
+  [docs/development/branching.md](docs/development/branching.md).
+- **Commits:** [Conventional Commits](https://www.conventionalcommits.org/); history
+  is preserved (rebase-and-merge, no default squash-merge). See
+  [docs/development/commits.md](docs/development/commits.md).
+- **Pull requests:** every change to `main` goes through a PR. See
+  [docs/development/pull-requests.md](docs/development/pull-requests.md).
+- **Before starting:** check [Definition of Ready](docs/development/definition-of-ready.md).
+- **Before calling it done:** check [Definition of Done](docs/development/definition-of-done.md).
+
+For more detail, see [docs/development/contributing.md](docs/development/contributing.md),
+[docs/development/testing.md](docs/development/testing.md), and the full
+[Developer Workflow](docs/development/workflow.md) index.

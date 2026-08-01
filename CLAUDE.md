@@ -27,6 +27,16 @@ Handling, Models, Filters/Pagination/Sorting/Options, and API Modules. The
 [API Coverage Matrix](docs/coverage/api-coverage.md) exists as a structure only —
 no endpoint has been inventoried yet.
 
+**Phase A.3.1 — Developer Workflow & Governance (documentation only) — complete.**
+The project now also has a binding development workflow: branch types and
+strategy, commit strategy, pull request requirements, Definition of Ready,
+Definition of Done, testing rules by change type, ADR policy, and the governance
+rules that constrain Claude's own behavior in this repository — see
+[Developer Workflow](docs/development/workflow.md) and
+[Claude Workflow & Architecture Governance](docs/development/claude-workflow.md).
+No hooks, CI, or templates exist yet to enforce any of this automatically; it is
+applied manually until a later phase adds that tooling.
+
 **None of this is implemented in runtime code yet.** `src/logrhythm_sdk` remains
 the Phase A.1 package skeleton: there is still no HTTP transport, authentication,
 TLS logic, configuration loader, Pydantic models, YAML/JSON/TOML handling, logging
@@ -125,7 +135,8 @@ gap with an assumption. See
 - New public components require corresponding documentation under `/docs` in the same
   change that introduces them.
 - Significant architecture decisions require a new ADR under `docs/adr/`, following
-  the existing format and numbering.
+  the existing format and numbering — see
+  [ADR Policy](docs/adr/README.md#when-an-adr-is-required) for when this applies.
 - Before implementing a component, prefer designing it as a Design Specification
   under `docs/specifications/` first — see
   [docs/specifications/README.md](docs/specifications/README.md) for the status model
@@ -141,6 +152,65 @@ gap with an assumption. See
 - Do not modify files outside the scope of the current task.
 - **Never create a git commit without an explicit instruction to do so** from the
   user, even after making and verifying changes.
+
+## Branching, commits, and pull requests
+
+The binding process is documented in full under
+[Developer Workflow](docs/development/workflow.md); this is the summary:
+
+- **Branches:** exactly four types — `main` (stable, PR-only), `integration/*`
+  (larger, multi-resource efforts), `feature/*` (one logically complete work
+  package), `fix/*` (bug fixes). No deeper hierarchy. See
+  [Branch Types & Branch Strategy](docs/development/branching.md).
+- **Commits:** [Conventional Commits](https://www.conventionalcommits.org/).
+  Commit history is preserved — **squash-merge is not the default**; prefer
+  Rebase and Merge to keep `main` linear. See
+  [Commit Strategy](docs/development/commits.md).
+- **Pull requests:** every change reaching `main` goes through a PR. See
+  [Pull Requests](docs/development/pull-requests.md) for required content and
+  merge prerequisites.
+- **Before starting work**, check
+  [Definition of Ready](docs/development/definition-of-ready.md); before
+  reporting a task done, check
+  [Definition of Done](docs/development/definition-of-done.md).
+
+## Architecture governance
+
+**Claude does not make architecture decisions.** If a task turns out to touch a
+SPEC, an ADR, the Public API's shape, Security Defaults, Ownership, or Lifecycle
+— and the existing documentation doesn't already give a clear, binding answer —
+**stop and get an explicit decision from the user before proceeding.** Report
+what was found and why it's a decision, not an implementation detail; do not
+silently pick the most reasonable-looking option and continue. See
+[Architecture Governance](docs/development/claude-workflow.md#architecture-governance)
+and [ADR Policy](docs/adr/README.md#when-an-adr-is-required).
+
+## Claude's git and PR permissions
+
+- **Branches:** may create an explicitly named `feature/*` or `integration/*`
+  branch, switch to it, and check its status. Never plans or creates additional
+  branch structure on its own initiative.
+- **Commits:** only after explicit approval for that specific commit, and only
+  once all four quality commands pass. No WIP commits.
+- **Push:** only on explicit instruction. Never directly to `main`. Never force
+  push.
+- **Pull requests:** may prepare/draft a PR description; creates the actual PR
+  only on explicit instruction. Never merges a PR, changes branch protection, or
+  triggers a release.
+
+Full detail: [Claude Workflow](docs/development/claude-workflow.md).
+
+## Git safety rules
+
+Never performed without the user's explicit, scoped approval for that exact
+operation: `git reset --hard`, `git clean`, force push (including
+`--force-with-lease`), `git commit --amend`, branch deletion, or `git rebase`
+(interactive or not). Before any command that could discard uncommitted work,
+run `git status` first; existing user changes are never discarded or overwritten
+without asking. Stage only the files relevant to the approved change (avoid
+`git add -A`/`git add .`); review `git status` and `git diff` before every
+commit. Full detail:
+[Git Safety Rules](docs/development/claude-workflow.md#git-safety-rules).
 
 ## Required quality commands
 
