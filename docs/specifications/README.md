@@ -35,6 +35,7 @@ specifications:
 | SPEC-006 | Logging | Draft | [logging.md](logging.md) |
 | SPEC-007 | Exception Handling | Draft | [exceptions.md](exceptions.md) |
 | SPEC-008 | Models | Draft | [models.md](models.md) |
+| SPEC-009 | Filters, Pagination, Sorting and Options | Draft | [filters-and-options.md](filters-and-options.md) |
 
 ## Where this fits
 

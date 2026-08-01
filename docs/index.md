@@ -43,6 +43,9 @@ LogRhythm SIEM REST APIs.
 - [SPEC-008 — Models](specifications/models.md) — the Pydantic v2 model
   hierarchy, request/response validation strictness, aliasing, and UTC date/time
   normalization (currently `Draft`, not implemented).
+- [SPEC-009 — Filters, Pagination, Sorting and Options](specifications/filters-and-options.md) —
+  filter/pagination/sorting/options models, query and header serialization, and
+  conflict handling (currently `Draft`, not implemented).
 - [API Coverage Matrix](coverage/api-coverage.md) — tracks, per LogRhythm API area,
   how far each endpoint has progressed from not-yet-inventoried to implemented.
 - [Development: Contributing](development/contributing.md) — local setup and quality checks.
