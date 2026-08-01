@@ -1,12 +1,13 @@
 # SPEC-001 — SDK Client
 
-| | |
+| Field | Value |
 |---|---|
+| ID | SPEC-001 |
 | Status | Draft |
 | Phase | A.2.2 |
-| Component | `LogRhythmClient` |
-| Depends on | [SPEC-000 — Design Principles](design-principles.md) |
-| Implementation Status | Not implemented |
+| Component | SDK Client |
+| Depends on | [SPEC-000](design-principles.md) |
+| Implementation | Not implemented |
 
 ## Status
 
@@ -19,10 +20,11 @@ from this Draft; see the status model in [Design Specifications](README.md).
 
 `LogRhythmClient` is the SDK's single public, high-level entry point and its
 **composition root** — the one place where the shared infrastructure (configuration,
-logging, transport) and the individual API modules (Administration, AI Engine,
-Metrics, Alarm, Search, and later additions) are assembled into a working object
-graph. Every other component either is created and owned by `LogRhythmClient`, or is
-handed to it by the caller. This specification defines that role precisely: what
+logging, transport) and the individual API modules — the seven API areas
+[SPEC-010](api-modules.md#supported-apis) defines (Administration, AI Engine Cache
+Drilldown, Metrics, AI Engine, Alarm, Case, and Search, in that implementation
+order) — are assembled into a working object graph. Every other component either
+is created and owned by `LogRhythmClient`, or is handed to it by the caller. This specification defines that role precisely: what
 `LogRhythmClient` is responsible for, its public shape, how it obtains its
 dependencies, who owns what, and how its lifecycle works. See
 [Component Model](../architecture/components.md) for the diagram this specification
@@ -203,8 +205,11 @@ This section describes intended behavior only; no implementation is specified he
 - **Not managed:**
   - Shared infrastructure components supplied externally by the caller (see
     [Ownership](#ownership)).
-  - The API module objects themselves (Administration, AI Engine, Metrics, Alarm,
-    Search) and anything inside them (`Resources`, `Models`, `Filters`) — per
+  - The API module objects themselves — the seven API areas
+    [SPEC-010](api-modules.md#supported-apis) defines — and anything inside them
+    (each area's API Client and Resources, together with a resource's `resource.py`
+    and whichever of `models/`, `filters/`, `sorting/`, and `options/` it uses; see
+    [SPEC-010, Resource Hierarchy](api-modules.md#resource-hierarchy)) — per
     [Component Model](../architecture/components.md), these own no infrastructure of
     their own, so they hold nothing that needs closing independently of the shared
     infrastructure above.

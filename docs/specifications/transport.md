@@ -333,7 +333,10 @@ not swallow errors — every category propagates to the caller, consistent with
 - status code
 - duration
 - error category (see [Error Behaviour](#error-behaviour))
-- correlation/request ID
+- SDK request ID (`request_id`)
+- server request ID (`server_request_id`), when returned by LogRhythm — tracked
+  separately from the SDK request ID, never merged (see
+  [SPEC-006, Request IDs](logging.md#request-ids))
 - retry counter (reserved for the future retry extension; always present, even
   though version 1 has no retries — see [Non-Goals](#non-goals))
 

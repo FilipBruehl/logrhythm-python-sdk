@@ -156,6 +156,11 @@ any particular request. Minimum subclasses:
   reused at all remains an open question there — this exception applies to
   whichever "used while closed" cases that resolution ultimately disallows).
 
+This list is a minimum, not an exhaustive, set: [SPEC-010](api-modules.md#api-configuration)
+documents a further `ClientStateError` subclass, `ApiNotConfiguredError`, for using
+an API area that is not configured or is explicitly disabled — it is not repeated
+in full here.
+
 ## Transport Errors
 
 `TransportError` covers failures [SPEC-005](transport.md#error-behaviour) already
