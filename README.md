@@ -62,8 +62,9 @@ Specifications that govern how these components are designed — starting with
 [SPEC-000 — Design Principles](docs/specifications/design-principles.md),
 [SPEC-001 — SDK Client](docs/specifications/sdk-client.md),
 [SPEC-002 — Configuration](docs/specifications/configuration.md),
-[SPEC-003 — Authentication](docs/specifications/authentication.md), and
-[SPEC-004 — TLS](docs/specifications/tls.md) (all currently `Draft`, not
+[SPEC-003 — Authentication](docs/specifications/authentication.md),
+[SPEC-004 — TLS](docs/specifications/tls.md), and
+[SPEC-005 — Transport](docs/specifications/transport.md) (all currently `Draft`, not
 implemented). Per-endpoint progress is tracked in
 [docs/coverage/api-coverage.md](docs/coverage/api-coverage.md), which is currently an
 empty structure — nothing has been inventoried or implemented yet.
