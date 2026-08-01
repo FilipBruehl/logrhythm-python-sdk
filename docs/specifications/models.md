@@ -51,8 +51,9 @@ specification builds on.
 - Partial updates (`unset` vs. `None`).
 - Model organization and the public import surface.
 
-**Out of scope** (defined by a future specification — SPEC-009 — or referenced
-only):
+**Out of scope** (defined by
+[SPEC-009 — Filters, Pagination, Sorting and Options](filters-and-options.md), or
+referenced only):
 
 - Filters.
 - Pagination.
@@ -90,8 +91,8 @@ only):
 
 - does not perform HTTP requests or transport-level work — see
   [SPEC-005](transport.md#purpose).
-- does not build filters, queries, or pagination logic — that is a future
-  specification's territory (`SPEC-009`), not this specification's.
+- does not build filters, queries, or pagination logic — see
+  [SPEC-009](filters-and-options.md#purpose).
 - does not know about concrete API endpoints.
 - does not decide what gets logged — see [SPEC-006](logging.md#purpose).
 - does not raise or define exceptions itself — model validation failures surface
@@ -353,8 +354,8 @@ diagram unchanged would visibly contradict this specification, it has been updat
 in this same change to show `models` nested under `<api_module>/<resource>/`
 instead — a minimal, necessary consistency fix, not a new decision beyond what is
 stated here. The placement of `filters.py`, `resources.py`, and `client.py` is
-unaffected and not addressed by this specification — filters belong to a future
-specification (`SPEC-009`).
+unaffected and not addressed by this specification — filters belong to
+[SPEC-009](filters-and-options.md).
 
 ## Public API
 
@@ -465,9 +466,8 @@ any architectural decision or part of SPEC-008:
 
 This specification, and by extension `Models` itself, explicitly does not cover:
 
-- Filters, pagination, query builders, or options — see SPEC-009 (not yet
-  written; referenced by number only, consistent with this series' numbering
-  scheme — see [Design Specifications](README.md#numbering)).
+- Filters, pagination, query builders, or options — see
+  [SPEC-009 — Filters, Pagination, Sorting and Options](filters-and-options.md).
 - HTTP or transport implementation.
 - Logging implementation.
 - The exception hierarchy itself (only where models participate in it — see
