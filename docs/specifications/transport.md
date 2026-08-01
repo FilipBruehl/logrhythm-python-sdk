@@ -333,7 +333,10 @@ not swallow errors — every category propagates to the caller, consistent with
 - status code
 - duration
 - error category (see [Error Behaviour](#error-behaviour))
-- correlation/request ID
+- SDK request ID (`request_id`)
+- server request ID (`server_request_id`), when returned by LogRhythm — tracked
+  separately from the SDK request ID, never merged (see
+  [SPEC-006, Request IDs](logging.md#request-ids))
 - retry counter (reserved for the future retry extension; always present, even
   though version 1 has no retries — see [Non-Goals](#non-goals))
 
@@ -478,14 +481,17 @@ significant, an ADR) before it can move out of this list.
 
 - **Concrete timeout default values.** The actual numeric defaults for connect,
   read, write, and pool timeouts (see [Timeout Handling](#timeout-handling)).
-- **Request-ID strategy.** How a correlation/request ID is determined when
-  LogRhythm does not supply one itself (see [Logging Metadata](#logging-metadata)).
 - **Response size limits.** Whether `Transport` enforces any limit on response body
   size.
 - **Maximum redirect count.** Only relevant if/when configurable redirect-following
   becomes a supported [Future Extension](#future-extensions) — not applicable to
   version 1, which does not follow redirects at all (see
   [Response Handling](#response-handling)).
+
+The "how is a correlation/request ID determined" question previously listed here
+is settled by [SPEC-006](logging.md#request-ids): the SDK always generates its own
+request ID locally, regardless of whether LogRhythm supplies one; a server-supplied
+ID is tracked separately, and optionally, as `server_request_id`.
 
 ## Future Extensions
 

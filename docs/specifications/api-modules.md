@@ -214,6 +214,16 @@ admin/
         ...
 ```
 
+**Pagination is deliberately not one of these per-resource folders.** The shared,
+`core`-level `PaginationModel` is the standard, used by nearly all documented
+endpoints (see [SPEC-009, Pagination](filters-and-options.md#pagination)). In the
+rare, documented exception where a resource genuinely needs a different
+pagination mechanism, the resulting resource-specific pagination model is placed
+under that resource's own `models/` (shown above) — see
+[SPEC-009, Resource-Specific Models](filters-and-options.md#resource-specific-models).
+No separate `pagination/` folder is introduced, since a standard folder for this
+case would misrepresent the exception as the norm.
+
 ## Dependency Injection
 
 **API clients receive, at minimum:**

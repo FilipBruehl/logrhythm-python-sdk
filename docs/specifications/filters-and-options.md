@@ -6,7 +6,7 @@
 | Status | Draft |
 | Phase | A.2.10 |
 | Component | Filters, Pagination, Sorting and Options |
-| Depends on | [SPEC-000](design-principles.md), [SPEC-005](transport.md), [SPEC-007](exceptions.md), [SPEC-008](models.md) |
+| Depends on | [SPEC-000](design-principles.md), [SPEC-005](transport.md), [SPEC-006](logging.md), [SPEC-007](exceptions.md), [SPEC-008](models.md) |
 | Implementation | Not implemented |
 
 ## Status
@@ -157,7 +157,9 @@ Factory or helper methods for that (e.g. something like `with_changes(...)`) are
 introduced **only where a concrete, present need exists** — there is no
 precautionary, uniform method mandated across every model, the same restraint
 [SPEC-008](models.md#immutability) already applies to itself. The concrete API for
-this remains undecided — see [Open Questions](#open-questions).
+this remains undecided — tracked as [SPEC-008, Open Questions](models.md#open-questions)'s
+"Concrete factory/update methods," not duplicated as a separate open question here,
+since it applies to the shared `SdkModel` base these models inherit from.
 
 ## Separation from Request Models
 
@@ -201,12 +203,18 @@ admin/
     └── options/
 ```
 
-**Pagination may be a shared `core` model** when its semantics are genuinely
-identical across APIs (see [Pagination](#pagination)). **A shared component
-belongs in `core` only when the semantics are actually shared** — matching
-parameter *names* across two APIs is not, by itself, sufficient justification;
-this is the same standard [SPEC-000](design-principles.md#extensibility)'s "Shared
-infrastructure belongs in `core`" principle already sets, applied here.
+**Decision: the shared, `core`-level `PaginationModel` (see
+[Pagination](#pagination)) is the standard, used by nearly all documented
+endpoints.** Resource-specific pagination is a rare, documented exception —
+reserved for historically grown or manufacturer-specific endpoints whose
+pagination mechanism is genuinely different, never adopted merely because two
+endpoints happen to use matching parameter *names*; this is the same standard
+[SPEC-000](design-principles.md#extensibility)'s "Shared infrastructure belongs in
+`core`" principle already sets, applied here. Where that rare exception applies,
+the resource-specific pagination model is placed under that resource's own
+`models/` (see [Model Organisation](#model-organisation)) — **no dedicated
+`pagination/` subfolder is introduced**, since a standard subfolder would
+misrepresent the exception as the norm.
 
 ## Validation
 
@@ -414,7 +422,9 @@ count
 - Manufacturer naming is handled through explicit aliases (see
   [Aliases](#aliases)).
 - A resource gets its own, different pagination model only where the API
-  documents a genuinely different pagination mechanism.
+  documents a genuinely different pagination mechanism — see
+  [Resource-Specific Models](#resource-specific-models) for this decision and
+  where such an exceptional model is placed.
 
 **No precautionary cursor-, token-, or page-based pagination hierarchy exists in
 version 1** — see [Future Extensions](#future-extensions) for where that
@@ -539,13 +549,20 @@ support, in a new SDK version. This is a deliberate consequence of:
 
 Filter, sorting, and options models live under their resource, per
 [Resource-Specific Models](#resource-specific-models) — for example
-`admin/hosts/filters/`, `admin/hosts/sorting/`, `admin/hosts/options/`. Shared
-pagination and sorting-direction components, where genuinely shared, live in
+`admin/hosts/filters/`, `admin/hosts/sorting/`, `admin/hosts/options/`. The
+standard, shared pagination model and sorting-direction components live in
 `core`, consistent with [SPEC-008](models.md#model-organisation)'s "no large
-collection files" principle applied to this category of model as well.
+collection files" principle applied to this category of model as well. In the
+rare exception where a resource needs its own pagination model (see
+[Resource-Specific Models](#resource-specific-models)), that model is placed
+under the resource's own `models/` — deliberately not a dedicated
+`pagination/` folder, which would overstate how common that exception is.
 
-The exact package/module layout beneath these locations is not further specified
-here — see [Open Questions](#open-questions).
+The folder-level layout beneath a resource is shown concretely in
+[SPEC-010 — Resource Hierarchy](api-modules.md#resource-hierarchy) (e.g.
+`resource.py`, `models/`, `filters/`, `sorting/`, `options/`); finer detail below
+that (module contents, class/file naming) is not decided here — see
+[Open Questions](#open-questions).
 
 ## Public API
 
@@ -637,8 +654,11 @@ significant, an ADR) before it can move out of this list.
 - **Exact class and module names for the base types.** The concrete names behind
   `FilterModel`, `PaginationModel`, `SortingModel`, and `OptionsModel` (see
   [Base Models](#base-models)).
-- **Exact package structure** for filters, pagination, sorting, and options beneath
-  a resource (see [Model Organisation](#model-organisation)).
+- **Module/file layout within each resource's `filters/`, `sorting/`, and
+  `options/` folders.** The folder-level structure itself is decided (see
+  [Model Organisation](#model-organisation) and
+  [SPEC-010 — Resource Hierarchy](api-modules.md#resource-hierarchy)); what is not
+  decided is the finer-grained layout within those folders.
 - **Exact manufacturer values for the shared sort-direction enum**, where not
   already documented (see [Sorting](#sorting)).
 - **Documented exceptions to the shared pagination model** — which specific
@@ -689,6 +709,7 @@ not cover:
 
 - [SPEC-000 — Design Principles](design-principles.md)
 - [SPEC-005 — Transport](transport.md)
+- [SPEC-006 — Logging](logging.md)
 - [SPEC-007 — Exception Handling](exceptions.md)
 - [SPEC-008 — Models](models.md)
 - [Architecture Overview](../architecture/overview.md)

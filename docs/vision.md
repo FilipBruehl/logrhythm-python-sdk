@@ -26,7 +26,8 @@ The SDK is intended to eventually cover, at minimum:
 ## Project goals
 
 - Provide a single, consistent, typed entry point to LogRhythm's REST APIs.
-- Keep every API module structurally consistent (models, filters, resources, client).
+- Keep every API module structurally consistent (a `client.py` per API area, with
+  `resource.py`, models, filters, sorting, and options organized per resource).
 - Make the public API predictable, well documented, and safe to depend on.
 - Treat security (TLS verification, secret handling) as a default, not an opt-in.
 - Base every implemented behavior on LogRhythm's official, documented API behavior.

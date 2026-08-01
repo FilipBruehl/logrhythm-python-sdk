@@ -54,7 +54,8 @@ uv run pytest                  # tests + coverage
 
 The SDK is designed around a central high-level facade backed by a shared `core`
 (transport, configuration, authentication, TLS, logging) and a set of API modules,
-each following the same internal structure (models, filters, resources, client). None
+each following the same internal structure (a `client.py` per API area, with
+`resource.py`, models, filters, sorting, and options organized per resource). None
 of this is implemented yet beyond the package skeleton — see
 [docs/architecture/overview.md](docs/architecture/overview.md) for the full picture,
 [docs/architecture/components.md](docs/architecture/components.md) for a component

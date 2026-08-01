@@ -22,10 +22,12 @@ future work; no API area is implemented yet as part of this foundation phase.
    concise spec that will drive the implementation, stored alongside the relevant
    development materials.
 4. **Define the SDK mapping.** Decide how the documented API maps onto the SDK's
-   conventions: module name, models, filters, resource methods, and client methods.
-5. **Implement models, filters, resources, and client integration.** Follow the
-   established shape (see [Architecture Overview](../architecture/overview.md))
-   consistently with existing API modules.
+   conventions: API area, resource, and the per-resource models, filters, sorting,
+   and options it needs, plus the corresponding resource and client methods.
+5. **Implement the resource, its models/filters/sorting/options, and client
+   integration.** Follow the established shape (see
+   [Architecture Overview](../architecture/overview.md)) consistently with existing
+   API modules.
 6. **Write unit tests with mocked HTTP calls.** No test in this phase depends on a
    live LogRhythm instance.
 7. **Update documentation and API coverage.** Reflect the newly implemented endpoints

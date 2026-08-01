@@ -6,7 +6,7 @@
 | Status | Draft |
 | Phase | A.2.9 |
 | Component | Models |
-| Depends on | [SPEC-000](design-principles.md), [SPEC-001](sdk-client.md), [SPEC-002](configuration.md), [SPEC-003](authentication.md), [SPEC-005](transport.md), [SPEC-007](exceptions.md) |
+| Depends on | [SPEC-000](design-principles.md), [SPEC-001](sdk-client.md), [SPEC-002](configuration.md), [SPEC-003](authentication.md), [SPEC-005](transport.md), [SPEC-006](logging.md), [SPEC-007](exceptions.md) |
 | Implementation | Not implemented |
 
 ## Status
@@ -482,6 +482,7 @@ This specification, and by extension `Models` itself, explicitly does not cover:
 - [SPEC-002 — Configuration](configuration.md)
 - [SPEC-003 — Authentication](authentication.md)
 - [SPEC-005 — Transport](transport.md)
+- [SPEC-006 — Logging](logging.md)
 - [SPEC-007 — Exception Handling](exceptions.md)
 - [Architecture Overview](../architecture/overview.md)
 - [Component Model](../architecture/components.md)

@@ -68,8 +68,12 @@ see [Component Model](../architecture/components.md) for that.
 ## API design
 
 - **Consistent public API.** Every API module (Administration, AI Engine, Metrics,
-  Alarm, Search, and later additions) exposes the same shape of client, resources,
-  models, and filters, so a consumer who learns one module already knows the others.
+  Alarm, Search, and later additions) exposes the same shape: one API client per
+  area, owning the business resources beneath it, each of which may hold its own
+  `resource.py` together with whichever of `models/`, `filters/`, `sorting/`, and
+  `options/` it actually needs — not every resource needs all of them, and shared
+  infrastructure always stays in `core` (see [SPEC-010](api-modules.md)). A
+  consumer who learns one module already knows the others.
 - **Backwards compatibility.** Once a public component ships, its signature and
   behavior are a compatibility contract. Breaking it is a deliberate, documented, and
   versioned decision — never an accidental side effect of refactoring.
@@ -159,9 +163,12 @@ see [Component Model](../architecture/components.md) for that.
 ## Extensibility
 
 - **New API modules follow the same architecture.** Any newly implemented API area
-  reuses the same module shape (models, filters, resources, client) described in
-  [Component Model](../architecture/components.md) — it does not introduce a
-  parallel structure.
+  reuses the same shape described in
+  [Component Model](../architecture/components.md): one API client per area, and,
+  beneath it, one subpackage per business resource holding that resource's
+  `resource.py` together with whichever of `models/`, `filters/`, `sorting/`, and
+  `options/` it actually needs — not every resource needs all of them. It does not
+  introduce a parallel structure.
 - **Shared infrastructure belongs in `core`.** If two or more API modules would need
   the same piece of logic, that logic belongs in `logrhythm_sdk.core`, not duplicated
   or reinvented per module.
