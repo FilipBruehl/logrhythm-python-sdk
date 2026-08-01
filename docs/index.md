@@ -37,6 +37,9 @@ LogRhythm SIEM REST APIs.
 - [SPEC-006 — Logging](specifications/logging.md) — structured events, request IDs,
   the logger hierarchy, and the Transport/API-module logging split (currently
   `Draft`, not implemented).
+- [SPEC-007 — Exception Handling](specifications/exceptions.md) — the public
+  exception hierarchy, HTTP-to-exception mapping, exception context, and
+  redaction (currently `Draft`, not implemented).
 - [API Coverage Matrix](coverage/api-coverage.md) — tracks, per LogRhythm API area,
   how far each endpoint has progressed from not-yet-inventoried to implemented.
 - [Development: Contributing](development/contributing.md) — local setup and quality checks.
