@@ -66,6 +66,9 @@ LogRhythm SIEM REST APIs.
   implementation task may begin.
 - [Definition of Done](development/definition-of-done.md) — when a work package is
   complete.
+- [Dependencies & Tooling](development/dependencies.md) — the runtime dependency
+  baseline (Pydantic, HTTPX, PyYAML), dependency placement/versioning, and the
+  dependency-upgrade process.
 - [Development: Contributing](development/contributing.md) — local setup and quality checks.
 - [Development: Testing](development/testing.md) — how the test suite is organized,
   and testing rules by change type.

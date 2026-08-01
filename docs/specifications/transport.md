@@ -113,7 +113,9 @@ explicitly deferred — see [Non-Goals](#non-goals) and
 ## Transport Model
 
 **Decision: version 1 uses [httpx](https://www.python-httpx.org/) as the underlying
-HTTP library.** API modules must never depend on httpx directly, at any point —
+HTTP library** — see
+[ADR-0006](../adr/0006-httpx-transport.md) for the full decision and its
+alternatives. API modules must never depend on httpx directly, at any point —
 they depend exclusively on the SDK's own transport abstraction.
 
 **Decision: the SDK owns a dedicated `HttpTransport`.** It fully encapsulates:
@@ -529,5 +531,5 @@ This specification, and by extension `Transport` itself, explicitly does not cov
 - [SPEC-004 — TLS](tls.md)
 - [Architecture Overview](../architecture/overview.md)
 - [Component Model](../architecture/components.md)
-- No existing ADR (see [docs/adr/](../adr/README.md)) is specific to transport
-  architecture; none is referenced here as directly applicable.
+- [ADR-0006 — Use HTTPX as HTTP transport library](../adr/0006-httpx-transport.md) —
+  the HTTP library decision [Transport Model](#transport-model) relies on.

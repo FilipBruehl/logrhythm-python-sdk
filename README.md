@@ -40,6 +40,17 @@ uv sync
 This installs the project along with its development dependencies (Ruff, mypy,
 pytest, pytest-cov) into a local virtual environment.
 
+## Dependencies
+
+The SDK's runtime dependency baseline is now in place, ahead of the runtime
+implementation that will use it: **Pydantic v2** (models), **HTTPX** (HTTP
+transport), and **PyYAML** (YAML configuration files) — see
+[docs/development/dependencies.md](docs/development/dependencies.md) and
+[ADR-0005](docs/adr/0005-pydantic-v2-models.md),
+[ADR-0006](docs/adr/0006-httpx-transport.md), and
+[ADR-0007](docs/adr/0007-configuration-file-formats.md) for the reasoning
+behind each. No code uses them yet — see [Status](#status).
+
 ## Quality checks
 
 ```powershell

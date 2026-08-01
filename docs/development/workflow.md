@@ -47,6 +47,7 @@ style already established in Phases A.1–A.2.
 | [Testing](testing.md) | Test suite layout, coverage target, and rules by change type. |
 | [Claude Workflow & Architecture Governance](claude-workflow.md) | Architecture Governance (Claude never decides architecture alone), Claude's branch/commit/push/PR permissions, Git Safety Rules. |
 | [ADR Policy](../adr/README.md#when-an-adr-is-required) | When a new ADR is required, and when it isn't. |
+| [Dependencies & Tooling](dependencies.md) | Runtime dependency baseline, dependency placement/versioning, and the upgrade process. |
 | [Contributing](contributing.md) | Local setup and required quality commands. |
 | [API Implementation Workflow](api-implementation-workflow.md) | The process for implementing a new LogRhythm API area. |
 

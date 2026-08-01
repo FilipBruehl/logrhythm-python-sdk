@@ -32,7 +32,9 @@ error body as "a separate, structured error object" without defining it either.
 **Decision: version 1 uses Pydantic v2, exclusively**, for every model in the SDK —
 public and internal, request and response. No `dataclasses` are used anywhere in
 this architecture. This is a foundational decision that everything else in this
-specification builds on.
+specification builds on — see
+[ADR-0005](../adr/0005-pydantic-v2-models.md) for the full decision and its
+alternatives.
 
 ## Scope
 
@@ -486,5 +488,6 @@ This specification, and by extension `Models` itself, explicitly does not cover:
 - [SPEC-007 — Exception Handling](exceptions.md)
 - [Architecture Overview](../architecture/overview.md)
 - [Component Model](../architecture/components.md)
-- No existing ADR (see [docs/adr/](../adr/README.md)) is specific to model
-  architecture; none is referenced here as directly applicable.
+- [ADR-0005 — Use Pydantic v2 for SDK models](../adr/0005-pydantic-v2-models.md) —
+  the Pydantic decision [Purpose](#purpose) and [Base Models](#base-models) rely
+  on.

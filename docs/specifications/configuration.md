@@ -174,12 +174,19 @@ possible future extension (see
 [Future Extensions](#future-extensions-non-binding)) and are not part of this
 specification's binding scope.
 
-[Architecture Overview](../architecture/overview.md) already names YAML, JSON, and
-TOML as target file formats for configuration loading. This specification does not
-re-decide that intent, but it also does not treat it as binding: which of these
-formats `from_config(...)` actually supports, and the concrete loader mechanism, are
-not finalized here — see [Open Questions](#open-questions). No concrete environment
-variable names are defined by this specification.
+**Decision: version 1 bindingly supports exactly three configuration file
+formats** — YAML (`.yaml`, `.yml`), JSON (`.json`), and TOML (`.toml`) — per
+[ADR-0007](../adr/0007-configuration-file-formats.md), which closes what was
+previously an open question here. YAML is parsed via PyYAML (safe-loading only),
+JSON via the standard library's `json` module, and TOML via the standard
+library's `tomllib`; no additional third-party TOML library is used. **The format
+is determined exclusively by the file's extension** — never by inspecting file
+content or any other heuristic. A file with an unrecognized or unsupported
+extension is rejected as a `ConfigurationFormatError` (see
+[SPEC-007, Configuration Errors](exceptions.md#configuration-errors)). See
+[ADR-0007](../adr/0007-configuration-file-formats.md) for the full decision and
+its alternatives. No concrete environment variable names are defined by this
+specification.
 
 ## Precedence and Merging
 
@@ -447,9 +454,6 @@ These are explicitly undecided. They must not be resolved silently by
 implementation; each requires an explicit decision (and, where architecturally
 significant, an ADR) before it can move out of this list.
 
-- **File format.** Which file format(s) `from_config(...)` actually accepts —
-  [Architecture Overview](../architecture/overview.md) names YAML, JSON, and TOML as
-  targets, but this is not finalized at specification level.
 - **Additional factory/loader methods.** Whether any factory or loader functions
   exist beyond the primary constructor and `from_config(...)` — for example, one
   based on environment variables, should that become a supported source — and what
@@ -464,6 +468,11 @@ significant, an ADR) before it can move out of this list.
   [Defaults](#defaults)).
 - **Source traceability mechanism.** How (if at all) the origin of a resolved value
   is tracked or exposed (see [Responsibilities](#responsibilities)).
+
+A question previously listed here, "File format" (which file format(s)
+`from_config(...)` accepts), is now decided — see
+[Configuration Sources](#configuration-sources) and
+[ADR-0007](../adr/0007-configuration-file-formats.md) — and is not duplicated here.
 
 ## Future Extensions (non-binding)
 
@@ -497,7 +506,9 @@ explicitly does not cover:
 
 - [SPEC-000 — Design Principles](design-principles.md)
 - [SPEC-001 — SDK Client](sdk-client.md)
+- [SPEC-007 — Exception Handling](exceptions.md)
 - [Architecture Overview](../architecture/overview.md)
 - [Component Model](../architecture/components.md)
-- No existing ADR (see [docs/adr/](../adr/README.md)) is specific to configuration
-  architecture; none is referenced here as directly applicable.
+- [ADR-0007 — Support YAML, JSON, and TOML configuration files](../adr/0007-configuration-file-formats.md) —
+  the binding configuration file format decision [Configuration Sources](#configuration-sources)
+  relies on.

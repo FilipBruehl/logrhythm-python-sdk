@@ -65,3 +65,6 @@ ADR (and any dependent SPEC update) exists.
 | [0002](0002-src-layout.md) | `src` layout and package namespace | Accepted |
 | [0003](0003-quality-tooling.md) | Ruff, mypy, and pytest as quality tooling; Google-style docstrings | Accepted |
 | [0004](0004-documentation-and-adrs.md) | Markdown documentation under `/docs` and Architecture Decision Records | Accepted |
+| [0005](0005-pydantic-v2-models.md) | Use Pydantic v2 for SDK models | Accepted |
+| [0006](0006-httpx-transport.md) | Use HTTPX as HTTP transport library | Accepted |
+| [0007](0007-configuration-file-formats.md) | Support YAML, JSON, and TOML configuration files | Accepted |

@@ -37,10 +37,21 @@ rules that constrain Claude's own behavior in this repository — see
 No hooks, CI, or templates exist yet to enforce any of this automatically; it is
 applied manually until a later phase adds that tooling.
 
+**Phase A.3.2 — Dependencies & Tooling Baseline (documentation + dependency
+declarations only) — complete.** The SDK's runtime dependency baseline is now
+declared: Pydantic v2, HTTPX, and PyYAML (see
+[Dependencies & Tooling](docs/development/dependencies.md),
+[ADR-0005](docs/adr/0005-pydantic-v2-models.md),
+[ADR-0006](docs/adr/0006-httpx-transport.md), and
+[ADR-0007](docs/adr/0007-configuration-file-formats.md)), and the Pydantic mypy
+plugin is enabled. SPEC-002's previously open configuration-file-format question
+is now closed by ADR-0007.
+
 **None of this is implemented in runtime code yet.** `src/logrhythm_sdk` remains
 the Phase A.1 package skeleton: there is still no HTTP transport, authentication,
 TLS logic, configuration loader, Pydantic models, YAML/JSON/TOML handling, logging
-handlers, API clients, resources, filters, or concrete LogRhythm endpoints in code.
+handlers, API clients, resources, filters, or concrete LogRhythm endpoints in code
+— the runtime dependencies declared in Phase A.3.2 are not yet used by any code.
 Do not add these until the task at hand explicitly calls for that phase of work.
 
 ## Target architecture
@@ -70,6 +81,9 @@ Do not add these until the task at hand explicitly calls for that phase of work.
 - Documentation lives under `/docs` in Markdown; significant architecture decisions
   get an ADR under `docs/adr/` (format: Title, Status, Context, Decision,
   Consequences).
+- Runtime dependencies go in `pyproject.toml`'s `[project.dependencies]`;
+  development tools stay in `[dependency-groups.dev]`; `uv.lock` is versioned. See
+  [Dependencies & Tooling](docs/development/dependencies.md).
 
 ## Naming conventions
 
@@ -87,6 +101,10 @@ Do not add these until the task at hand explicitly calls for that phase of work.
   `pyproject.toml`).
 - Do not add `# type: ignore` without a specific reason; unused ignores are treated
   as errors.
+- The official Pydantic mypy plugin (`pydantic.mypy`) is enabled, with
+  `init_typed`, `init_forbid_extra`, and `warn_required_dynamic_aliases` set — see
+  [ADR-0005](docs/adr/0005-pydantic-v2-models.md) and
+  [Dependencies & Tooling](docs/development/dependencies.md).
 
 ## Docstrings
 
