@@ -31,6 +31,7 @@ specifications:
 | SPEC-002 | Configuration | Draft | [configuration.md](configuration.md) |
 | SPEC-003 | Authentication | Draft | [authentication.md](authentication.md) |
 | SPEC-004 | TLS | Draft | [tls.md](tls.md) |
+| SPEC-005 | Transport | Draft | [transport.md](transport.md) |
 
 ## Where this fits
 
