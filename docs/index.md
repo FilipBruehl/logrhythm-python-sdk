@@ -40,6 +40,9 @@ LogRhythm SIEM REST APIs.
 - [SPEC-007 — Exception Handling](specifications/exceptions.md) — the public
   exception hierarchy, HTTP-to-exception mapping, exception context, and
   redaction (currently `Draft`, not implemented).
+- [SPEC-008 — Models](specifications/models.md) — the Pydantic v2 model
+  hierarchy, request/response validation strictness, aliasing, and UTC date/time
+  normalization (currently `Draft`, not implemented).
 - [API Coverage Matrix](coverage/api-coverage.md) — tracks, per LogRhythm API area,
   how far each endpoint has progressed from not-yet-inventoried to implemented.
 - [Development: Contributing](development/contributing.md) — local setup and quality checks.

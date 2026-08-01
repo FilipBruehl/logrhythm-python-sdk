@@ -19,14 +19,21 @@ rules that follow from this shape, see
 
 ```text
 logrhythm_sdk/
-├── __init__.py        Public, high-level facade (e.g. a future LogRhythmClient)
-├── core/               Shared infrastructure used by every API module
-└── <api_module>/       One package per LogRhythm API area (added when implemented)
-    ├── models.py        Typed data structures for that API's resources
-    ├── filters.py        Typed query/filter builders for that API
-    ├── resources.py       Resource-oriented wrappers over the API client
-    └── client.py           Thin client binding transport + endpoints for that API
+├── __init__.py         Public, high-level facade (e.g. a future LogRhythmClient)
+├── core/                Shared infrastructure used by every API module
+│   └── models           Shared/internal SDK-wide models (see SPEC-008)
+└── <api_module>/        One package per LogRhythm API area (added when implemented)
+    ├── <resource>/        One subpackage per resource within that API area
+    │   └── models          Typed data structures for that resource (see SPEC-008)
+    ├── filters.py         Typed query/filter builders for that API
+    ├── resources.py        Resource-oriented wrappers over the API client
+    └── client.py            Thin client binding transport + endpoints for that API
 ```
+
+Model placement (nesting `models` under a per-resource subpackage rather than one
+`models.py` per API module) follows
+[SPEC-008 — Models](../specifications/models.md#model-organisation); the rest of
+this shape is unaffected by that specification.
 
 ### Central high-level facade
 

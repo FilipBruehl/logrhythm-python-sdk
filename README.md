@@ -65,9 +65,10 @@ Specifications that govern how these components are designed — starting with
 [SPEC-003 — Authentication](docs/specifications/authentication.md),
 [SPEC-004 — TLS](docs/specifications/tls.md),
 [SPEC-005 — Transport](docs/specifications/transport.md),
-[SPEC-006 — Logging](docs/specifications/logging.md), and
-[SPEC-007 — Exception Handling](docs/specifications/exceptions.md) (all currently
-`Draft`, not implemented). Per-endpoint progress is tracked in
+[SPEC-006 — Logging](docs/specifications/logging.md),
+[SPEC-007 — Exception Handling](docs/specifications/exceptions.md), and
+[SPEC-008 — Models](docs/specifications/models.md) (all currently `Draft`, not
+implemented). Per-endpoint progress is tracked in
 [docs/coverage/api-coverage.md](docs/coverage/api-coverage.md), which is currently an
 empty structure — nothing has been inventoried or implemented yet.
 
