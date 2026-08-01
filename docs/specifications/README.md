@@ -34,6 +34,7 @@ specifications:
 | SPEC-005 | Transport | Draft | [transport.md](transport.md) |
 | SPEC-006 | Logging | Draft | [logging.md](logging.md) |
 | SPEC-007 | Exception Handling | Draft | [exceptions.md](exceptions.md) |
+| SPEC-008 | Models | Draft | [models.md](models.md) |
 
 ## Where this fits
 
