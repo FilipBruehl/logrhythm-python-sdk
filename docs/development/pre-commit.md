@@ -81,7 +81,7 @@ declares its `stages:` explicitly — nothing relies on an implicit default).
 Runs on every `git commit`, via `.git/hooks/pre-commit`. Configured hooks:
 
 | Hook | Source | Purpose |
-|---|---|---|
+| --- | --- | --- |
 | `ruff-format` | `astral-sh/ruff-pre-commit` | Formatting, matching `ruff format --check .`. Auto-fixes and blocks the commit if it had to change something (see [Troubleshooting](#troubleshooting)). |
 | `ruff-check` | `astral-sh/ruff-pre-commit` | Linting, matching `ruff check .`. |
 | `trailing-whitespace` | `pre-commit/pre-commit-hooks` | Removes trailing whitespace. |
@@ -95,16 +95,19 @@ Runs on every `git commit`, via `.git/hooks/pre-commit`. Configured hooks:
 | `gitleaks` | `gitleaks/gitleaks` | Secret detection — see [Secret Detection](#secret-detection). |
 | `uv-lock` | `astral-sh/uv-pre-commit` | Keeps `uv.lock` from being committed out of date — see [uv Integration](#uv-integration). |
 | `actionlint` | `rhysd/actionlint` | Validates GitHub Actions workflow files under `.github/workflows/` — see [GitHub Actions: CI & Build](ci.md#actionlint). |
+| `markdownlint-cli2` | `DavidAnson/markdownlint-cli2` | Markdown style/consistency checking, check-only — see [Templates, Markdownlint](templates.md#markdownlint). |
 | `mypy` (local) | this repo | Static type checking, matching `mypy src/logrhythm_sdk`. |
 
-No further hooks are configured, per this phase's scope.
+A separate, `manual`-stage-only `markdownlint-cli2` hook applies `--fix`; it
+never runs as part of a git hook — see
+[Templates, Manual full-repository lint](templates.md#manual-full-repository-lint).
 
 ### Pre-Push Hook
 
 Runs on `git push`, via `.git/hooks/pre-push`, and runs **only**:
 
 | Hook | Source | Purpose |
-|---|---|---|
+| --- | --- | --- |
 | `pytest` (local) | this repo | The full test suite, matching `uv run pytest`. |
 
 This is deliberately the only push-time check. The full test suite is slower
@@ -251,3 +254,5 @@ uv run pre-commit install --hook-type pre-push
 - [Claude Workflow & Architecture Governance](claude-workflow.md) — Claude's
   commit/push rules, which this automation runs underneath.
 - [GitHub Actions: CI & Build](ci.md) — the same hooks running server-side.
+- [Repository Templates & Markdown Tooling](templates.md) — the
+  `markdownlint-cli2` configuration and manual `--fix` invocation in detail.

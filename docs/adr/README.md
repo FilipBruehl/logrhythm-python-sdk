@@ -11,7 +11,12 @@ Each ADR contains:
 - **Status** (e.g. `Proposed`, `Accepted`, `Superseded`)
 - **Context** — the situation and forces at play
 - **Decision** — what was decided
+- **Alternatives** — what else was considered, and why it was not chosen
+  (omit only if there genuinely was no other option worth naming)
 - **Consequences** — the resulting tradeoffs, positive and negative
+
+See [`docs/templates/adr-template.md`](../templates/adr-template.md) for a
+ready-to-copy skeleton in this format.
 
 ## When an ADR is required
 
@@ -60,7 +65,7 @@ ADR (and any dependent SPEC update) exists.
 ## Index
 
 | # | Title | Status |
-|---|-------|--------|
+| --- | ------- | -------- |
 | [0001](0001-python-313.md) | Python 3.13 as the development baseline | Accepted |
 | [0002](0002-src-layout.md) | `src` layout and package namespace | Accepted |
 | [0003](0003-quality-tooling.md) | Ruff, mypy, and pytest as quality tooling; Google-style docstrings | Accepted |

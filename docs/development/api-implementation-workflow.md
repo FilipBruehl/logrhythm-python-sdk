@@ -10,6 +10,27 @@ future work; no API area is implemented yet as part of this foundation phase.
 > be filled in with an assumption. An honestly incomplete implementation is preferred
 > over a confident, invented one.
 
+## API Endpoint issue
+
+Before or during steps 1–4 below, an [API Endpoint issue](../../.github/ISSUE_TEMPLATE/api-endpoint.yml)
+may be the right way to plan and collaborate on an endpoint before writing the
+implementation spec in step 3. It is a planning and collaboration tool only —
+it never replaces the SPECs, an ADR, official vendor documentation, the
+[API Coverage Matrix](../coverage/api-coverage.md), or tests (see
+[Template Governance](templates.md#template-governance)).
+
+- **Required** for external contributors, shared planning, architecture
+  alignment, gathering vendor information collaboratively, or a larger or
+  unclear endpoint.
+- **Recommended** for a complex endpoint, several related endpoints
+  implemented together, incomplete vendor documentation, or open modeling
+  questions.
+- **Optional** for solo development of a fully documented endpoint headed
+  for immediate implementation with no open architecture question.
+
+See [Templates, API Endpoint issue](templates.md#api-endpoint-issue) for the
+full rule set.
+
 ## Steps
 
 1. **Capture the official documentation page.** Record which LogRhythm documentation
@@ -20,7 +41,9 @@ future work; no API area is implemented yet as part of this foundation phase.
    undocumented.
 3. **Create a compressed Markdown implementation spec.** Summarize step 2 into a
    concise spec that will drive the implementation, stored alongside the relevant
-   development materials.
+   development materials. The
+   [API Resource template](../templates/api-resource-template.md) is a helper
+   for this step — see [Templates](templates.md#available-templates).
 4. **Define the SDK mapping.** Decide how the documented API maps onto the SDK's
    conventions: API area, resource, and the per-resource models, filters, sorting,
    and options it needs, plus the corresponding resource and client methods.

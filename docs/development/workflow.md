@@ -40,7 +40,7 @@ style already established in Phases A.1–A.3.
 ## Workflow documents
 
 | Document | Covers |
-|---|---|
+| --- | --- |
 | [Branch Types & Branch Strategy](branching.md) | `main`, `integration/*`, `feature/*`, `fix/*`; creation, updates, merge order, lifecycle, deletion. |
 | [Commit Strategy](commits.md) | Conventional Commits, allowed types, scopes, commit size/content, linear history. |
 | [Pull Requests](pull-requests.md) | When a PR is required, required content, Definition of Review, merge prerequisites, Branch Protection recommendations. |
@@ -53,18 +53,21 @@ style already established in Phases A.1–A.3.
 | [Contributing](contributing.md) | Local setup and required quality commands. |
 | [Pre-Commit & Local Code Quality Automation](pre-commit.md) | Local git hooks (pre-commit/pre-push), secret detection, the `uv-lock` hook, and the local quality check (`pre-commit run --all-files`). |
 | [GitHub Actions: CI & Build](ci.md) | Server-side `CI / quality` → `CI / test` pipeline, the separate build/package-verification workflow, actionlint, SHA-pinning, and Branch Protection recommendations. |
+| [Repository Templates & Markdown Tooling](templates.md) | The pull request template, issue forms, document templates, Template Governance, and markdownlint. |
 | [API Implementation Workflow](api-implementation-workflow.md) | The process for implementing a new LogRhythm API area. |
 
 ## What is and isn't automated yet
 
 Formatting, linting, type checking, basic file hygiene, secret detection,
-lockfile freshness, and workflow linting are enforced both locally (git hooks,
-see [Pre-Commit & Local Code Quality Automation](pre-commit.md)) and
-server-side (see [GitHub Actions: CI & Build](ci.md)) on every pull request
-and relevant push; the full test suite runs before every push locally and as
-part of CI; packaging is independently verified by a separate build workflow.
-What remains manual, applied by hand rather than enforced by tooling: actual
-branch protection settings (documented, not yet configured in GitHub), PR and
-issue templates, Claude Code settings, commit-message linting, Markdown
-linting, and release/publish automation (planned for Phase A.3.7) — these
-remain later steps or phases.
+lockfile freshness, workflow linting, and Markdown linting are enforced both
+locally (git hooks, see
+[Pre-Commit & Local Code Quality Automation](pre-commit.md)) and server-side
+(see [GitHub Actions: CI & Build](ci.md)) on every pull request and relevant
+push; the full test suite runs before every push locally and as part of CI;
+packaging is independently verified by a separate build workflow. A pull
+request template and GitHub Issue Forms now standardize contribution intake
+(see [Repository Templates & Markdown Tooling](templates.md)). What remains
+manual, applied by hand rather than enforced by tooling: actual branch
+protection settings (documented, not yet configured in GitHub), Claude Code
+settings, commit-message linting, and release/publish automation (planned
+for Phase A.3.7) — these remain later steps or phases.

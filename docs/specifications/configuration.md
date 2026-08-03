@@ -1,7 +1,7 @@
 # SPEC-002 — Configuration
 
 | Field | Value |
-|---|---|
+| --- | --- |
 | ID | SPEC-002 |
 | Status | Draft |
 | Phase | A.2.3 |

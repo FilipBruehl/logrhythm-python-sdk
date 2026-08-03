@@ -1,7 +1,7 @@
 # SPEC-009 — Filters, Pagination, Sorting and Options
 
 | Field | Value |
-|---|---|
+| --- | --- |
 | ID | SPEC-009 |
 | Status | Draft |
 | Phase | A.2.10 |

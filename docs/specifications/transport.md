@@ -1,7 +1,7 @@
 # SPEC-005 — Transport
 
 | Field | Value |
-|---|---|
+| --- | --- |
 | ID | SPEC-005 |
 | Status | Draft |
 | Phase | A.2.6 |
@@ -274,7 +274,7 @@ Request-specific headers
 **Status codes:**
 
 | Range | Treatment |
-|---|---|
+| --- | --- |
 | `2xx` | Success. |
 | `3xx` | Treated as an error — version 1 does not follow redirects by default (see below), so a redirect response is not a normal outcome. |
 | `4xx` / `5xx` | Recognized as HTTP-level errors by `Transport`; translated into SDK exceptions later, by a future exception-handling specification (see [Error Behaviour](#error-behaviour)). |

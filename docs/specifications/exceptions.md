@@ -1,7 +1,7 @@
 # SPEC-007 — Exception Handling
 
 | Field | Value |
-|---|---|
+| --- | --- |
 | ID | SPEC-007 |
 | Status | Draft |
 | Phase | A.2.8 |
@@ -260,7 +260,7 @@ The conceptual mapping from HTTP status to `ApiError` subclass (see
 [API Errors](#api-errors)):
 
 | Status | Exception |
-|---|---|
+| --- | --- |
 | `401` | `AuthenticationError` |
 | `403` | `AuthorizationError` |
 | `404` | `ResourceNotFoundError` |

@@ -61,8 +61,23 @@ and a separate `Build` workflow that builds and verifies the package (never
 publishing) when packaging-relevant files change — see
 [GitHub Actions: CI & Build](docs/development/ci.md). Branch protection rules
 are documented there but **not yet configured** in GitHub — that remains a
-manual step. No publish workflow, release automation, or PR/issue templates
-exist yet; publishing is deferred to Phase A.3.7 (not yet started).
+manual step. No publish workflow or release automation exists yet; publishing
+is deferred to Phase A.3.7 (not yet started).
+
+**Phase A.3.5 — Repository Templates & Documentation Tooling (templates +
+local/CI Markdown linting) — complete.** A shared pull request template, four
+GitHub Issue Forms (bug report, feature request, API endpoint, and the issue
+chooser config), and three document templates (ADR, Specification, API
+Resource) now exist under `.github/` and `docs/templates/` — see
+[Repository Templates & Markdown Tooling](docs/development/templates.md).
+Markdown is now linted (`markdownlint-cli2`, check-only) both locally via
+pre-commit and server-side via the existing CI quality job — no new workflow
+was needed. Templates are exclusively a helper: a SPEC, ADR, or workflow
+document always wins over a template — see
+[Template Governance](docs/development/templates.md#template-governance).
+Still no PR/issue-template automation beyond the templates themselves (no
+CODEOWNERS, no commit-message linting), and still no publish/release
+automation (Phase A.3.7).
 
 **None of this is implemented in runtime code yet.** `src/logrhythm_sdk` remains
 the Phase A.1 package skeleton: there is still no HTTP transport, authentication,
@@ -179,6 +194,11 @@ gap with an assumption. See
 - Per-endpoint implementation progress belongs in
   [docs/coverage/api-coverage.md](docs/coverage/api-coverage.md), not invented ahead
   of the actual documentation inventory.
+- [Templates](docs/development/templates.md) under `.github/` and
+  `docs/templates/` (PR template, issue forms, ADR/SPEC/API-Resource
+  skeletons) are a starting point, never a substitute for the SPEC/ADR/
+  workflow-document content they help produce — see
+  [Template Governance](docs/development/templates.md#template-governance).
 
 ## Change discipline
 

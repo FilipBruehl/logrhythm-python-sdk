@@ -1,0 +1,19 @@
+{
+  // markdownlint-cli2-specific configuration. Rule configuration itself
+  // lives in .markdownlint.jsonc, which markdownlint-cli2 discovers
+  // automatically — not duplicated here.
+  // See docs/development/templates.md#markdownlint.
+
+  // Respect .gitignore (ignored files — .venv/, build/dist artifacts,
+  // caches, etc. — are never linted), including when specific filenames are
+  // passed on the command line (as the pre-commit hook does).
+  "gitignore": true
+
+  // Deliberately no top-level "globs" here: the pre-commit hook passes only
+  // the changed Markdown files as arguments (fast, incremental, like the
+  // Ruff/mypy hooks). A "globs" entry would be *appended* to those
+  // arguments, forcing every invocation to re-lint the entire repository
+  // regardless of what changed. For a full-repository lint, pass the glob
+  // explicitly on the command line — see
+  // docs/development/templates.md#markdownlint for the exact command.
+}

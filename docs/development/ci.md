@@ -12,8 +12,8 @@ introduced here — see [Build vs. Publish](#build-vs-publish).
 
 - **`ci.yml`** reproduces the local quality gates (formatting, linting, type
   checking, file hygiene, secret detection, lockfile freshness, workflow
-  linting) and the test suite, server-side, so a check does not depend on
-  whether a contributor's local hooks actually ran.
+  linting, Markdown linting) and the test suite, server-side, so a check does
+  not depend on whether a contributor's local hooks actually ran.
 - **`build.yml`** independently confirms the SDK can be built into
   distributable artifacts (wheel + sdist) and that those artifacts actually
   install and import correctly — without publishing them anywhere.
@@ -38,7 +38,7 @@ filters on the PR's **target** branch, not its source.
   packaging- or runtime-relevant path changed.
 - `push` to `main` (not `integration/**` — build verification for an
   in-progress integration effort happens through the PRs that feed it,
-  per [Branch Strategy, Model B](branching.md#model-b-larger-work-package-integration-branch)).
+  per [Branch Strategy, Model B](branching.md#model-b--larger-work-package-integration-branch)).
 - `workflow_dispatch`.
 
 Path filter (`paths:`), applied to both `pull_request` and `push`:
@@ -75,7 +75,7 @@ test
   entire pre-commit-stage hook set from
   [`.pre-commit-config.yaml`](../../.pre-commit-config.yaml) — Ruff format,
   Ruff check, mypy, gitleaks, the `uv-lock` freshness check, file-hygiene
-  hooks, and actionlint — via one command:
+  hooks, actionlint, and markdownlint-cli2 — via one command:
 
   ```bash
   uv run pre-commit run --all-files --show-diff-on-failure
@@ -163,8 +163,8 @@ to any registry.
 **Build is not publishing.** `build.yml` only confirms the package builds and
 installs correctly; it has no credentials, no registry access, and no step
 that could publish anything, by construction (see
-[Permissions](#least-privilege-permissions) and
-[Actions & SHA Pinning](#actions-sha-pinning)). Ordinary pull requests and
+[Permissions](#least-privilege--permissions) and
+[Actions & SHA Pinning](#actions--sha-pinning)). Ordinary pull requests and
 pushes — including to `main` — can **never** publish a package through this
 phase's automation.
 
@@ -179,11 +179,12 @@ prematurely lock in a design for a problem it isn't solving yet.
 ## Local equivalents
 
 | CI check | Local equivalent |
-|---|---|
+| --- | --- |
 | `quality` job | `uv run pre-commit run --all-files` — see [Pre-Commit, Local quality check](pre-commit.md#local-quality-check). |
 | `test` job | `uv run pytest` (add `--cov-report=xml` to also produce the XML report locally). |
 | `build` job | `uv build`, then the same verification steps — see [`.github/scripts/verify_package.py`](../../.github/scripts/verify_package.py); can be run manually with `uv venv .verify-venv && uv pip install --python .verify-venv dist/*.whl && uv run python .github/scripts/verify_package.py --installed-python .verify-venv/bin/python` (adjust the interpreter path on Windows: `.verify-venv/Scripts/python.exe`). |
 | `actionlint` | Runs automatically as part of `pre-commit run --all-files` (see [actionlint](#actionlint)). |
+| `markdownlint-cli2` | Runs automatically as part of `pre-commit run --all-files` (see [Templates, Markdownlint](templates.md#markdownlint)). |
 
 Passing everything locally before pushing means CI is confirming, not
 discovering, problems.
@@ -199,7 +200,7 @@ stable status check names are:
 
 `build.yml` (`name: Build`, job `build`) would produce `Build / build`, but
 is **not** configured as a universally required status check (see
-[Branch Protection](#branch-protection-rulesets-recommendations)), because it
+[Branch Protection](#branch-protection--rulesets-recommendations)), because it
 deliberately does not run for non-packaging-relevant changes — a required
 check that sometimes never starts would permanently block merging.
 
@@ -262,7 +263,7 @@ corresponding released version in a trailing comment — never a mutable tag
 or branch:
 
 | Action | Pinned at | Used for |
-|---|---|---|
+| --- | --- | --- |
 | `actions/checkout` | `3d3c42e5aac5ba805825da76410c181273ba90b1` (`v7.0.1`) | Checking out the repository. |
 | `astral-sh/setup-uv` | `c771a70e6277c0a99b617c7a806ffedaca235ff9` (`v9.0.0`) | Installing uv and Python 3.13. |
 | `actions/upload-artifact` | `043fb46d1a93c77aae656e7c1c64a875d1fc6a0a` (`v7.0.1`) | Uploading `distribution-packages` in `build.yml`. |
@@ -384,7 +385,7 @@ guaranteed on every GitHub tier):
 
 - Require a pull request before merging (covers `feature/*`/`fix/*` branches
   merging into the integration branch, per
-  [Branch Strategy, Model B](branching.md#model-b-larger-work-package-integration-branch)).
+  [Branch Strategy, Model B](branching.md#model-b--larger-work-package-integration-branch)).
 - Require the same status checks: `CI / quality`, `CI / test`.
 - Block direct pushes and force pushes.
 - No approval requirement (consistent with `main`'s current one-person

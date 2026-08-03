@@ -25,7 +25,7 @@ reference a specification regardless of later title or filename changes. Current
 specifications:
 
 | ID | Title | Status | File |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | SPEC-000 | Design Principles | Draft | [design-principles.md](design-principles.md) |
 | SPEC-001 | SDK Client | Draft | [sdk-client.md](sdk-client.md) |
 | SPEC-002 | Configuration | Draft | [configuration.md](configuration.md) |
@@ -71,7 +71,7 @@ what the code actually does.
 A specification moves through the following statuses:
 
 | Status | Meaning |
-|---|---|
+| --- | --- |
 | `Draft` | Being written or actively discussed; not yet reviewed as a whole. Implementation must not start from a Draft. |
 | `In Review` | Complete and under review by maintainers/contributors. |
 | `Accepted` | Reviewed and approved as the target design; meets the [Review Criteria](#review-criteria) below. Implementation may begin or continue against it. |
@@ -118,7 +118,12 @@ or `In Review` until the gap is closed.
 ## Change process
 
 1. Propose the specification (new file) or the change (edit to an existing file) as
-   part of a small, reviewable change, per [CLAUDE.md](../../CLAUDE.md).
+   part of a small, reviewable change, per [CLAUDE.md](../../CLAUDE.md). The
+   [Specification template](../templates/specification-template.md) is a
+   starting-point skeleton for a new file — see
+   [Repository Templates](../development/templates.md) — but this page
+   remains the normative source for the numbering, status model, and Review
+   Criteria it does not repeat.
 2. State the status at the top of the file at all times, per the status model above.
 3. If a proposed change would contradict or replace an existing ADR's decision, raise
    a new or updated ADR first — a specification implements a decision, it does not

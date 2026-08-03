@@ -1,7 +1,7 @@
 # SPEC-003 — Authentication
 
 | Field | Value |
-|---|---|
+| --- | --- |
 | ID | SPEC-003 |
 | Status | Draft |
 | Phase | A.2.4 |

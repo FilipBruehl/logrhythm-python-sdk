@@ -25,7 +25,7 @@ Every commit message follows [Conventional Commits](https://www.conventionalcomm
 ## Allowed commit types
 
 | Type | Use for |
-|---|---|
+| --- | --- |
 | `feat` | A new capability — a new resource, endpoint, model, or SPEC-driven feature. |
 | `fix` | A bug fix. Pairs naturally with a `fix/*` branch (see [Branch Types](branching.md#fix)). |
 | `docs` | A documentation-only change — this is how the excluded `docs/*` branch category is actually represented (see [Branch Types](branching.md#not-part-of-the-official-workflow)). |
@@ -160,7 +160,7 @@ of change are represented through commit types and existing branch types
 instead:
 
 | Excluded category | How it's actually handled |
-|---|---|
+| --- | --- |
 | `docs/*` | A `docs:` commit on an ordinary `feature/*` branch (or `integration/developer-infrastructure` for a larger documentation effort). |
 | `refactor/*` | A `refactor:` commit on an ordinary `feature/*` branch. |
 | `hotfix/*` | A `fix/*` branch created from `main` — no separate hotfix concept, since `main` is always releasable (see [Branch Types](branching.md#main)). |

@@ -1,0 +1,27 @@
+{
+  // Rule configuration for markdownlint / markdownlint-cli2.
+  // See docs/development/templates.md#markdownlint for the rationale and the
+  // process for adjusting anything here.
+  //
+  // Starting point per Phase A.3.5: only the two rules called out as
+  // unsuitable for this repository's documentation style are adjusted below.
+  // Every other rule is left at its default (enabled) and satisfied by
+  // fixing the documents instead of loosening the rule — no blanket
+  // rule disabling.
+
+  // MD013 (line-length): disabled. Prose wrapping in this repository is an
+  // authoring-style choice (see e.g. docs/specifications/*), not something
+  // meaningful to enforce mechanically at a fixed column count.
+  "MD013": false,
+
+  // MD024 (no-duplicate-heading): restricted to sibling headings only. This
+  // repository's SPEC/ADR series deliberately reuses the same generic
+  // subheadings (e.g. "## Decision", "## Consequences", "## References")
+  // across many independent documents, and within one document across
+  // unrelated top-level sections — that repetition is intentional structure,
+  // not a duplicate-heading mistake. Restricting the rule to siblings still
+  // catches an actual duplicate heading under the same parent.
+  "MD024": {
+    "siblings_only": true
+  }
+}

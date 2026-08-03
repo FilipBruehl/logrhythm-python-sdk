@@ -1,9 +1,13 @@
 # Pull Requests
 
 This page defines when a pull request is required, what it must contain, how
-it is reviewed, and what must be true before it can be merged. No PR or issue
-template is created in this phase (see Scope); the requirements below are
-applied manually until a template exists.
+it is reviewed, and what must be true before it can be merged. The
+[pull request template](../../.github/pull_request_template.md) — one shared
+template for every PR, per
+[Repository Templates & Markdown Tooling](templates.md) — mirrors the
+requirements below as fill-in-the-blank sections and a checklist; this page
+remains the normative source if the two ever disagree (see
+[Template Governance](templates.md#template-governance)).
 
 ## When a PR is required
 
@@ -13,7 +17,7 @@ applied manually until a template exists.
 - Every `feature/*`/`fix/*` branch merging into an `integration/*` branch also
   goes through a PR, so each resource receives the same review discipline
   before the combined integration effort reaches `main` (see
-  [Branch Strategy, Model B](branching.md#model-b-larger-work-package-integration-branch)).
+  [Branch Strategy, Model B](branching.md#model-b--larger-work-package-integration-branch)).
 - This applies regardless of author (human or Claude) and regardless of change
   size — there is no "too small for a PR" exception once work leaves a
   contributor's local branch.
@@ -83,14 +87,14 @@ A PR may be merged only once:
   so the merge lands as a linear, fast-forward-style merge.
 - For an `integration/*` branch: every planned `feature/*`/`fix/*` branch for
   that effort has already been merged into it (see
-  [Branch Strategy, Model B](branching.md#model-b-larger-work-package-integration-branch)).
+  [Branch Strategy, Model B](branching.md#model-b--larger-work-package-integration-branch)).
 
 ## Branch Protection
 
 Concrete branch protection / ruleset recommendations — including the required
 status checks `CI / quality` and `CI / test` now that
 [GitHub Actions: CI & Build](ci.md) exists — are documented in
-[GitHub Actions: CI & Build, Branch Protection / Rulesets recommendations](ci.md#branch-protection-rulesets-recommendations).
+[GitHub Actions: CI & Build, Branch Protection / Rulesets recommendations](ci.md#branch-protection--rulesets-recommendations).
 These are **not** configured through the GitHub API or UI as part of any
 phase so far; they are applied by hand, per that page.
 
@@ -103,3 +107,5 @@ phase so far; they are applied by hand, per that page.
   checks, and branch protection recommendations.
 - [Claude Workflow](claude-workflow.md#pull-requests) — Claude's specific PR
   permissions.
+- [Repository Templates & Markdown Tooling](templates.md) — the pull request
+  template, issue forms, and document templates.

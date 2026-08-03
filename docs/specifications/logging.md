@@ -1,7 +1,7 @@
 # SPEC-006 — Logging
 
 | Field | Value |
-|---|---|
+| --- | --- |
 | ID | SPEC-006 |
 | Status | Draft |
 | Phase | A.2.7 |

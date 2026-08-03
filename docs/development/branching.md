@@ -171,7 +171,7 @@ main
 ### Origin and destination at a glance
 
 | Branch | Entsteht von | Merge nach |
-|---|---|---|
+| --- | --- | --- |
 | `main` | – | – |
 | `integration/*` | `main` | `main` |
 | `feature/*` | `main` oder `integration/*` | Ursprungsbranch |

@@ -78,6 +78,9 @@ LogRhythm SIEM REST APIs.
 - [GitHub Actions: CI & Build](development/ci.md) — the server-side `CI / quality`
   → `CI / test` pipeline, the separate build/package-verification workflow,
   actionlint, SHA-pinning, and Branch Protection recommendations.
+- [Repository Templates & Markdown Tooling](development/templates.md) — the
+  pull request template, GitHub Issue Forms, document templates (ADR, SPEC,
+  API Resource), Template Governance, and markdownlint.
 - [Claude Workflow & Architecture Governance](development/claude-workflow.md) — why
   Claude never makes architecture decisions alone, Claude's branch/commit/push/PR
   permissions, and Git Safety Rules.

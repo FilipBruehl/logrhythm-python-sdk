@@ -1,7 +1,7 @@
 # SPEC-004 — TLS
 
 | Field | Value |
-|---|---|
+| --- | --- |
 | ID | SPEC-004 |
 | Status | Draft |
 | Phase | A.2.5 |

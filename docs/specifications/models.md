@@ -1,7 +1,7 @@
 # SPEC-008 — Models
 
 | Field | Value |
-|---|---|
+| --- | --- |
 | ID | SPEC-008 |
 | Status | Draft |
 | Phase | A.2.9 |

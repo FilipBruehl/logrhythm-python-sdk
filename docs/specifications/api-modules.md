@@ -1,7 +1,7 @@
 # SPEC-010 — API Modules
 
 | Field | Value |
-|---|---|
+| --- | --- |
 | ID | SPEC-010 |
 | Status | Draft |
 | Phase | A.2.11 |

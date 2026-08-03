@@ -1,7 +1,7 @@
 # SPEC-001 — SDK Client
 
 | Field | Value |
-|---|---|
+| --- | --- |
 | ID | SPEC-001 |
 | Status | Draft |
 | Phase | A.2.2 |

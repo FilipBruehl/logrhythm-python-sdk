@@ -9,7 +9,7 @@ needs its own ADR).
 ## Runtime dependencies
 
 | Dependency | Version range | Used for | Decision |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `pydantic` | `>=2.9,<3` | The SDK's exclusive model layer (public and internal, request and response). | [ADR-0005](../adr/0005-pydantic-v2-models.md) |
 | `httpx` | `>=0.27,<1` | The SDK's sole underlying HTTP library, fully encapsulated behind `Transport`. | [ADR-0006](../adr/0006-httpx-transport.md) |
 | `pyyaml` | `>=6.0,<7` | Parsing YAML configuration files (safe-loading only). | [ADR-0007](../adr/0007-configuration-file-formats.md) |
