@@ -2,9 +2,10 @@
 # See docs/development/pre-commit.md for installation, usage, and troubleshooting.
 #
 # Hooks are explicitly pinned to the `pre-commit` git-hook stage unless noted
-# otherwise, so that `pre-commit install` (commit-time) and
-# `pre-commit install --hook-type pre-push` (push-time) each run only the
-# hooks intended for that stage.
+# otherwise, so that `pre-commit install` (commit-time),
+# `pre-commit install --hook-type pre-push` (push-time), and
+# `pre-commit install --hook-type commit-msg` (commit-message-time) each run
+# only the hooks intended for that stage.
 
 repos:
   # Formatting and linting (Ruff) — mirrors the project's required quality
@@ -101,3 +102,39 @@ repos:
         pass_filenames: false
         always_run: true
         stages: [pre-push]
+
+      # Commit-msg only: exact-lowercase commit-type check. Runs before
+      # conventional-pre-commit below to catch a gap that tool's own default
+      # (and --strict) mode leaves open: it does not reject a valid type in
+      # the wrong case (e.g. `Feat(config): ...`), confirmed empirically —
+      # see docs/development/claude-code.md#commit-message-validation. The
+      # allowed-type list and extraction/casing logic live in the single,
+      # shared .github/scripts/commit_types.py module, imported (not
+      # re-implemented) by .github/scripts/validate_commits.py as well, so
+      # the local hook and CI never diverge on this rule.
+      - id: commit-type-lowercase
+        name: commit-type-lowercase
+        entry: uv run python .github/scripts/commit_types.py
+        language: system
+        stages: [commit-msg]
+
+      # Commit-msg only: Conventional Commit message validation, matching the
+      # exact allowed-type list in docs/development/commits.md (restated here
+      # because this is a third-party tool's own CLI argument list, not
+      # importable from .github/scripts/commit_types.py — that module remains
+      # the one normative, importable source for Python-side code). Deliberately
+      # no `--strict`: strict mode also rejects merge and fixup!/squash!
+      # commits outright, which would block normal local work (see
+      # docs/development/claude-code.md#commit-message-validation for the
+      # empirically tested behavior this relies on). `--scopes`/
+      # `--force-scope` are deliberately omitted too — scopes stay optional
+      # and unconstrained to a fixed enum, per
+      # docs/development/commits.md#recommended-scopes. Runs via the project's
+      # own uv-managed environment (language: system), the same
+      # uv.lock-pinned version `.github/scripts/validate_commits.py` uses —
+      # not pre-commit's own isolated mirror environment.
+      - id: conventional-pre-commit
+        name: conventional-pre-commit
+        entry: uv run conventional-pre-commit feat fix docs refactor test chore perf style build ci revert
+        language: system
+        stages: [commit-msg]

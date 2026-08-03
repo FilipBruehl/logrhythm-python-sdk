@@ -12,8 +12,9 @@ introduced here — see [Build vs. Publish](#build-vs-publish).
 
 - **`ci.yml`** reproduces the local quality gates (formatting, linting, type
   checking, file hygiene, secret detection, lockfile freshness, workflow
-  linting, Markdown linting) and the test suite, server-side, so a check does
-  not depend on whether a contributor's local hooks actually ran.
+  linting, Markdown linting), Conventional Commit message validation, and the
+  test suite, server-side, so a check does not depend on whether a
+  contributor's local hooks actually ran.
 - **`build.yml`** independently confirms the SDK can be built into
   distributable artifacts (wheel + sdist) and that those artifacts actually
   install and import correctly — without publishing them anywhere.
@@ -63,14 +64,79 @@ goes through — depends on it; a change there is a signal the build
 environment's tooling contract changed. The workflow's own file and the
 verification script are included so that editing either re-validates itself.
 
+## Commit-message job
+
+`commit-message` validates every commit a pull request or push actually
+introduces against [Commit Strategy](commits.md), using
+[`.github/scripts/validate_commits.py`](../../.github/scripts/validate_commits.py),
+the project's `conventional-pre-commit` dev dependency, and the shared
+[`.github/scripts/commit_types.py`](../../.github/scripts/commit_types.py)
+exact-lowercase check — the exact same tool, version, allowed-type list, and
+casing rule the local `commit-msg` hooks use (see
+[Claude Code, Commit message validation](claude-code.md#commit-message-validation)
+for the full tool behavior, special-case handling, and empirically tested
+results this job relies on). It runs in parallel with `quality`, and `test`
+now requires both to succeed — see [CI Pipeline](#ci-pipeline-quality--test)
+below.
+
+Unlike the other jobs, its checkout uses `fetch-depth: 0` (full history)
+rather than `fetch-depth: 1` — resolving an arbitrary `base..head` range
+needs history a shallow clone would not have. This is the one, explicitly
+scoped exception to this project's otherwise-minimal-checkout policy (see
+[Least-Privilege & Permissions](#least-privilege--permissions)); every other
+job keeps `fetch-depth: 1`.
+
+## CI commit range
+
+The commit range `commit-message` validates depends on what triggered the
+workflow, resolved in a dedicated step before validation runs:
+
+| Trigger | Base | Head |
+| --- | --- | --- |
+| `pull_request` | `github.event.pull_request.base.sha` | `github.event.pull_request.head.sha` |
+| `push` | `github.event.before` | `github.sha` |
+| `workflow_dispatch` | *(none)* | `github.sha` |
+
+All four values come from GitHub-controlled SHA fields (never free-text like
+a PR title or commit message) and are passed into the range-resolution step
+through `env:` rather than interpolated directly into the `run:` script, as
+a defense-in-depth practice consistent with
+[Least-Privilege & Permissions](#least-privilege--permissions).
+
+[`validate_commits.py`](../../.github/scripts/validate_commits.py) then
+applies two documented, non-silent fallbacks rather than guessing at a
+range it cannot reliably compute:
+
+- **No base at all** (`workflow_dispatch`), or a **`push` whose `before` is
+  git's all-zeros sentinel** (`0000000000000000000000000000000000000000`,
+  meaning a new branch/ref's first push has no prior history to diff
+  against) — falls back to validating `head` alone. This is always exactly
+  one commit, never zero, so it cannot masquerade as an empty range passing
+  silently.
+- **An explicit `base`/`head` pair that resolves to zero commits** (should
+  not normally happen) — treated as a hard failure, not a silent pass, per
+  this phase's explicit requirement that an empty or undeterminable range
+  must never be reported as successfully validated.
+
+Enumeration itself uses `git rev-list --first-parent --reverse base..head`:
+`--first-parent` means a merge commit landing directly on the branch being
+validated (for example, a PR merged into `main` via GitHub's "Create a merge
+commit" strategy) is still seen and structurally recognized as a merge
+commit — see
+[Claude Code, Special-case handling](claude-code.md#special-case-handling-merge-revert-fixupsquash)
+— without also re-walking and re-validating every individual commit from
+the branch it merged in, which would already have been validated by that
+branch's own pull request.
+
 ## CI Pipeline: `quality` → `test`
 
 ```text
-quality
-   ↓
-test
+commit-message ─┐
+quality         ├──> test
 ```
 
+- **`commit-message`** runs first (in parallel with `quality`) — see
+  [Commit-message job](#commit-message-job) above.
 - **`quality`** runs first, on `ubuntu-latest` with Python 3.13. It runs the
   entire pre-commit-stage hook set from
   [`.pre-commit-config.yaml`](../../.pre-commit-config.yaml) — Ruff format,
@@ -85,8 +151,8 @@ test
   in `.pre-commit-config.yaml`, and `pre-commit run` without
   `--hook-stage pre-push` only runs `pre-commit`-stage hooks (see
   [Pre-Commit & Local Code Quality Automation, Hook types](pre-commit.md#hook-types)).
-- **`test`** declares `needs: quality`, so it never starts if `quality`
-  fails, and runs on the same platform/Python version. It installs
+- **`test`** declares `needs: [commit-message, quality]`, so it never starts
+  if either job fails, and runs on the same platform/Python version. It installs
   dependencies the same way, then runs:
 
   ```bash
@@ -180,6 +246,7 @@ prematurely lock in a design for a problem it isn't solving yet.
 
 | CI check | Local equivalent |
 | --- | --- |
+| `commit-message` job | The `commit-msg` git hook, which runs automatically on every local `git commit` — see [Pre-Commit, Installation](pre-commit.md#installation). To check an already-made commit or range manually: `uv run python .github/scripts/validate_commits.py --head <sha>` (or `--base <sha> --head <sha>` for a range). |
 | `quality` job | `uv run pre-commit run --all-files` — see [Pre-Commit, Local quality check](pre-commit.md#local-quality-check). |
 | `test` job | `uv run pytest` (add `--cov-report=xml` to also produce the XML report locally). |
 | `build` job | `uv build`, then the same verification steps — see [`.github/scripts/verify_package.py`](../../.github/scripts/verify_package.py); can be run manually with `uv venv .verify-venv && uv pip install --python .verify-venv dist/*.whl && uv run python .github/scripts/verify_package.py --installed-python .verify-venv/bin/python` (adjust the interpreter path on Windows: `.verify-venv/Scripts/python.exe`). |
@@ -192,9 +259,10 @@ discovering, problems.
 ## Status check names
 
 GitHub names a status check `<workflow name> / <job name>`. With
-`name: CI` in `ci.yml` and jobs named `quality` and `test`, the resulting,
-stable status check names are:
+`name: CI` in `ci.yml` and jobs named `commit-message`, `quality`, and
+`test`, the resulting, stable status check names are:
 
+- `CI / commit-message`
 - `CI / quality`
 - `CI / test`
 
@@ -248,13 +316,20 @@ permissions:
 ```
 
 No write scope, and no `pull-requests`, `packages`, `releases`,
-`deployments`, or `id-token` permission is granted — neither job needs to
+`deployments`, or `id-token` permission is granted — no job needs to
 write to the repository, comment on a PR, publish a package, create a
 release, deploy anywhere, or mint an OIDC token. Checkout uses
 `persist-credentials: false` (the checked-out `.git` config never retains a
-usable token) and `fetch-depth: 1` (a shallow clone — no job needs history).
-Neither workflow uses `pull_request_target`, and neither uses any repository
-secret.
+usable token) and, for every job except `commit-message`, `fetch-depth: 1`
+(a shallow clone — no other job needs history; see
+[Commit-message job](#commit-message-job) for that one, explicitly scoped
+exception). Neither workflow uses `pull_request_target`, and neither uses
+any repository secret. The `commit-message` job additionally passes every
+GitHub-context SHA value through `env:` rather than interpolating it
+directly into a `run:` script — the values themselves are GitHub-controlled
+SHAs, not attacker-influenceable free text, but the indirection is a cheap,
+standard defense-in-depth practice against the general class of
+`${{ }}`-expression injection in `run:` steps.
 
 ## Actions & SHA Pinning
 
@@ -368,6 +443,7 @@ of this phase — the rules below are to be applied manually.
 - Block force pushes.
 - Block branch deletion.
 - Require status checks to pass before merging:
+  - `CI / commit-message`
   - `CI / quality`
   - `CI / test`
 - Require the branch to be up to date with `main` before merging.
@@ -386,7 +462,8 @@ guaranteed on every GitHub tier):
 - Require a pull request before merging (covers `feature/*`/`fix/*` branches
   merging into the integration branch, per
   [Branch Strategy, Model B](branching.md#model-b--larger-work-package-integration-branch)).
-- Require the same status checks: `CI / quality`, `CI / test`.
+- Require the same status checks: `CI / commit-message`, `CI / quality`,
+  `CI / test`.
 - Block direct pushes and force pushes.
 - No approval requirement (consistent with `main`'s current one-person
   constellation).
@@ -403,9 +480,13 @@ scope.
 
 Per Scope: publishing to PyPI/TestPyPI, GitHub Releases, tag-based
 publishing, Trusted Publishing, an enforced coverage gate or external
-coverage service (Codecov/Coveralls), commit-message linting, a `commit-msg`
-hook, Markdown linting, PR/issue templates, Dependabot/Renovate, and a merge
-queue. See [Publish Abgrenzung](#build-vs-publish) above for where publishing
+coverage service (Codecov/Coveralls), Dependabot/Renovate, and a merge
+queue. (Commit-message linting, the `commit-msg` hook, Markdown linting, and
+PR/issue templates were out of scope when this page was first written, but
+have since been added — see [Commit-message job](#commit-message-job) /
+[Claude Code](claude-code.md#commit-message-validation) and
+[Templates](templates.md), respectively.) See
+[Build vs. Publish](#build-vs-publish) above for where publishing
 is planned (A.3.7).
 
 ## See also

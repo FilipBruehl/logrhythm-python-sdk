@@ -75,7 +75,9 @@ a substitute for checking before reporting a task done.
 - `git status` is clean of stray or unintended untracked/modified files before
   the change is reported complete.
 - Commits follow [Commit Strategy](commits.md) (Conventional Commits,
-  appropriate size and scope).
+  appropriate size and scope) — mechanically checked by the local
+  `commit-msg` hook and the `CI / commit-message` status check, per
+  [Claude Code, Commit message validation](claude-code.md#commit-message-validation).
 
 ## Completion report
 
@@ -90,3 +92,6 @@ the explicit authorization [Claude Workflow](claude-workflow.md) requires.
 - [Testing Rules](testing.md#testing-rules-by-change-type)
 - [Architecture Governance](claude-workflow.md#architecture-governance)
 - [GitHub Actions: CI & Build](ci.md)
+- [Claude Code: Technical Settings](claude-code.md#commit-workflow) — the
+  concrete pre-commit checklist this page's "Change hygiene" section maps
+  to.

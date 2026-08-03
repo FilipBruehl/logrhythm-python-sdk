@@ -79,6 +79,31 @@ Still no PR/issue-template automation beyond the templates themselves (no
 CODEOWNERS, no commit-message linting), and still no publish/release
 automation (Phase A.3.7).
 
+**Phase A.3.6 — Claude Code Workflow & Commit Message Validation (tooling +
+documentation) — complete.** The governance rules above are now also
+mechanically enforced: `.claude/settings.json` is a versioned, narrow
+permission model (`defaultMode: "default"`, an explicit allow list for
+read-only git inspection and the required quality commands, explicit ask
+rules for git-write actions, and hard deny rules for destructive operations
+and hook bypasses) — see
+[Claude Code: Technical Settings](docs/development/claude-code.md), which
+now documents the technical *how* alongside
+[Claude Workflow](docs/development/claude-workflow.md)'s *why*. Sensitive-file
+protection uses narrow, specific filename/extension patterns rather than
+broad prefixes (e.g. `token`, `*.token`, `*_token.json` — never a bare
+`token*` that could collide with a legitimate future source file). Commit
+messages are validated against [Commit Strategy](docs/development/commits.md)
+both locally (two `commit-msg` git hooks — `conventional-pre-commit` plus a
+small, shared exact-lowercase type check,
+[`.github/scripts/commit_types.py`](.github/scripts/commit_types.py)) and
+server-side (the new `CI / commit-message` status check, running before
+`CI / test`, importing that same shared module) — see
+[Claude Code, Commit message validation](docs/development/claude-code.md#commit-message-validation)
+for the tooling's exact, empirically tested behavior, including a
+non-obvious, still-open gap (git's own default revert message failing
+validation even without `--strict`) documented there rather than silently
+assumed away.
+
 **None of this is implemented in runtime code yet.** `src/logrhythm_sdk` remains
 the Phase A.1 package skeleton: there is still no HTTP transport, authentication,
 TLS logic, configuration loader, Pydantic models, YAML/JSON/TOML handling, logging
@@ -253,7 +278,10 @@ and [ADR Policy](docs/adr/README.md#when-an-adr-is-required).
   only on explicit instruction. Never merges a PR, changes branch protection, or
   triggers a release.
 
-Full detail: [Claude Workflow](docs/development/claude-workflow.md).
+Full detail: [Claude Workflow](docs/development/claude-workflow.md); the
+technical permission model backing these limits (allow/ask/deny rules in
+`.claude/settings.json`) is documented in
+[Claude Code: Technical Settings](docs/development/claude-code.md).
 
 ## Git safety rules
 
@@ -269,7 +297,10 @@ commit. Local git hooks now run automatically at commit/push time (see
 with `git commit --no-verify`, `git push --no-verify`, or `SKIP=<hook-id>`
 without the same explicit approval any other safety-rule exception would need.
 Full detail:
-[Git Safety Rules](docs/development/claude-workflow.md#git-safety-rules).
+[Git Safety Rules](docs/development/claude-workflow.md#git-safety-rules); the
+technical permission rules (`.claude/settings.json`) that mechanically back
+part of this policy are documented in
+[Claude Code: Technical Settings](docs/development/claude-code.md).
 
 ## Required quality commands
 

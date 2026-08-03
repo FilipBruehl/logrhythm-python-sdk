@@ -37,12 +37,14 @@ architecture.
 uv sync
 uv run pre-commit install
 uv run pre-commit install --hook-type pre-push
+uv run pre-commit install --hook-type commit-msg
 ```
 
 This installs the project along with its development dependencies (Ruff, mypy,
-pytest, pytest-cov, pre-commit) into a local virtual environment, then installs
-the local git hooks that run formatting/linting/type-checks and secret
-detection on every commit, and the test suite on every push — see
+pytest, pytest-cov, pre-commit, conventional-pre-commit) into a local virtual
+environment, then installs the local git hooks that run formatting/linting/
+type-checks and secret detection on every commit, Conventional Commit message
+validation on every commit, and the test suite on every push — see
 [docs/development/pre-commit.md](docs/development/pre-commit.md).
 
 ## Dependencies

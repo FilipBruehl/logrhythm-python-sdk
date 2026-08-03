@@ -2,7 +2,11 @@
 
 This page defines the project's binding commit conventions: message format,
 allowed types, scopes, commit size/content rules, and how history is kept
-linear across merges.
+linear across merges. Message format, allowed types, and exact type casing
+are mechanically enforced, both locally (two `commit-msg` git hooks) and
+server-side (a CI job) — see
+[Claude Code, Commit message validation](claude-code.md#commit-message-validation)
+for the tooling, its exact tested behavior, and its known limitations.
 
 ## Conventional Commits
 
@@ -174,4 +178,8 @@ instead:
 - [Pull Requests](pull-requests.md)
 - [Definition of Done](definition-of-done.md) — commit-strategy compliance is
   part of "done."
-- [GitHub Actions: CI & Build](ci.md)
+- [GitHub Actions: CI & Build](ci.md) — the `CI / commit-message` status
+  check.
+- [Claude Code: Technical Settings](claude-code.md#commit-message-validation) —
+  the `commit-msg` hook and CI script that enforce this page's message
+  format and allowed types.

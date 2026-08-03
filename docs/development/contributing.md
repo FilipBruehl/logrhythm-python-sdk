@@ -31,6 +31,7 @@ picture:
 ```powershell
 uv run pre-commit install
 uv run pre-commit install --hook-type pre-push
+uv run pre-commit install --hook-type commit-msg
 ```
 
 ## Quality checks
@@ -67,6 +68,8 @@ uv run ruff format .
 
 - [Pre-Commit & Local Code Quality Automation](pre-commit.md) — hook setup, the
   local quality check, and troubleshooting.
+- [Claude Code: Technical Settings](claude-code.md) — permission model and
+  commit message validation.
 - [Developer Workflow](workflow.md) — branching, commits, pull requests.
 - [Definition of Ready](definition-of-ready.md) / [Definition of Done](definition-of-done.md)
 - [Claude Workflow & Architecture Governance](claude-workflow.md)

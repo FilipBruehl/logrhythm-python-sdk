@@ -84,6 +84,9 @@ LogRhythm SIEM REST APIs.
 - [Claude Workflow & Architecture Governance](development/claude-workflow.md) — why
   Claude never makes architecture decisions alone, Claude's branch/commit/push/PR
   permissions, and Git Safety Rules.
+- [Claude Code: Technical Settings](development/claude-code.md) — the
+  `.claude/settings.json` permission model and Conventional Commit message
+  validation (local `commit-msg` hook + `CI / commit-message`).
 - [API Implementation Workflow](development/api-implementation-workflow.md) — the process
   used to add support for a new LogRhythm API.
 - [Architecture Decision Records](adr/README.md) — recorded, significant architecture

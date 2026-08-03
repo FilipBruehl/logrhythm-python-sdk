@@ -4,9 +4,11 @@ This page documents how Claude Code operates within this repository's
 workflow: which architecture decisions Claude may never make on its own, and
 which git operations it may and may not perform, and under what conditions.
 [CLAUDE.md](../../CLAUDE.md) carries the short, always-loaded summary of these
-rules; this page is the full elaboration. No technical permissions (Claude
-Code settings, hooks, or tool allowlists) are configured as part of this
-documentation phase — see Scope.
+rules; this page is the full elaboration of *why* and *what*. The technical
+configuration that mechanically enforces these rules — `.claude/settings.json`'s
+permission model, and Conventional Commit message validation — is documented
+separately in [Claude Code: Technical Settings](claude-code.md), so this page
+does not repeat *how* it is configured.
 
 ## Architecture Governance
 
@@ -142,6 +144,9 @@ approval for that exact operation — never as a default or convenience action:
 ## See also
 
 - [CLAUDE.md](../../CLAUDE.md) — the always-loaded summary of these rules.
+- [Claude Code: Technical Settings](claude-code.md) — the technical
+  permission model and commit message validation that mechanically enforce
+  the rules on this page.
 - [Branch Types & Branch Strategy](branching.md)
 - [Commit Strategy](commits.md)
 - [Pull Requests](pull-requests.md)

@@ -11,10 +11,12 @@ Requirements: Python 3.13+ and [uv](https://docs.astral.sh/uv/).
 uv sync
 uv run pre-commit install
 uv run pre-commit install --hook-type pre-push
+uv run pre-commit install --hook-type commit-msg
 ```
 
-The last two commands install the local git hooks (formatting/linting/type
-checks + secret detection on commit, the test suite on push) — see
+The last three commands install the local git hooks (formatting/linting/type
+checks + secret detection on commit, Conventional Commit message validation
+on commit, the test suite on push) — see
 [docs/development/pre-commit.md](docs/development/pre-commit.md).
 
 ## Quality checks
@@ -58,7 +60,8 @@ automatically at commit and push time.
   [docs/development/commits.md](docs/development/commits.md).
 - **Pull requests:** every change to `main` goes through a PR (using the
   shared [pull request template](.github/pull_request_template.md)), and runs
-  through the `CI / quality` and `CI / test` checks automatically. See
+  through the `CI / commit-message`, `CI / quality`, and `CI / test` checks
+  automatically. See
   [docs/development/pull-requests.md](docs/development/pull-requests.md) and
   [docs/development/ci.md](docs/development/ci.md).
 - **Issues:** use the GitHub Issue Forms under **New issue** (bug report,

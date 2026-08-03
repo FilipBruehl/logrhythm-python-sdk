@@ -36,6 +36,7 @@ character in every invocation (`uv run pre-commit ...` instead of bare
 uv sync
 uv run pre-commit install
 uv run pre-commit install --hook-type pre-push
+uv run pre-commit install --hook-type commit-msg
 ```
 
 - `uv sync` installs `pre-commit` (and every other dev/runtime dependency) into
@@ -46,6 +47,15 @@ uv run pre-commit install --hook-type pre-push
   hook to `.git/hooks/pre-push`. This is a **separate, explicit step** — it is
   not installed automatically by the first command, by design (see
   [Pre-Push Hook](#pre-push-hook)).
+- `uv run pre-commit install --hook-type commit-msg` writes the
+  message-validation git hook to `.git/hooks/commit-msg`. Also a **separate,
+  explicit step**, for the same reason as `pre-push` above — see
+  [Commit-Msg Hook](#commit-msg-hook).
+
+**Existing clones** created before this hook type existed only need to run
+the one new command above (`uv run pre-commit install --hook-type
+commit-msg`) — the other two hook types are already installed and are
+unaffected.
 
 Both generated hook scripts invoke the project's own `.venv` interpreter
 directly, so they work correctly even in a shell where the virtual environment
@@ -113,6 +123,24 @@ Runs on `git push`, via `.git/hooks/pre-push`, and runs **only**:
 This is deliberately the only push-time check. The full test suite is slower
 than the commit-time hooks, so it runs once per push rather than once per
 commit, while still guaranteeing nothing untested reaches a remote.
+
+### Commit-Msg Hook
+
+Runs on `git commit`, via `.git/hooks/commit-msg`, and runs **only**:
+
+| Hook | Source | Purpose |
+| --- | --- | --- |
+| `commit-type-lowercase` (local) | this repo, via `.github/scripts/commit_types.py` | Exact-lowercase commit-type check — a gap `conventional-pre-commit` itself leaves open, see [Claude Code, `commit_types.py`](claude-code.md#commit_typespy-the-shared-lowercase-check). |
+| `conventional-pre-commit` (local) | this repo, via the `conventional-pre-commit` dev dependency | Conventional Commit message validation — see [Claude Code, Commit message validation](claude-code.md#commit-message-validation). |
+
+This is a separate git hook type from the commit-time
+[Pre-Commit Hook](#pre-commit-hook) above (which validates file *content*):
+`commit-msg` runs once, against the drafted commit *message*, after the
+pre-commit-stage hooks have already passed. `conventional-pre-commit` is not
+run with `--strict` — see
+[Claude Code, Why no `--strict` locally](claude-code.md#why-no---strict-locally)
+for why, and for both hooks' exact, empirically tested behavior around
+casing, merge, revert, and `fixup!`/`squash!` commits.
 
 ### Secret Detection
 
@@ -241,6 +269,7 @@ uv run ruff format --check . ; uv run ruff check . ; uv run mypy src/logrhythm_s
 uv sync
 uv run pre-commit install
 uv run pre-commit install --hook-type pre-push
+uv run pre-commit install --hook-type commit-msg
 ```
 
 ## See also
@@ -253,6 +282,9 @@ uv run pre-commit install --hook-type pre-push
   automation partially enforces.
 - [Claude Workflow & Architecture Governance](claude-workflow.md) — Claude's
   commit/push rules, which this automation runs underneath.
+- [Claude Code: Technical Settings](claude-code.md#commit-message-validation) —
+  the `conventional-pre-commit` tool's exact, tested behavior and its
+  server-side counterpart.
 - [GitHub Actions: CI & Build](ci.md) — the same hooks running server-side.
 - [Repository Templates & Markdown Tooling](templates.md) — the
   `markdownlint-cli2` configuration and manual `--fix` invocation in detail.

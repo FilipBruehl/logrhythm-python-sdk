@@ -26,6 +26,7 @@ dev = [
     "pytest>=8.3",
     "pytest-cov>=6.0",
     "pre-commit>=4.6",
+    "conventional-pre-commit>=4.2,<5",
 ]
 
 [build-system]
