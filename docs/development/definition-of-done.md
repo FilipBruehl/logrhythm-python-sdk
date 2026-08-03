@@ -61,8 +61,12 @@ uv run mypy src/logrhythm_sdk
 uv run pytest
 ```
 
-Automated enforcement of these via hooks or CI is a later phase (see Scope) —
-until then, they are run and reported manually for every change.
+These are enforced automatically, twice over: locally via git hooks (see
+[Pre-Commit & Local Code Quality Automation](pre-commit.md)) and server-side
+via the `CI / quality` and `CI / test` status checks (see
+[GitHub Actions: CI & Build](ci.md)). Running them locally first, and
+reporting the results, is still expected — the automation is a backstop, not
+a substitute for checking before reporting a task done.
 
 ## Change hygiene
 
@@ -85,3 +89,4 @@ the explicit authorization [Claude Workflow](claude-workflow.md) requires.
 - [Definition of Ready](definition-of-ready.md)
 - [Testing Rules](testing.md#testing-rules-by-change-type)
 - [Architecture Governance](claude-workflow.md#architecture-governance)
+- [GitHub Actions: CI & Build](ci.md)

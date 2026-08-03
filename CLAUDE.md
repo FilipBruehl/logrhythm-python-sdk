@@ -52,8 +52,17 @@ complete.** Local git hooks now enforce part of this automatically: Ruff
 format/check, mypy, basic file hygiene, and gitleaks secret detection run at
 commit time; the full test suite runs at push time — see
 [Pre-Commit & Local Code Quality Automation](docs/development/pre-commit.md).
-No GitHub Actions, CI, or PR/issue templates exist yet — this remains local-only
-automation.
+
+**Phase A.3.4 — GitHub Actions, CI and Build Automation (server-side tooling
+only) — complete.** The same quality gates now also run server-side: a `CI`
+workflow (`quality` → `test` jobs; status checks `CI / quality`, `CI / test`)
+on every pull request against `main`/`integration/**` and relevant pushes,
+and a separate `Build` workflow that builds and verifies the package (never
+publishing) when packaging-relevant files change — see
+[GitHub Actions: CI & Build](docs/development/ci.md). Branch protection rules
+are documented there but **not yet configured** in GitHub — that remains a
+manual step. No publish workflow, release automation, or PR/issue templates
+exist yet; publishing is deferred to Phase A.3.7 (not yet started).
 
 **None of this is implemented in runtime code yet.** `src/logrhythm_sdk` remains
 the Phase A.1 package skeleton: there is still no HTTP transport, authentication,
@@ -259,7 +268,10 @@ fixed before reporting the task as done.
 The first three commands also run automatically as local pre-commit hooks, and
 `pytest` runs automatically as a pre-push hook — see
 [Pre-Commit & Local Code Quality Automation](docs/development/pre-commit.md).
-Running `uv run pre-commit run --all-files` (the
+The same checks run again server-side as the `CI / quality` and `CI / test`
+GitHub Actions checks on every PR — see
+[GitHub Actions: CI & Build](docs/development/ci.md). Running
+`uv run pre-commit run --all-files` (the
 [official local quality check](docs/development/pre-commit.md#local-quality-check))
-first is still expected; the hooks are a backstop, not a substitute for
+first is still expected; the hooks and CI are a backstop, not a substitute for
 checking before reporting a task done.

@@ -34,12 +34,40 @@ Every commit message follows [Conventional Commits](https://www.conventionalcomm
 | `chore` | Tooling, dependency bookkeeping, repository maintenance, and release bookkeeping. |
 | `perf` | A performance improvement without a behavior change. |
 | `style` | A formatting-only change (whitespace, import order) with no logic change. |
-| `build` | Build system or packaging configuration. |
+| `build` | Build system, packaging, toolchain, or dependency management — see [`build` vs. `ci`](#build-vs-ci) below. |
+| `ci` | Continuous integration configuration — see [`build` vs. `ci`](#build-vs-ci) below. |
 | `revert` | Reverts a previous commit. |
 
-`ci` is a valid Conventional Commits type reserved for future use once GitHub
-Actions configuration exists to commit — configuring CI itself is out of scope
-for this phase (see Scope).
+### `build` vs. `ci`
+
+These two are easy to confuse and are kept deliberately distinct:
+
+- **`build`** covers the build system, packaging, toolchain, and dependency
+  management: `pyproject.toml`, `uv.lock`, dependency version bumps,
+  `pre-commit` itself (the tool and its hook definitions in
+  `.pre-commit-config.yaml`), and other local development tooling. In short:
+  what a contributor installs and runs on their own machine to build the
+  project or work on it.
+- **`ci`** covers GitHub Actions and everything that runs the project's
+  automation on GitHub's infrastructure rather than locally: workflow files
+  under `.github/workflows/`, CI/CD pipeline configuration, build- and
+  test-workflow definitions, pipeline automation, and branch-protection-adjacent
+  infrastructure (status check names, required workflows) — see
+  [GitHub Actions: CI & Build](ci.md). In short: what runs a check or builds
+  something *for* the project, on a server, not what a contributor runs
+  locally.
+
+A change to `.pre-commit-config.yaml` itself is `build` (it configures local
+tooling); a change to `.github/workflows/ci.yml` or `.github/workflows/build.yml`
+is `ci` (it configures server-side automation) — even though the `ci.yml`
+workflow's `quality` job happens to invoke that same local tooling
+server-side. The commit changes the workflow, not the tooling, so it is `ci`.
+
+### Example
+
+```text
+ci(github): introduce quality and package build workflows
+```
 
 ## Recommended scopes
 
@@ -52,7 +80,7 @@ Scope names the most specific affected component:
   [SPEC-010, Supported APIs](../specifications/api-modules.md#supported-apis)):
   `admin`, `drilldown`, `metrics`, `aie`, `alarms`, `cases`, `search`.
 - **Documentation / governance**: `spec`, `adr`, `docs`, `workflow`.
-- **Repository / tooling**: `deps`, `tooling`, `ci` (future).
+- **Repository / tooling**: `deps`, `tooling`, `ci`.
 
 When a change genuinely spans multiple components with no single dominant one,
 omit the scope rather than picking an arbitrary one.
@@ -120,7 +148,7 @@ Instead:
   the reviewable structure of the resources merged into it.
 - Actually configuring the GitHub merge-button settings to enforce this is a
   Branch Protection concern — see
-  [Pull Requests, Branch Protection](pull-requests.md#branch-protection-conceptual)
+  [Pull Requests, Branch Protection](pull-requests.md#branch-protection)
   — and remains out of scope for this documentation-only phase.
 
 ## Mapping the excluded branch categories
@@ -146,3 +174,4 @@ instead:
 - [Pull Requests](pull-requests.md)
 - [Definition of Done](definition-of-done.md) — commit-strategy compliance is
   part of "done."
+- [GitHub Actions: CI & Build](ci.md)

@@ -6,8 +6,9 @@ and push time, and the official local quality check for running those same
 checks on demand, outside of a commit. It complements
 [Contributing](contributing.md) (local setup) and
 [Definition of Done](definition-of-done.md) (the checklist this automation
-partially enforces). No GitHub Actions, CI pipeline, or PR/issue templates are
-introduced here — see Scope in the phase that added this page.
+partially enforces). This page is local-only; the same hooks now also run
+server-side on every pull request and relevant push — see
+[GitHub Actions: CI & Build](ci.md).
 
 ## Installation
 
@@ -93,6 +94,7 @@ Runs on every `git commit`, via `.git/hooks/pre-commit`. Configured hooks:
 | `debug-statements` | `pre-commit/pre-commit-hooks` | Blocks committing stray Python debugger/breakpoint statements. |
 | `gitleaks` | `gitleaks/gitleaks` | Secret detection — see [Secret Detection](#secret-detection). |
 | `uv-lock` | `astral-sh/uv-pre-commit` | Keeps `uv.lock` from being committed out of date — see [uv Integration](#uv-integration). |
+| `actionlint` | `rhysd/actionlint` | Validates GitHub Actions workflow files under `.github/workflows/` — see [GitHub Actions: CI & Build](ci.md#actionlint). |
 | `mypy` (local) | this repo | Static type checking, matching `mypy src/logrhythm_sdk`. |
 
 No further hooks are configured, per this phase's scope.
@@ -248,3 +250,4 @@ uv run pre-commit install --hook-type pre-push
   automation partially enforces.
 - [Claude Workflow & Architecture Governance](claude-workflow.md) — Claude's
   commit/push rules, which this automation runs underneath.
+- [GitHub Actions: CI & Build](ci.md) — the same hooks running server-side.

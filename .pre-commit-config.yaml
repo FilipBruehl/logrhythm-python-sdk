@@ -54,6 +54,14 @@ repos:
       - id: uv-lock
         stages: [pre-commit]
 
+  # Validates GitHub Actions workflow files (.github/workflows/*.yml) — the
+  # same check the CI quality job runs, per docs/development/ci.md.
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.12
+    hooks:
+      - id: actionlint
+        stages: [pre-commit]
+
   # mypy runs against the project's own environment (via `uv run`) rather than
   # an isolated mirror environment, so it sees the actual installed runtime
   # dependencies (e.g. Pydantic) without duplicating them as

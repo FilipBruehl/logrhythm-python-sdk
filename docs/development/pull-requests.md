@@ -33,7 +33,10 @@ Every PR description states, at minimum:
   still passing, any manual verification performed.
 - **Quality check results** — confirmation that `ruff format --check`,
   `ruff check`, `mypy`, and `pytest` all pass (see
-  [Definition of Done](definition-of-done.md)).
+  [Definition of Done](definition-of-done.md)). The `CI / quality` and
+  `CI / test` checks (see [GitHub Actions: CI & Build](ci.md)) confirm this
+  automatically once the PR is open — restating it in the description is
+  still expected, since the checks run after the description is written.
 - **Documentation impact** — which docs were updated in the same change, or an
   explicit note that none were needed and why.
 - **Breaking-change flag** — explicitly called out if the change affects the
@@ -64,9 +67,11 @@ Before approving, a reviewer confirms:
 
 A PR may be merged only once:
 
-- All four required quality commands pass — currently confirmed manually and
-  reported in the PR / completion report; automated enforcement via hooks or
-  CI is a later phase (see Scope).
+- All four required quality commands pass. This is now automatically
+  confirmed server-side by `CI / quality` and `CI / test` (see
+  [GitHub Actions: CI & Build](ci.md)), in addition to the local pre-commit
+  hooks from [Pre-Commit & Local Code Quality Automation](pre-commit.md) —
+  still restated and reported in the PR / completion report.
 - At least one review has been completed against the
   [Definition of Review](#definition-of-review) above. Where no second
   reviewer is available yet, the author explicitly performs and records a
@@ -80,27 +85,21 @@ A PR may be merged only once:
   that effort has already been merged into it (see
   [Branch Strategy, Model B](branching.md#model-b-larger-work-package-integration-branch)).
 
-## Branch Protection (conceptual)
+## Branch Protection
 
-No GitHub branch protection settings are configured in this phase (see Scope).
-The following is the conceptual target for a later phase, once hooks/CI are
-introduced:
-
-- `main` requires a pull request before any change lands — no direct pushes.
-- `main` requires the [merge prerequisites](#merge-prerequisites) above to be
-  satisfied before the merge option becomes available (review completed,
-  checks green once CI exists).
-- Force-pushes to `main` — and, once opened, to an `integration/*` branch with
-  more than one contributor — are disabled.
-- Branch deletion protection is not needed for `main` (never deleted);
-  `integration/*`/`feature/*`/`fix/*` branches are deleted routinely per
-  [Branch Strategy](branching.md#branch-strategy), which is expected, normal
-  behavior, not something to guard against.
+Concrete branch protection / ruleset recommendations — including the required
+status checks `CI / quality` and `CI / test` now that
+[GitHub Actions: CI & Build](ci.md) exists — are documented in
+[GitHub Actions: CI & Build, Branch Protection / Rulesets recommendations](ci.md#branch-protection-rulesets-recommendations).
+These are **not** configured through the GitHub API or UI as part of any
+phase so far; they are applied by hand, per that page.
 
 ## See also
 
 - [Branch Types & Branch Strategy](branching.md)
 - [Commit Strategy](commits.md)
 - [Definition of Done](definition-of-done.md)
+- [GitHub Actions: CI & Build](ci.md) — the `CI / quality` and `CI / test`
+  checks, and branch protection recommendations.
 - [Claude Workflow](claude-workflow.md#pull-requests) — Claude's specific PR
   permissions.

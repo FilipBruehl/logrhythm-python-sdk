@@ -56,12 +56,15 @@ automatically at commit and push time.
 - **Commits:** [Conventional Commits](https://www.conventionalcommits.org/); history
   is preserved (rebase-and-merge, no default squash-merge). See
   [docs/development/commits.md](docs/development/commits.md).
-- **Pull requests:** every change to `main` goes through a PR. See
-  [docs/development/pull-requests.md](docs/development/pull-requests.md).
+- **Pull requests:** every change to `main` goes through a PR, and runs
+  through the `CI / quality` and `CI / test` checks automatically. See
+  [docs/development/pull-requests.md](docs/development/pull-requests.md) and
+  [docs/development/ci.md](docs/development/ci.md).
 - **Before starting:** check [Definition of Ready](docs/development/definition-of-ready.md).
 - **Before calling it done:** check [Definition of Done](docs/development/definition-of-done.md).
 
 For more detail, see [docs/development/contributing.md](docs/development/contributing.md),
 [docs/development/testing.md](docs/development/testing.md),
-[docs/development/pre-commit.md](docs/development/pre-commit.md), and the full
+[docs/development/pre-commit.md](docs/development/pre-commit.md),
+[docs/development/ci.md](docs/development/ci.md), and the full
 [Developer Workflow](docs/development/workflow.md) index.

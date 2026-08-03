@@ -68,7 +68,12 @@ uv run pytest                  # tests + coverage
 
 These same checks (minus `pytest`) run automatically at commit time, and
 `pytest` runs automatically at push time, via the local git hooks — see
-[docs/development/pre-commit.md](docs/development/pre-commit.md).
+[docs/development/pre-commit.md](docs/development/pre-commit.md). The same
+checks also run server-side, on every pull request and relevant push, as the
+`CI / quality` and `CI / test` GitHub Actions checks; a separate workflow
+independently verifies the package builds and installs correctly (never
+publishing anything) — see
+[docs/development/ci.md](docs/development/ci.md).
 
 ## Contributing
 

@@ -61,7 +61,7 @@ LogRhythm SIEM REST APIs.
   and scopes, and the linear-history (rebase-and-merge) decision.
 - [Pull Requests](development/pull-requests.md) — when a PR is required, required
   content, Definition of Review, merge prerequisites, and Branch Protection
-  (conceptual).
+  recommendations.
 - [Definition of Ready](development/definition-of-ready.md) — when an
   implementation task may begin.
 - [Definition of Done](development/definition-of-done.md) — when a work package is
@@ -75,6 +75,9 @@ LogRhythm SIEM REST APIs.
   (`pre-commit run --all-files`), and troubleshooting.
 - [Development: Testing](development/testing.md) — how the test suite is organized,
   and testing rules by change type.
+- [GitHub Actions: CI & Build](development/ci.md) — the server-side `CI / quality`
+  → `CI / test` pipeline, the separate build/package-verification workflow,
+  actionlint, SHA-pinning, and Branch Protection recommendations.
 - [Claude Workflow & Architecture Governance](development/claude-workflow.md) — why
   Claude never makes architecture decisions alone, Claude's branch/commit/push/PR
   permissions, and Git Safety Rules.
