@@ -52,6 +52,10 @@ automatically at commit and push time.
 
 ## Workflow
 
+For AI-assisted work, [AGENTS.md](AGENTS.md) is the single source of truth for
+AI Development governance. Tool-specific adapter files do not redefine the
+project rules.
+
 - **Branching:** `main` is always stable; work happens on `feature/*`/`fix/*`
   branches, with `integration/*` branches for larger, multi-resource efforts. See
   [docs/development/branching.md](docs/development/branching.md).

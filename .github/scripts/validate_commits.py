@@ -15,8 +15,8 @@ implementation the local ``commit-type-lowercase`` hook uses.
 
 Special cases -- all empirically verified against the tool's actual,
 non-strict behavior; see
-``docs/development/claude-code.md#commit-message-validation`` for the test
-transcript this relies on:
+``docs/development/pre-commit.md#commit-message-validation`` for the documented
+behavior this relies on:
 
 - A merge commit (two or more parents) is skipped, not validated -- it is
   either a deliberate merge-commit-strategy PR merge or a GitHub-generated

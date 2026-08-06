@@ -15,8 +15,8 @@ author.
 ## Documentation
 
 - Documentation under `/docs` is updated in the same change for any new or
-  changed public component (see [CLAUDE.md](../../CLAUDE.md), "Documentation
-  duties").
+  changed public component (see
+  [`AGENTS.md`](../../AGENTS.md#definition-of-done)).
 - Google-style docstrings exist for all public modules, classes, and functions
   touched.
 - [API Coverage Matrix](../coverage/api-coverage.md) is updated for any
@@ -28,15 +28,16 @@ author.
 
 - The change matches the relevant `Accepted` SPEC(s); any necessary deviation
   is itself documented in the same change (a SPEC update) or escalated per
-  [Architecture Governance](claude-workflow.md#architecture-governance) —
+  [Architecture Governance](../../AGENTS.md#architecture-governance) —
   never a silent departure.
 - No new architectural decision (SPEC content, ADR-worthy choice) was made
-  without following [Architecture Governance](claude-workflow.md#architecture-governance).
+  without following
+  [Architecture Governance](../../AGENTS.md#architecture-governance).
 
 ## Public API
 
 - Any new or changed public export is deliberate, added via `__all__`, and
-  documented — see [CLAUDE.md](../../CLAUDE.md), "Public vs. internal APIs."
+  documented — see [`AGENTS.md`](../../AGENTS.md#implementation-rules).
 - Any change to an already-public surface (client methods, models, exceptions)
   is flagged as compatibility-relevant in the PR (see
   [Pull Requests, Required PR content](pull-requests.md#required-pr-content)).
@@ -77,21 +78,20 @@ a substitute for checking before reporting a task done.
 - Commits follow [Commit Strategy](commits.md) (Conventional Commits,
   appropriate size and scope) — mechanically checked by the local
   `commit-msg` hook and the `CI / commit-message` status check, per
-  [Claude Code, Commit message validation](claude-code.md#commit-message-validation).
+  [Pre-Commit, Commit-message validation](pre-commit.md#commit-message-validation).
 
 ## Completion report
 
 A short report is produced covering: files added/changed, what changed and
-why, quality-check results, `git diff --stat`, `git status --short`, and — for
-Claude-driven work — confirmation that no commit, push, or PR was made without
-the explicit authorization [Claude Workflow](claude-workflow.md) requires.
+why, assumptions, open risks, known limitations, quality-check results,
+`git diff --stat`, `git status --short`, and — for AI-assisted work — whether
+any commit, push, PR, merge, release, or repository-administration action
+occurred. See [`AGENTS.md`](../../AGENTS.md#completion-reports).
 
 ## See also
 
 - [Definition of Ready](definition-of-ready.md)
 - [Testing Rules](testing.md#testing-rules-by-change-type)
-- [Architecture Governance](claude-workflow.md#architecture-governance)
+- [Architecture Governance](../../AGENTS.md#architecture-governance)
 - [GitHub Actions: CI & Build](ci.md)
-- [Claude Code: Technical Settings](claude-code.md#commit-workflow) — the
-  concrete pre-commit checklist this page's "Change hygiene" section maps
-  to.
+- [`AGENTS.md`](../../AGENTS.md) — binding AI Development governance.

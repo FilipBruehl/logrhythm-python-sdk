@@ -73,7 +73,7 @@ the project's `conventional-pre-commit` dev dependency, and the shared
 [`.github/scripts/commit_types.py`](../../.github/scripts/commit_types.py)
 exact-lowercase check — the exact same tool, version, allowed-type list, and
 casing rule the local `commit-msg` hooks use (see
-[Claude Code, Commit message validation](claude-code.md#commit-message-validation)
+[Pre-Commit, Commit-message validation](pre-commit.md#commit-message-validation)
 for the full tool behavior, special-case handling, and empirically tested
 results this job relies on). It runs in parallel with `quality`, and `test`
 now requires both to succeed — see [CI Pipeline](#ci-pipeline-quality--test)
@@ -123,7 +123,7 @@ Enumeration itself uses `git rev-list --first-parent --reverse base..head`:
 validated (for example, a PR merged into `main` via GitHub's "Create a merge
 commit" strategy) is still seen and structurally recognized as a merge
 commit — see
-[Claude Code, Special-case handling](claude-code.md#special-case-handling-merge-revert-fixupsquash)
+[Pre-Commit, Commit-message validation](pre-commit.md#commit-message-validation)
 — without also re-walking and re-validating every individual commit from
 the branch it merged in, which would already have been validated by that
 branch's own pull request.
@@ -484,7 +484,7 @@ coverage service (Codecov/Coveralls), Dependabot/Renovate, and a merge
 queue. (Commit-message linting, the `commit-msg` hook, Markdown linting, and
 PR/issue templates were out of scope when this page was first written, but
 have since been added — see [Commit-message job](#commit-message-job) /
-[Claude Code](claude-code.md#commit-message-validation) and
+[Pre-Commit](pre-commit.md#commit-message-validation) and
 [Templates](templates.md), respectively.) See
 [Build vs. Publish](#build-vs-publish) above for where publishing
 is planned (A.3.7).

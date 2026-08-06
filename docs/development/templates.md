@@ -20,7 +20,7 @@ If a template ever contradicts a SPEC, an ADR, or a workflow document under
 `docs/development/`, the SPEC/ADR/workflow document is correct and the
 **template is fixed** — never the other way around. A template cannot make an
 architecture decision, close an Open Question, or override
-[Architecture Governance](claude-workflow.md#architecture-governance); it can
+[Architecture Governance](../../AGENTS.md#architecture-governance); it can
 only prompt a contributor to check the documents that do.
 
 ## Available templates

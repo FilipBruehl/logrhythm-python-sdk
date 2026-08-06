@@ -5,7 +5,7 @@ allowed types, scopes, commit size/content rules, and how history is kept
 linear across merges. Message format, allowed types, and exact type casing
 are mechanically enforced, both locally (two `commit-msg` git hooks) and
 server-side (a CI job) — see
-[Claude Code, Commit message validation](claude-code.md#commit-message-validation)
+[Pre-Commit, Commit-message validation](pre-commit.md#commit-message-validation)
 for the tooling, its exact tested behavior, and its known limitations.
 
 ## Conventional Commits
@@ -95,7 +95,7 @@ omit the scope rather than picking an arbitrary one.
 - Imperative mood in the description.
 - The body states *why*, not a restatement of *what* the diff already shows.
 - No unrelated files or concerns bundled into one commit (see
-  [CLAUDE.md](../../CLAUDE.md), "Change discipline").
+  [`AGENTS.md`](../../AGENTS.md#working-agreements)).
 - No secrets, ever, in a commit message or diff.
 - The commit type accurately reflects the nature of the change — a refactor is
   never labeled `fix`, a new feature is never labeled `chore`, and so on.
@@ -108,9 +108,9 @@ omit the scope rather than picking an arbitrary one.
   [API Implementation Workflow](api-implementation-workflow.md)'s existing "prefer
   one focused commit… over one large, hard-to-review change."
 - Each commit should, as a goal, leave the repository in a state that would pass
-  the required quality commands. This is not yet mechanically enforced (no
-  pre-commit hook exists in this phase — see Scope), but it keeps history
-  bisectable and is expected as a matter of discipline.
+  the required quality commands. Local hooks and CI enforce these checks at
+  commit/push and pull-request boundaries; keeping each individual commit
+  healthy also preserves a bisectable history.
 
 ## Commit content
 
@@ -153,7 +153,7 @@ Instead:
 - Actually configuring the GitHub merge-button settings to enforce this is a
   Branch Protection concern — see
   [Pull Requests, Branch Protection](pull-requests.md#branch-protection)
-  — and remains out of scope for this documentation-only phase.
+  — and remains a manual repository-administration step.
 
 ## Mapping the excluded branch categories
 
@@ -180,6 +180,5 @@ instead:
   part of "done."
 - [GitHub Actions: CI & Build](ci.md) — the `CI / commit-message` status
   check.
-- [Claude Code: Technical Settings](claude-code.md#commit-message-validation) —
-  the `commit-msg` hook and CI script that enforce this page's message
-  format and allowed types.
+- [Pre-Commit, Commit-message validation](pre-commit.md#commit-message-validation) —
+  the local `commit-msg` hooks and their server-side counterpart.

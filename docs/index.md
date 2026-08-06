@@ -51,9 +51,11 @@ LogRhythm SIEM REST APIs.
   API split (currently `Draft`, not implemented).
 - [API Coverage Matrix](coverage/api-coverage.md) — tracks, per LogRhythm API area,
   how far each endpoint has progressed from not-yet-inventoried to implemented.
-- [Developer Workflow](development/workflow.md) — the binding development workflow:
-  branching, commits, pull requests, readiness/completion criteria, testing rules,
-  and Claude Code governance.
+- [Developer Workflow](development/workflow.md) — contributor-oriented navigation
+  for branching, commits, pull requests, readiness/completion criteria, and testing.
+- [AI Coding Agent Governance](../AGENTS.md) — the single, vendor-neutral source
+  of truth for AI Coding Agent roles, lifecycle, context recovery, authority,
+  Git safety, quality gates, security, and completion reports.
 - [Branch Types & Branch Strategy](development/branching.md) — `main`,
   `integration/*`, `feature/*`, `fix/*`; creation, updates, merge order, and
   deletion.
@@ -81,12 +83,11 @@ LogRhythm SIEM REST APIs.
 - [Repository Templates & Markdown Tooling](development/templates.md) — the
   pull request template, GitHub Issue Forms, document templates (ADR, SPEC,
   API Resource), Template Governance, and markdownlint.
-- [Claude Workflow & Architecture Governance](development/claude-workflow.md) — why
-  Claude never makes architecture decisions alone, Claude's branch/commit/push/PR
-  permissions, and Git Safety Rules.
 - [Claude Code: Technical Settings](development/claude-code.md) — the
-  `.claude/settings.json` permission model and Conventional Commit message
-  validation (local `commit-msg` hook + `CI / commit-message`).
+  tool-specific `.claude/settings.json` permission model. The repository-root
+  tool adapters are [`CLAUDE.md`](../CLAUDE.md) and [`CODEX.md`](../CODEX.md);
+  different AI Coding Agents may use the repository under the same AGENTS.md
+  rules, and further adapters may be added only when technically needed.
 - [API Implementation Workflow](development/api-implementation-workflow.md) — the process
   used to add support for a new LogRhythm API.
 - [Architecture Decision Records](adr/README.md) — recorded, significant architecture
@@ -99,4 +100,7 @@ src/logrhythm_sdk/   Importable package (src layout)
 tests/unit/          Unit tests
 tests/integration/   Integration tests (added once there is something to integrate with)
 docs/                This documentation
+AGENTS.md             Vendor-neutral AI Development governance
+CLAUDE.md             Claude Code adapter
+CODEX.md              Codex adapter
 ```

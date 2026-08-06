@@ -107,7 +107,7 @@ repos:
       # conventional-pre-commit below to catch a gap that tool's own default
       # (and --strict) mode leaves open: it does not reject a valid type in
       # the wrong case (e.g. `Feat(config): ...`), confirmed empirically —
-      # see docs/development/claude-code.md#commit-message-validation. The
+      # see docs/development/pre-commit.md#commit-message-validation. The
       # allowed-type list and extraction/casing logic live in the single,
       # shared .github/scripts/commit_types.py module, imported (not
       # re-implemented) by .github/scripts/validate_commits.py as well, so
@@ -125,7 +125,7 @@ repos:
       # the one normative, importable source for Python-side code). Deliberately
       # no `--strict`: strict mode also rejects merge and fixup!/squash!
       # commits outright, which would block normal local work (see
-      # docs/development/claude-code.md#commit-message-validation for the
+      # docs/development/pre-commit.md#commit-message-validation for the
       # empirically tested behavior this relies on). `--scopes`/
       # `--force-scope` are deliberately omitted too — scopes stay optional
       # and unconstrained to a fixed enum, per

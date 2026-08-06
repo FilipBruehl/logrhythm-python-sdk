@@ -21,8 +21,8 @@ This project instead adds `pre-commit` to `pyproject.toml`'s
 [Dependencies & Tooling](dependencies.md#dependency-placement)).
 
 **Why:** a global `uv tool install` is not pinned by `uv.lock` — its exact
-version can silently drift between contributors' machines (and Claude's
-environment) over time. Adding `pre-commit` as a dev dependency instead means
+version can silently drift between contributors' and AI Coding Agents'
+environments over time. Adding `pre-commit` as a dev dependency instead means
 `uv sync` installs the *exact same, lock-file-pinned* version for everyone,
 consistent with this project's existing dependency-group convention and its
 "reproducible technical basis" goal (see
@@ -50,7 +50,7 @@ uv run pre-commit install --hook-type commit-msg
 - `uv run pre-commit install --hook-type commit-msg` writes the
   message-validation git hook to `.git/hooks/commit-msg`. Also a **separate,
   explicit step**, for the same reason as `pre-push` above — see
-  [Commit-Msg Hook](#commit-msg-hook).
+  [Commit-message validation](#commit-message-validation).
 
 **Existing clones** created before this hook type existed only need to run
 the one new command above (`uv run pre-commit install --hook-type
@@ -124,23 +124,36 @@ This is deliberately the only push-time check. The full test suite is slower
 than the commit-time hooks, so it runs once per push rather than once per
 commit, while still guaranteeing nothing untested reaches a remote.
 
-### Commit-Msg Hook
+### Commit-message validation
 
 Runs on `git commit`, via `.git/hooks/commit-msg`, and runs **only**:
 
 | Hook | Source | Purpose |
 | --- | --- | --- |
-| `commit-type-lowercase` (local) | this repo, via `.github/scripts/commit_types.py` | Exact-lowercase commit-type check — a gap `conventional-pre-commit` itself leaves open, see [Claude Code, `commit_types.py`](claude-code.md#commit_typespy-the-shared-lowercase-check). |
-| `conventional-pre-commit` (local) | this repo, via the `conventional-pre-commit` dev dependency | Conventional Commit message validation — see [Claude Code, Commit message validation](claude-code.md#commit-message-validation). |
+| `commit-type-lowercase` (local) | this repo, via `.github/scripts/commit_types.py` | Rejects a recognized commit type written with incorrect casing. |
+| `conventional-pre-commit` (local) | this repo, via the `conventional-pre-commit` dev dependency | Validates Conventional Commit syntax and the allowed type list. |
 
 This is a separate git hook type from the commit-time
 [Pre-Commit Hook](#pre-commit-hook) above (which validates file *content*):
 `commit-msg` runs once, against the drafted commit *message*, after the
 pre-commit-stage hooks have already passed. `conventional-pre-commit` is not
-run with `--strict` — see
-[Claude Code, Why no `--strict` locally](claude-code.md#why-no---strict-locally)
-for why, and for both hooks' exact, empirically tested behavior around
-casing, merge, revert, and `fixup!`/`squash!` commits.
+run with `--strict`, because strict mode rejects merge and autosquash messages
+that Git may need during local history preparation. The repository's tested
+behavior is:
+
+- the local lowercase hook rejects a recognized type in the wrong case;
+- the Conventional Commit hook validates syntax and the allowed type list;
+- local merge and `fixup!`/`squash!` messages are permitted by the non-strict
+  third-party hook so history preparation is not blocked;
+- the CI validator skips merge commits, rejects `fixup!`/`squash!` commits
+  remaining in a submitted range, and accepts Git's default revert subject;
+- Git's default revert subject is a known local limitation: the third-party
+  local hook rejects it, so the subject must be converted to the documented
+  `revert:` form before a normal local commit succeeds.
+
+Both Python-side casing checks import the same allowed-type tuple from
+`.github/scripts/commit_types.py`; the hook configuration restates the list only
+because YAML cannot import that constant.
 
 ### Secret Detection
 
@@ -149,7 +162,7 @@ casing, merge, revert, and `fixup!`/`squash!` commits.
 exceptions/allowlist entries. If gitleaks ever reports a genuine false
 positive, adding an exception is itself a deliberate decision (not a routine
 one) and should be discussed rather than silently added, consistent with
-[Architecture Governance](claude-workflow.md#architecture-governance)'s
+[Architecture Governance](../../AGENTS.md#architecture-governance)'s
 general stance on quietly working around a safeguard. No GitHub-side secret
 scanning integration is configured — this is local-only, per this phase's
 scope.
@@ -280,11 +293,10 @@ uv run pre-commit install --hook-type commit-msg
   dependency rather than a global tool.
 - [Definition of Done](definition-of-done.md) — the completion checklist this
   automation partially enforces.
-- [Claude Workflow & Architecture Governance](claude-workflow.md) — Claude's
-  commit/push rules, which this automation runs underneath.
-- [Claude Code: Technical Settings](claude-code.md#commit-message-validation) —
-  the `conventional-pre-commit` tool's exact, tested behavior and its
-  server-side counterpart.
+- [`AGENTS.md`](../../AGENTS.md) — vendor-neutral commit, push, quality, and
+  security governance that this automation partially enforces.
+- [GitHub Actions: CI & Build](ci.md#commit-message-job) — the server-side
+  counterpart to commit-message validation.
 - [GitHub Actions: CI & Build](ci.md) — the same hooks running server-side.
 - [Repository Templates & Markdown Tooling](templates.md) — the
   `markdownlint-cli2` configuration and manual `--fix` invocation in detail.

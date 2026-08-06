@@ -13,12 +13,12 @@ remains the normative source if the two ever disagree (see
 
 - **Every** change that reaches `main` goes through a PR — no direct pushes to
   `main`, ever (see [Branch Types](branching.md#main) and
-  [Git Safety Rules](claude-workflow.md#git-safety-rules)).
+  [`AGENTS.md`, Git workflow](../../AGENTS.md#git-workflow)).
 - Every `feature/*`/`fix/*` branch merging into an `integration/*` branch also
   goes through a PR, so each resource receives the same review discipline
   before the combined integration effort reaches `main` (see
   [Branch Strategy, Model B](branching.md#model-b--larger-work-package-integration-branch)).
-- This applies regardless of author (human or Claude) and regardless of change
+- This applies regardless of author (human or AI Coding Agent) and regardless of change
   size — there is no "too small for a PR" exception once work leaves a
   contributor's local branch.
 
@@ -31,8 +31,8 @@ Every PR description states, at minimum:
 - Which **SPEC(s)** and/or **ADR(s)** the change implements or is governed by,
   if any.
 - **Scope** — which files/components were touched, and confirmation that
-  nothing outside that scope was touched (see [CLAUDE.md](../../CLAUDE.md),
-  "Change discipline").
+  nothing outside that scope was touched (see
+  [`AGENTS.md`](../../AGENTS.md#working-agreements)).
 - **Test plan** — what was tested and how: new tests added, existing tests
   still passing, any manual verification performed.
 - **Quality check results** — confirmation that `ruff format --check`,
@@ -65,7 +65,7 @@ Before approving, a reviewer confirms:
 - Any change touching Public API, Ownership, Lifecycle, Security Defaults, a
   SPEC, or an ADR was explicitly, deliberately decided — not something that
   happened incidentally as part of unrelated work (see
-  [Architecture Governance](claude-workflow.md#architecture-governance)).
+  [Architecture Governance](../../AGENTS.md#architecture-governance)).
 
 ## Merge prerequisites
 
@@ -105,7 +105,7 @@ phase so far; they are applied by hand, per that page.
 - [Definition of Done](definition-of-done.md)
 - [GitHub Actions: CI & Build](ci.md) — the `CI / quality` and `CI / test`
   checks, and branch protection recommendations.
-- [Claude Workflow](claude-workflow.md#pull-requests) — Claude's specific PR
-  permissions.
+- [`AGENTS.md`, Push and pull requests](../../AGENTS.md#push-and-pull-requests) —
+  AI Coding Agent authority for PR-related actions.
 - [Repository Templates & Markdown Tooling](templates.md) — the pull request
   template, issue forms, and document templates.

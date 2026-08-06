@@ -7,11 +7,13 @@ that process (this page and its links), the practical
 [Contribution Guide](contributing.md), and the
 [Definition of Done](definition-of-done.md) stay clearly separated.
 
-This workflow is the binding basis for every following development phase,
-per [CLAUDE.md](../../CLAUDE.md). It reflects the project's existing
+This workflow reflects the project's existing
 architecture ([SPEC-000 through SPEC-010](../specifications/README.md)),
 existing [ADRs](../adr/README.md), and the repository structure and working
-style already established in Phases A.1–A.3.
+style already established in Phases A.1–A.3. For AI-assisted work,
+[`AGENTS.md`](../../AGENTS.md) is the single source of truth for AI Development
+governance; this page is a contributor-oriented navigation and automation
+summary.
 
 ## Where to start
 
@@ -30,10 +32,9 @@ style already established in Phases A.1–A.3.
   [Definition of Done](definition-of-done.md).
 - **Writing tests?** See [Testing](testing.md), including
   [Testing rules by change type](testing.md#testing-rules-by-change-type).
-- **Working with (or as) Claude Code?** See
-  [Claude Workflow & Architecture Governance](claude-workflow.md) for the
-  rules, and [Claude Code: Technical Settings](claude-code.md) for how they
-  are technically enforced.
+- **Working with an AI Coding Agent?** Start with
+  [`AGENTS.md`](../../AGENTS.md). If a tool-specific adapter exists, read it
+  after AGENTS.md.
 - **Wondering whether a decision needs an ADR?** See
   [ADR Policy](../adr/README.md#when-an-adr-is-required).
 - **Implementing a LogRhythm API endpoint?** See
@@ -49,8 +50,8 @@ style already established in Phases A.1–A.3.
 | [Definition of Ready](definition-of-ready.md) | When an implementation task may begin. |
 | [Definition of Done](definition-of-done.md) | When a work package is complete. |
 | [Testing](testing.md) | Test suite layout, coverage target, and rules by change type. |
-| [Claude Workflow & Architecture Governance](claude-workflow.md) | Architecture Governance (Claude never decides architecture alone), Claude's branch/commit/push/PR permissions, Git Safety Rules. |
-| [Claude Code: Technical Settings](claude-code.md) | The technical permission model (`.claude/settings.json`) and Conventional Commit message validation (local `commit-msg` hook + `CI / commit-message`) that enforce the rules above. |
+| [`AGENTS.md`](../../AGENTS.md) | Vendor-neutral AI Development governance: authority, lifecycle, context recovery, Git safety, quality gates, and reporting. |
+| [Claude Code: Technical Settings](claude-code.md) | Tool-specific mechanics of `.claude/settings.json`; no general project rules. |
 | [ADR Policy](../adr/README.md#when-an-adr-is-required) | When a new ADR is required, and when it isn't. |
 | [Dependencies & Tooling](dependencies.md) | Runtime dependency baseline, dependency placement/versioning, and the upgrade process. |
 | [Contributing](contributing.md) | Local setup and required quality commands. |
@@ -69,9 +70,10 @@ Commit message validation are enforced both locally (git hooks, see
 push; the full test suite runs before every push locally and as part of CI;
 packaging is independently verified by a separate build workflow. A pull
 request template and GitHub Issue Forms now standardize contribution intake
-(see [Repository Templates & Markdown Tooling](templates.md)). Claude Code's
-own permission model (`.claude/settings.json`) is now also configured and
-versioned — see [Claude Code: Technical Settings](claude-code.md). What
+(see [Repository Templates & Markdown Tooling](templates.md)). Tool-specific
+permission settings may provide an additional mechanical backstop; see
+[Claude Code: Technical Settings](claude-code.md) for the existing adapter.
+What
 remains manual, applied by hand rather than enforced by tooling: actual
 branch protection settings (documented, not yet configured in GitHub) and
 release/publish automation (planned for Phase A.3.7) — these remain later

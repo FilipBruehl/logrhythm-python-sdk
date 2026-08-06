@@ -2,8 +2,8 @@
 
 This page defines the project's binding branch workflow: which branch types
 exist, and how they are created, updated, merged, and removed. It applies to
-every contributor, human or AI-assisted, per [CLAUDE.md](../../CLAUDE.md) and
-[Claude Workflow](claude-workflow.md).
+every contributor, human or AI-assisted. AI Coding Agent authority and Git
+safety are governed exclusively by [`AGENTS.md`](../../AGENTS.md).
 
 ## Branch Types
 
@@ -52,7 +52,7 @@ Properties:
 
 - Created from `main` **or** from an `integration/*` branch.
 - Contains exactly one logically complete work package — not a bundle of
-  unrelated changes (see [CLAUDE.md](../../CLAUDE.md), "Change discipline").
+  unrelated changes (see [`AGENTS.md`](../../AGENTS.md#working-agreements)).
 - Deleted immediately after a successful merge.
 
 ### `fix/*`
@@ -198,7 +198,5 @@ a reason to reach for an integration branch.
   experiments) are expressed instead.
 - [Pull Requests](pull-requests.md) — what a PR into `main` (or into an
   integration branch) requires.
-- [Claude Workflow](claude-workflow.md) — which branch operations Claude may
-  perform, and under what conditions.
-- [Git Safety Rules](claude-workflow.md#git-safety-rules) — forbidden
-  operations, including branch deletion outside the lifecycle described here.
+- [`AGENTS.md`](../../AGENTS.md#git-workflow) — AI Coding Agent authority and
+  Git safety, including branch deletion.

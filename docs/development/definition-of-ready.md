@@ -3,7 +3,7 @@
 An implementation task may begin only once every item below holds. If any item
 is unmet, the task is not ready: the correct response is to close the gap (or
 raise the question, per
-[Architecture Governance](claude-workflow.md#architecture-governance)) before
+[`AGENTS.md`](../../AGENTS.md#architecture-governance)) before
 writing any code — never to proceed on an assumption.
 
 ## SPEC status
@@ -31,7 +31,7 @@ writing any code — never to proceed on an assumption.
 - No unresolved Open Question in the relevant SPEC(s) blocks the task's scope.
   If one does, it is resolved explicitly — a decision, and where warranted a
   new ADR — before implementation starts, never silently assumed away. See
-  [Architecture Governance](claude-workflow.md#architecture-governance).
+  [Architecture Governance](../../AGENTS.md#architecture-governance).
 
 ## Vendor / API documentation
 
@@ -40,8 +40,8 @@ writing any code — never to proceed on an assumption.
   extracted per [API Implementation Workflow](api-implementation-workflow.md)
   steps 1–2 (documentation page identified; facts, schemas, parameters, and
   uncertainties written down). Implementation never starts from memory or
-  assumption about vendor behavior — see [CLAUDE.md](../../CLAUDE.md), "Do not
-  invent API behavior."
+  assumption about vendor behavior — see
+  [`AGENTS.md`](../../AGENTS.md#working-agreements).
 - Any documentation gap or ambiguity discovered during that extraction is
   written down explicitly, not resolved by guessing.
 
@@ -68,5 +68,5 @@ The following are **not** prerequisites, to avoid over-gating small work:
 ## See also
 
 - [Definition of Done](definition-of-done.md)
-- [Architecture Governance](claude-workflow.md#architecture-governance)
+- [Architecture Governance](../../AGENTS.md#architecture-governance)
 - [ADR Policy](../adr/README.md#when-an-adr-is-required)

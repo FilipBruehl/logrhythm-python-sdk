@@ -5,7 +5,7 @@ both the local ``commit-msg`` git hook (via this module's own CLI entry
 point below, wired up as its own hook in ``.pre-commit-config.yaml``) and
 ``.github/scripts/validate_commits.py`` (via direct import) -- see
 ``docs/development/commits.md#allowed-commit-types`` and
-``docs/development/claude-code.md#commit-message-validation``.
+``docs/development/pre-commit.md#commit-message-validation``.
 
 This module deliberately does not implement Conventional Commits parsing in
 general -- ``conventional-pre-commit`` already does that, both locally and

@@ -80,10 +80,25 @@ publishing anything) — see
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the short version, and the
-[Developer Workflow](docs/development/workflow.md) for the full, binding
-development workflow — branch types and strategy, commit strategy, pull
-requests, and the Definition of Ready / Definition of Done every change is
-checked against.
+[Developer Workflow](docs/development/workflow.md) for contributor-oriented
+workflow documentation.
+
+AI Coding Agents use [AGENTS.md](AGENTS.md) as the single, vendor-neutral
+source of truth for AI Development governance. Tool adapters may add only
+tool-specific integration details; the currently available adapters are
+[CLAUDE.md](CLAUDE.md) and [CODEX.md](CODEX.md).
+
+The adapter architecture is intentionally one-way:
+
+```text
+Repository → AGENTS.md → tool adapter → concrete AI Coding Agent
+```
+
+Different tools, including Claude Code and Codex, may work on the repository;
+these names are illustrative only. Every AI Coding Agent follows the same
+AGENTS.md rules, assumes no proprietary prior knowledge, and leaves enough
+repository-backed context for another Coding Agent to take over. Additional
+adapters may be added later only when a real tool-specific need exists.
 
 ## Architecture (planned)
 

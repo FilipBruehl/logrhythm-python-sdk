@@ -71,7 +71,7 @@ the work, per [Definition of Ready](definition-of-ready.md) and
   certificates used in tests are never real, and never resemble real
   production identifiers. This restates, for tests specifically, the
   repository-wide rule against committing real secrets (see
-  [CLAUDE.md](../../CLAUDE.md), "Security requirements").
+  [`AGENTS.md`](../../AGENTS.md#security-rules)).
 - **Vendor/manufacturer data** — tests never embed captured real vendor
   response data that could contain customer-identifiable or otherwise
   sensitive information. Only documented, synthetic, or explicitly sanitized
