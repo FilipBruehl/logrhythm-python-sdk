@@ -145,13 +145,18 @@ Instead:
   merge lands as a fast-forward (or as close to one as the hosting platform
   allows), keeping `main`'s history linear instead of an interleaved graph of
   merge commits.
+- A merge commit must not be introduced into `main` or `integration/*`.
+  GitHub's **Create a merge commit** method is therefore not used. A working
+  branch may temporarily have non-linear internal history, but its submitted
+  range must be linearized before integration so every commit entering the
+  target is on one linear path.
 - Squash-merge is only ever a deliberate, explicit exception — for example, a
   branch whose intermediate commits are genuinely not worth preserving (a
   string of "fix typo" commits against the same PR) — never the default choice,
   and never for an `integration/*` branch, whose entire purpose is to preserve
   the reviewable structure of the resources merged into it.
-- Actually configuring the GitHub merge-button settings to enforce this is a
-  Branch Protection concern — see
+- Configuring GitHub's merge methods and linear-history protection to enforce
+  this is a repository-administration concern — see
   [Pull Requests, Branch Protection](pull-requests.md#branch-protection)
   — and remains a manual repository-administration step.
 

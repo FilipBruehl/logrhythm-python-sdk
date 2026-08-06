@@ -82,7 +82,7 @@ has not been separately activated.
 
 ## Hook types
 
-Two independent git hook types are configured, each running only the hooks
+Three independent git hook types are configured, each running only the hooks
 explicitly assigned to its stage in `.pre-commit-config.yaml` (every hook
 declares its `stages:` explicitly — nothing relies on an implicit default).
 
@@ -145,7 +145,7 @@ behavior is:
 - the Conventional Commit hook validates syntax and the allowed type list;
 - local merge and `fixup!`/`squash!` messages are permitted by the non-strict
   third-party hook so history preparation is not blocked;
-- the CI validator skips merge commits, rejects `fixup!`/`squash!` commits
+- the CI validator rejects merge commits and `fixup!`/`squash!` commits
   remaining in a submitted range, and accepts Git's default revert subject;
 - Git's default revert subject is a known local limitation: the third-party
   local hook rejects it, so the subject must be converted to the documented

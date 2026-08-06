@@ -168,6 +168,12 @@ main
     merged.
   - No integration, feature, or fix branch outlives its own merge.
 
+Every PR into `main` or `integration/*` must introduce a linear range without
+merge commits. A working branch may temporarily contain non-linear internal
+history, but it must be rebased or otherwise linearized before integration.
+Rebase and Merge, or an equivalent commit-preserving linear procedure, is the
+default; GitHub's Create a merge commit method is not used.
+
 ### Origin and destination at a glance
 
 | Branch | Entsteht von | Merge nach |

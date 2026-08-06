@@ -18,9 +18,9 @@ non-strict behavior; see
 ``docs/development/pre-commit.md#commit-message-validation`` for the documented
 behavior this relies on:
 
-- A merge commit (two or more parents) is skipped, not validated -- it is
-  either a deliberate merge-commit-strategy PR merge or a GitHub-generated
-  merge, never hand-written Conventional Commits prose.
+- A merge commit (two or more parents) is rejected. The protected target
+  branches require linear history, so a merge commit must not remain in the
+  range introduced by a pull request or push.
 - A ``fixup!``/``squash!`` commit is rejected outright. The tool accepts
   these without ``--strict``, but they must never remain in a range that is
   about to land on ``main``/``integration/**``.
@@ -77,14 +77,15 @@ def commit_range(base: str, head: str) -> list[str]:
     range that resolves to zero commits is treated as an error instead of a
     silent pass.
     """
-    if not base or base in (ZERO_SHA, head):
+    if not base or base == ZERO_SHA:
         return [head]
     output = _git("rev-list", "--first-parent", "--reverse", f"{base}..{head}")
     shas = [line for line in output.splitlines() if line]
     if not shas:
         fail(
-            f"commit range {base}..{head} contains no commits to validate -- "
-            "refusing to silently treat an empty range as a pass"
+            f"explicit commit range with base {base} and head {head} contains "
+            "no commits -- an empty explicit range must not be validated "
+            "successfully"
         )
     return shas
 
@@ -168,7 +169,10 @@ def main() -> None:
         short = sha[:12]
 
         if is_merge_commit(sha):
-            ok(f"{short} skipped (merge commit): {subject!r}")
+            failures.append(
+                f"{short} is a merge commit and cannot enter main or an "
+                f"integration branch; protected targets require linear history: {subject!r}"
+            )
             continue
 
         if is_fixup_or_squash(subject):

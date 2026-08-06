@@ -260,7 +260,7 @@ Only a human owner performs the external release actions:
 3. Run all quality, build, package-verification, link, and workflow checks.
 4. Open and review the dedicated release PR.
 5. Merge the release PR into `main`.
-6. Create an annotated `v<version>` tag on that merge commit.
+6. Create an annotated `v<version>` tag on the resulting commit on `main`.
 7. Push only that tag.
 8. Review the `validate-release`, `quality-test`, and `build-verify` results.
 9. Approve the protected `pypi` Environment.
@@ -305,7 +305,7 @@ Use `.release-install-test/bin/python` instead of the Windows path on POSIX.
 
 An AI Coding Agent may, when explicitly authorized:
 
-- prepare the release branch contents;
+- prepare the release-preparation `feature/prepare-<version>` branch contents;
 - update and validate version mirrors, changelog, metadata, and release notes;
 - run quality, build, verification, link, and workflow checks;
 - document the proposed release and report readiness.

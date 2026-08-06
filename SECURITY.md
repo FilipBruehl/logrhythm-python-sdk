@@ -3,16 +3,19 @@
 ## Reporting a vulnerability
 
 If you believe you have found a security vulnerability in `logrhythm-python-sdk`,
-please report it privately rather than opening a public GitHub issue.
+do not open a public GitHub issue or disclose vulnerability details publicly.
 
-**Preferred path — report privately:**
+The intended private reporting path is GitHub Private Vulnerability Reporting:
+open the repository's **Security** area, select **Report a vulnerability**, and
+submit the report there. The repository owner must manually enable this feature
+under **Settings → Security → Private vulnerability reporting**; repository
+files and workflows do not activate it.
 
-- Contact a repository maintainer directly through a private channel, if one is
-  available to you.
-- If no private channel is available, open a GitHub issue that states only that
-  you have a security concern to disclose — **without** any technical detail,
-  proof-of-concept code, logs, tokens, or credentials — and a maintainer will
-  follow up through a private channel to gather further details.
+If **Report a vulnerability** is not available, do not put technical details,
+proof-of-concept code, logs, tokens, or credentials in a public issue. Use only
+an existing nontechnical, organizationally appropriate contact path to ask the
+repository owner or a maintainer to establish a private channel. Do not include
+the vulnerability itself in that request.
 
 The vulnerability itself is never discussed in public issue comments, pull
 requests, or commit messages before it has been assessed and, where applicable,

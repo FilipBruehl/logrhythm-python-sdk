@@ -119,9 +119,9 @@ through `env:` rather than interpolated directly into the `run:` script, as
 a defense-in-depth practice consistent with
 [Least-Privilege & Permissions](#least-privilege--permissions).
 
-[`validate_commits.py`](../../.github/scripts/validate_commits.py) then
-applies two documented, non-silent fallbacks rather than guessing at a
-range it cannot reliably compute:
+[`validate_commits.py`](../../.github/scripts/validate_commits.py) then applies
+one explicit fallback and rejects an explicitly empty range rather than
+guessing at a range it cannot reliably compute:
 
 - **No base at all** (`workflow_dispatch`), or a **`push` whose `before` is
   git's all-zeros sentinel** (`0000000000000000000000000000000000000000`,
@@ -135,14 +135,13 @@ range it cannot reliably compute:
   must never be reported as successfully validated.
 
 Enumeration itself uses `git rev-list --first-parent --reverse base..head`:
-`--first-parent` means a merge commit landing directly on the branch being
-validated (for example, a PR merged into `main` via GitHub's "Create a merge
-commit" strategy) is still seen and structurally recognized as a merge
-commit — see
-[Pre-Commit, Commit-message validation](pre-commit.md#commit-message-validation)
-— without also re-walking and re-validating every individual commit from
-the branch it merged in, which would already have been validated by that
-branch's own pull request.
+`--first-parent` enumerates the actual commits on the submitted branch path and
+still exposes every merge commit on that path, which the validator rejects as
+a linear-history violation. For pull requests, the head is
+`github.event.pull_request.head.sha`, not GitHub's synthetic test-merge commit,
+so the synthetic commit is outside the validated range. Once a real merge
+commit is found, its second-parent history does not need separate message
+validation because the merge commit itself makes the submitted range invalid.
 
 ## CI Pipeline: `quality` → `test`
 
@@ -546,6 +545,16 @@ architectural decision — see
 Branch protection is **not** configured through the GitHub API or UI as part
 of this phase — the rules below are to be applied manually.
 
+Configure the repository-wide pull-request merge methods manually under
+**Settings → General → Pull Requests**:
+
+- disable **Allow merge commits**;
+- enable **Allow rebase merging**;
+- do not use squash merging as the default; disable **Allow squash merging**
+  when enforcing the commit-preserving policy consistently, or reserve it only
+  for the explicit exception defined in
+  [Commit Strategy](commits.md#binding-decision-linear-history-no-default-squash-merge).
+
 ### `main`
 
 - Require a pull request before merging (no direct pushes).
@@ -556,6 +565,8 @@ of this phase — the rules below are to be applied manually.
   - `CI / quality`
   - `CI / test`
 - Require the branch to be up to date with `main` before merging.
+- Require linear history, where the active GitHub ruleset or Branch Protection
+  feature supports it.
 - Require conversation resolution before merging.
 - Do **not** require a second approval yet, given the current one-person
   contributor constellation (revisit once that changes).
@@ -573,6 +584,7 @@ guaranteed on every GitHub tier):
   [Branch Strategy, Model B](branching.md#model-b--larger-work-package-integration-branch)).
 - Require the same status checks: `CI / commit-message`, `CI / quality`,
   `CI / test`.
+- Require linear history, where supported.
 - Block direct pushes and force pushes.
 - No approval requirement (consistent with `main`'s current one-person
   constellation).

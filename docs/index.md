@@ -78,7 +78,7 @@ LogRhythm SIEM REST APIs.
   dependency-upgrade process.
 - [Development: Contributing](development/contributing.md) — local setup and quality checks.
 - [Pre-Commit & Local Code Quality Automation](development/pre-commit.md) — hook
-  installation, hook types (pre-commit/pre-push), the local quality check
+  installation, hook types (`pre-commit`, `pre-push`, and `commit-msg`), the local quality check
   (`pre-commit run --all-files`), and troubleshooting.
 - [Development: Testing](development/testing.md) — how the test suite is organized,
   and testing rules by change type.

@@ -26,15 +26,15 @@ summary.
   [Branch Types & Branch Strategy](branching.md).
 - **About to commit?** See [Commit Strategy](commits.md).
 - **About to open a PR?** See [Pull Requests](pull-requests.md); it will run
-  through `CI / quality` and `CI / test` automatically — see
+  through `CI / commit-message`, `CI / quality`, and `CI / test` automatically — see
   [GitHub Actions: CI, Build & Release](ci.md).
 - **Wrapping up a change?** Check it against
   [Definition of Done](definition-of-done.md).
 - **Writing tests?** See [Testing](testing.md), including
   [Testing rules by change type](testing.md#testing-rules-by-change-type).
 - **Preparing a version or release?** Follow
-  [Release & Publishing](release.md) from the dedicated release branch through
-  installation verification.
+  [Release & Publishing](release.md) from the dedicated release-preparation
+  `feature/prepare-<version>` branch through installation verification.
 - **Working with an AI Coding Agent?** Start with
   [`AGENTS.md`](../../AGENTS.md). If a tool-specific adapter exists, read it
   after AGENTS.md.
@@ -59,7 +59,7 @@ summary.
 | [ADR Policy](../adr/README.md#when-an-adr-is-required) | When a new ADR is required, and when it isn't. |
 | [Dependencies & Tooling](dependencies.md) | Runtime dependency baseline, dependency placement/versioning, and the upgrade process. |
 | [Contributing](contributing.md) | Local setup and required quality commands. |
-| [Pre-Commit & Local Code Quality Automation](pre-commit.md) | Local git hooks (pre-commit/pre-push), secret detection, the `uv-lock` hook, and the local quality check (`pre-commit run --all-files`). |
+| [Pre-Commit & Local Code Quality Automation](pre-commit.md) | Local git hooks (`pre-commit`, `pre-push`, and `commit-msg`), secret detection, the `uv-lock` hook, and the local quality check (`pre-commit run --all-files`). |
 | [GitHub Actions: CI, Build & Release](ci.md) | Server-side CI, separate package verification, the protected release pipeline, actionlint, SHA-pinning, and Branch Protection recommendations. |
 | [Repository Templates & Markdown Tooling](templates.md) | The pull request template, issue forms, document templates, Template Governance, and markdownlint. |
 | [API Implementation Workflow](api-implementation-workflow.md) | The process for implementing a new LogRhythm API area. |

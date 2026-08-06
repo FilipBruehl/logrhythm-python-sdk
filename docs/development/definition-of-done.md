@@ -66,10 +66,11 @@ uv run pytest
 
 These are enforced automatically, twice over: locally via git hooks (see
 [Pre-Commit & Local Code Quality Automation](pre-commit.md)) and server-side
-via the `CI / quality` and `CI / test` status checks (see
-[GitHub Actions: CI, Build & Release](ci.md)). Running them locally first, and
-reporting the results, is still expected — the automation is a backstop, not
-a substitute for checking before reporting a task done.
+through the required `CI / commit-message`, `CI / quality`, and `CI / test`
+status checks (see [GitHub Actions: CI, Build & Release](ci.md)); `quality` and
+`test` enforce the four commands above. Running them locally first, and reporting
+the results, is still expected — the automation is a backstop, not a substitute
+for checking before reporting a task done.
 
 ## Change hygiene
 

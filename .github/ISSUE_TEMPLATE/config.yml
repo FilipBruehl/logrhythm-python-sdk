@@ -3,8 +3,8 @@ contact_links:
   - name: Security vulnerability
     url: https://github.com/FilipBruehl/logrhythm-python-sdk/security/policy
     about: >-
-      Do not open a public issue for a security vulnerability — see
-      SECURITY.md for the private reporting process.
+      Use Security → Report a vulnerability; never disclose details in a
+      public issue. See SECURITY.md if private reporting is not yet available.
   - name: Contributing guide
     url: https://github.com/FilipBruehl/logrhythm-python-sdk/blob/main/CONTRIBUTING.md
     about: Local setup, workflow, and quality checks before opening a PR.
