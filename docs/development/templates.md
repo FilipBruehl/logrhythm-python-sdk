@@ -207,7 +207,7 @@ Markdown linting runs in CI without any workflow change: the `quality` job in
 [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) already runs
 `uv run pre-commit run --all-files --show-diff-on-failure`, which now includes
 the `markdownlint-cli2` hook alongside every other pre-commit-stage check —
-see [GitHub Actions: CI & Build, CI Pipeline](ci.md#ci-pipeline-quality--test).
+see [GitHub Actions, CI Pipeline](ci.md#ci-pipeline-quality--test).
 No new CI job was added.
 
 ## See also
@@ -215,7 +215,7 @@ No new CI job was added.
 - [Pull Requests](pull-requests.md)
 - [Definition of Done](definition-of-done.md)
 - [Pre-Commit & Local Code Quality Automation](pre-commit.md)
-- [GitHub Actions: CI & Build](ci.md)
+- [GitHub Actions: CI, Build & Release](ci.md)
 - [API Implementation Workflow](api-implementation-workflow.md)
 - [ADR Policy](../adr/README.md#when-an-adr-is-required)
 - [Design Specifications](../specifications/README.md)

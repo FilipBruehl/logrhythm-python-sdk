@@ -4,8 +4,8 @@ name: CI
 # including local equivalents of every check run here.
 #
 # Deliberately excluded from this workflow (see docs/development/ci.md):
-# publishing, releases, tag-based triggers, and packaging verification (see
-# build.yml for that).
+# publishing and releases (see release.yml), tag-based triggers, and packaging
+# verification (see build.yml).
 
 on:
   pull_request:

@@ -73,10 +73,16 @@ project rules.
   [docs/development/templates.md](docs/development/templates.md).
 - **Before starting:** check [Definition of Ready](docs/development/definition-of-ready.md).
 - **Before calling it done:** check [Definition of Done](docs/development/definition-of-done.md).
+- **Preparing a release:** use a dedicated `feature/prepare-<version>` branch,
+  update the canonical version and `CHANGELOG.md`, and follow
+  [Release & Publishing](docs/development/release.md). Merge, tag creation,
+  Environment approval, publishing, and GitHub Release creation remain
+  human-owned actions.
 
 For more detail, see [docs/development/contributing.md](docs/development/contributing.md),
 [docs/development/testing.md](docs/development/testing.md),
 [docs/development/pre-commit.md](docs/development/pre-commit.md),
 [docs/development/ci.md](docs/development/ci.md),
+[docs/development/release.md](docs/development/release.md),
 [docs/development/templates.md](docs/development/templates.md), and the full
 [Developer Workflow](docs/development/workflow.md) index.

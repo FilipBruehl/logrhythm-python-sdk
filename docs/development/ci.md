@@ -1,12 +1,13 @@
-# GitHub Actions: CI & Build
+# GitHub Actions: CI, Build & Release
 
 This page documents the project's server-side automation: the CI workflow
-(`.github/workflows/ci.yml`) and the build workflow
-(`.github/workflows/build.yml`). It complements
+(`.github/workflows/ci.yml`), build workflow
+(`.github/workflows/build.yml`), and release workflow
+(`.github/workflows/release.yml`). It complements
 [Pre-Commit & Local Code Quality Automation](pre-commit.md), which these
 workflows largely re-run in a clean, server-side environment on every pull
-request and relevant push. No publishing, release, or tag-based workflow is
-introduced here — see [Build vs. Publish](#build-vs-publish).
+request, relevant push, or authorized release. Build, publish, and GitHub
+Release creation remain separate processes.
 
 ## Purpose
 
@@ -18,6 +19,10 @@ introduced here — see [Build vs. Publish](#build-vs-publish).
 - **`build.yml`** independently confirms the SDK can be built into
   distributable artifacts (wheel + sdist) and that those artifacts actually
   install and import correctly — without publishing them anywhere.
+- **`release.yml`** validates an exact release version and `main` commit,
+  reruns quality and tests, builds and verifies fresh artifacts, publishes
+  through an Environment-scoped OIDC Trusted Publisher, and creates a GitHub
+  Release only after successful PyPI publication.
 
 ## Triggers
 
@@ -63,6 +68,17 @@ because `ci.yml`'s quality job — which every packaging-relevant change also
 goes through — depends on it; a change there is a signal the build
 environment's tooling contract changed. The workflow's own file and the
 verification script are included so that editing either re-validates itself.
+
+### `release.yml`
+
+- `push` of a tag matching `v*` selects the protected `pypi` Environment.
+- `workflow_dispatch` requires a target of `testpypi` or `pypi`.
+- Manual TestPyPI runs must use `main`.
+- Manual PyPI retries must use the existing release tag.
+
+Every trigger validates the version sources and confirms that the selected
+commit is contained in `main`. Details are binding in
+[Release & Publishing](release.md#release-workflow-triggers).
 
 ## Commit-message job
 
@@ -185,7 +201,7 @@ verify-package
 
 ```bash
 uv sync --locked
-uv build
+uv build --no-sources
 ```
 
 Produces a wheel and a source distribution under `dist/`.
@@ -234,13 +250,65 @@ that could publish anything, by construction (see
 pushes — including to `main` — can **never** publish a package through this
 phase's automation.
 
-Release and publish automation is explicitly deferred to a later phase,
-**A.3.7 — Release & Publishing**, which will be implemented before the first
-real release. No `publish.yml` exists yet. The eventual publish workflow is
-expected to publish only already-verified build artifacts and to be triggered
-by release tags and/or a deliberately gated manual release process — these
-details are not finalized now, on purpose, so this phase does not
-prematurely lock in a design for a problem it isn't solving yet.
+`release.yml` is the only publishing workflow. It rebuilds and verifies fresh
+artifacts after validation and quality checks, transfers them between jobs as
+one immutable workflow artifact, verifies their SHA-256 checksums after every
+download, and publishes those exact wheel and source-distribution files.
+
+Publishing uses `uv publish` with OIDC Trusted Publishing. It does not use
+`twine`, a publishing action, long-lived API tokens, usernames, or passwords.
+The `testpypi` and `pypi` Environments provide the external deployment gates;
+`pypi` requires manual approval. GitHub Release creation is a later job and
+cannot run unless PyPI publishing succeeds.
+
+## Release pipeline
+
+The Release workflow uses five dependent jobs and never trusts a previous CI
+or Build workflow run:
+
+```text
+validate-release
+       |
+       v
+quality-test
+       |
+       v
+build-verify
+       |
+       v
+publish
+       |
+       v
+github-release
+```
+
+- `validate-release` checks the `v<version>` tag, the canonical
+  `pyproject.toml` version, `uv version --short`, `__version__`, the dated
+  changelog section, and ancestry from `main`.
+- `quality-test` reruns Ruff format, Ruff lint, mypy, and pytest.
+- `build-verify` runs `uv build --no-sources`, reuses
+  `verify_package.py`, writes `SHA256SUMS`, extracts manually curated release
+  notes from `CHANGELOG.md`, and uploads the verified files.
+- `publish` downloads the artifacts, verifies checksums, enters the selected
+  GitHub Environment, obtains an OIDC token, and invokes `uv publish`.
+- `github-release` runs only for `pypi`, only after publish succeeds, and
+  attaches the wheel, sdist, checksum file, and curated notes to the existing
+  tag. PEP 440 alpha, beta, and RC versions become GitHub pre-releases.
+
+## GitHub Environments and Trusted Publishing
+
+The `testpypi` and `pypi` Environments are configured manually in GitHub; the
+workflow does not administer repository settings. `pypi` must require a human
+reviewer and restrict deployment to protected `v*` tags. Each registry also
+requires its own Trusted Publisher registration naming this repository,
+`.github/workflows/release.yml`, and the exact Environment name.
+
+The publish job uses `id-token: write` only to request the short-lived OIDC
+identity. `contents: read` is retained for least privilege. TestPyPI is an
+optional manual validation path; production releases use a tag plus the
+protected `pypi` Environment. See
+[Release & Publishing](release.md#trusted-publishing-and-github-environments)
+for setup and operational responsibilities.
 
 ## Local equivalents
 
@@ -249,7 +317,9 @@ prematurely lock in a design for a problem it isn't solving yet.
 | `commit-message` job | The `commit-msg` git hook, which runs automatically on every local `git commit` — see [Pre-Commit, Installation](pre-commit.md#installation). To check an already-made commit or range manually: `uv run python .github/scripts/validate_commits.py --head <sha>` (or `--base <sha> --head <sha>` for a range). |
 | `quality` job | `uv run pre-commit run --all-files` — see [Pre-Commit, Local quality check](pre-commit.md#local-quality-check). |
 | `test` job | `uv run pytest` (add `--cov-report=xml` to also produce the XML report locally). |
-| `build` job | `uv build`, then the same verification steps — see [`.github/scripts/verify_package.py`](../../.github/scripts/verify_package.py); can be run manually with `uv venv .verify-venv && uv pip install --python .verify-venv dist/*.whl && uv run python .github/scripts/verify_package.py --installed-python .verify-venv/bin/python` (adjust the interpreter path on Windows: `.verify-venv/Scripts/python.exe`). |
+| `build` job | `uv build --no-sources`, then the same verification steps — see [`.github/scripts/verify_package.py`](../../.github/scripts/verify_package.py); can be run manually with `uv venv .verify-venv && uv pip install --python .verify-venv dist/*.whl && uv run python .github/scripts/verify_package.py --installed-python .verify-venv/bin/python` (adjust the interpreter path on Windows: `.verify-venv/Scripts/python.exe`). |
+| `validate-release` job | `uv run --locked python .github/scripts/validate_release.py --tag v<version>`. Main-branch ancestry is additionally checked by the workflow. |
+| Release quality/build verification | Run the full commands in [Release & Publishing, Local release validation](release.md#local-release-validation). Publishing itself has no local equivalent and remains human-gated. |
 | `actionlint` | Runs automatically as part of `pre-commit run --all-files` (see [actionlint](#actionlint)). |
 | `markdownlint-cli2` | Runs automatically as part of `pre-commit run --all-files` (see [Templates, Markdownlint](templates.md#markdownlint)). |
 
@@ -272,6 +342,11 @@ is **not** configured as a universally required status check (see
 deliberately does not run for non-packaging-relevant changes — a required
 check that sometimes never starts would permanently block merging.
 
+`release.yml` produces `Release / validate-release`,
+`Release / quality-test`, `Release / build-verify`, `Release / publish`, and,
+for PyPI releases, `Release / github-release`. These are release evidence, not
+branch-protection checks for ordinary pull requests.
+
 ## Cache
 
 `astral-sh/setup-uv` is configured with `enable-cache: true`, which caches
@@ -291,9 +366,14 @@ single artifact:
   `verify_package.py` already checked — nothing is published to PyPI,
   TestPyPI, or any other registry.
 
+`release.yml` separately uploads `release-packages`, retained for 7 days. It
+contains the freshly verified wheel and sdist, `SHA256SUMS`, and the curated
+release-notes file. The publish and GitHub Release jobs download this same
+artifact and verify its checksums before use.
+
 ## Concurrency
 
-Both workflows cancel a superseded, still-running execution for the same
+The CI and Build workflows cancel a superseded, still-running execution for the same
 workflow and ref/PR:
 
 ```yaml
@@ -305,10 +385,14 @@ concurrency:
 `github.workflow` (`CI` vs. `Build`) keeps the two workflows' concurrency
 groups from ever colliding with each other, even for the same branch or PR.
 
+Release runs use a separate `release-<ref>-<target>` group with
+`cancel-in-progress: false`. A publication is never canceled merely because a
+second run was requested.
+
 ## Least-Privilege & Permissions
 
-Both workflows declare, at the workflow level (nothing more permissive at the
-job level):
+CI and Build declare, at the workflow level (nothing more permissive at the job
+level):
 
 ```yaml
 permissions:
@@ -331,6 +415,16 @@ SHAs, not attacker-influenceable free text, but the indirection is a cheap,
 standard defense-in-depth practice against the general class of
 `${{ }}`-expression injection in `run:` steps.
 
+Release also defaults to `contents: read`. Its only job-level exceptions are:
+
+- `publish`: `contents: read` and `id-token: write` for OIDC Trusted
+  Publishing;
+- `github-release`: `contents: write`, required only after successful PyPI
+  publishing to create the GitHub Release and upload assets.
+
+No job receives broader repository, pull-request, package, or administration
+permissions. OIDC is unavailable to every job except `publish`.
+
 ## Actions & SHA Pinning
 
 Every external action is pinned to a full, immutable commit SHA, with the
@@ -341,9 +435,10 @@ or branch:
 | --- | --- | --- |
 | `actions/checkout` | `3d3c42e5aac5ba805825da76410c181273ba90b1` (`v7.0.1`) | Checking out the repository. |
 | `astral-sh/setup-uv` | `c771a70e6277c0a99b617c7a806ffedaca235ff9` (`v9.0.0`) | Installing uv and Python 3.13. |
-| `actions/upload-artifact` | `043fb46d1a93c77aae656e7c1c64a875d1fc6a0a` (`v7.0.1`) | Uploading `distribution-packages` in `build.yml`. |
+| `actions/upload-artifact` | `043fb46d1a93c77aae656e7c1c64a875d1fc6a0a` (`v7.0.1`) | Uploading verified build and release artifacts. |
+| `actions/download-artifact` | `3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c` (`v8.0.1`) | Retrieving verified artifacts in publish and GitHub Release jobs. |
 
-Only these three, established actions are used — no additional marketplace
+Only these established actions are used; no third-party publishing or release
 action was added. **Updating a pin** is a deliberate step: resolve the new
 release's commit SHA (e.g.
 `git ls-remote --tags https://github.com/<org>/<repo> <new-tag>`, or the
@@ -365,7 +460,7 @@ this project's local workflow has always relied on. `--locked` (not
 `--frozen`) is used because it actively **asserts the lockfile would not
 change** — it fails the moment `pyproject.toml` and `uv.lock` disagree,
 rather than silently using a possibly-stale lock. Concretely, this guarantees
-every job in both workflows:
+every dependency-installing job in all three workflows:
 
 - never modifies `uv.lock`,
 - fails immediately if `pyproject.toml` and `uv.lock` have drifted apart, and
@@ -394,7 +489,8 @@ workflow syntax, expressions, and (where `shellcheck` is available) the
 
 Its built-in file filter (`files: ^\.github/workflows/`) means it
 automatically covers every file under `.github/workflows/` — currently
-`ci.yml` and `build.yml` — without listing them individually. It runs:
+`ci.yml`, `build.yml`, and `release.yml` — without listing them individually.
+It runs:
 
 - **Locally**, as part of `uv run pre-commit run --all-files` (or targeted:
   `uv run pre-commit run actionlint`).
@@ -427,6 +523,19 @@ architectural decision — see
   file, forbidden path in the wheel, metadata mismatch, or an isolated-install
   failure) and reproduces the same way locally (see
   [Local equivalents](#local-equivalents)).
+- **`validate-release` fails.** Run
+  `uv run --locked python .github/scripts/validate_release.py --tag v<version>` locally
+  and correct the reported tag, version mirror, or changelog mismatch. A commit
+  that is not contained in `main` cannot be released.
+- **`publish` waits.** The selected GitHub Environment is awaiting its required
+  reviewer or does not have matching deployment protection. Do not bypass the
+  Environment; review its configuration and the release evidence.
+- **Trusted Publishing fails.** Confirm the registry-side publisher names the
+  exact owner, repository, workflow filename, and Environment. No API-token
+  fallback is supported.
+- **A PyPI retry is required.** Dispatch `pypi` from the existing release tag.
+  `uv publish --check-url` skips identical files already present and rejects
+  mismatched artifacts.
 - **A workflow fails only in CI, not locally.** Confirm you're on Python
   3.13 and used `uv sync --locked` (not a plain `uv sync`, which would
   silently update the lock instead of failing on drift) — see
@@ -476,18 +585,14 @@ All of the above is applied by hand in the repository's GitHub settings
 (Settings → Branches / Rules); no automation configures it, per this phase's
 scope.
 
-## What this phase deliberately does not include
+## Deliberately deferred extensions
 
-Per Scope: publishing to PyPI/TestPyPI, GitHub Releases, tag-based
-publishing, Trusted Publishing, an enforced coverage gate or external
-coverage service (Codecov/Coveralls), Dependabot/Renovate, and a merge
-queue. (Commit-message linting, the `commit-msg` hook, Markdown linting, and
-PR/issue templates were out of scope when this page was first written, but
-have since been added — see [Commit-message job](#commit-message-job) /
-[Pre-Commit](pre-commit.md#commit-message-validation) and
-[Templates](templates.md), respectively.) See
-[Build vs. Publish](#build-vs-publish) above for where publishing
-is planned (A.3.7).
+Artifact attestations, automatic changelog generation, automatic release-note
+generation, dynamic Git-derived versioning, an enforced coverage gate or
+external coverage service, Dependabot/Renovate, and a merge queue are not
+implemented. The current workflow passes `uv publish --no-attestations`, uses
+the manually curated changelog section as release notes, and reads the version
+only from `pyproject.toml` plus its validated mirrors.
 
 ## See also
 
@@ -496,3 +601,4 @@ is planned (A.3.7).
 - [Pull Requests](pull-requests.md)
 - [Definition of Done](definition-of-done.md)
 - [Branch Types & Branch Strategy](branching.md)
+- [Release & Publishing](release.md)

@@ -57,7 +57,7 @@ These two are easy to confuse and are kept deliberately distinct:
   under `.github/workflows/`, CI/CD pipeline configuration, build- and
   test-workflow definitions, pipeline automation, and branch-protection-adjacent
   infrastructure (status check names, required workflows) — see
-  [GitHub Actions: CI & Build](ci.md). In short: what runs a check or builds
+  [GitHub Actions: CI, Build & Release](ci.md). In short: what runs a check or builds
   something *for* the project, on a server, not what a contributor runs
   locally.
 
@@ -178,7 +178,7 @@ instead:
 - [Pull Requests](pull-requests.md)
 - [Definition of Done](definition-of-done.md) — commit-strategy compliance is
   part of "done."
-- [GitHub Actions: CI & Build](ci.md) — the `CI / commit-message` status
+- [GitHub Actions: CI, Build & Release](ci.md) — the `CI / commit-message` status
   check.
 - [Pre-Commit, Commit-message validation](pre-commit.md#commit-message-validation) —
   the local `commit-msg` hooks and their server-side counterpart.

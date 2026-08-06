@@ -50,8 +50,9 @@ Repository sources have distinct, non-competing responsibilities:
    - `docs/development/commits.md` for commit strategy,
    - `docs/development/pull-requests.md` for pull requests,
    - `docs/development/definition-of-ready.md` for Definition of Ready,
-   - `docs/development/definition-of-done.md` for Definition of Done, and
-   - `docs/development/testing.md` for testing strategy.
+   - `docs/development/definition-of-done.md` for Definition of Done,
+   - `docs/development/testing.md` for testing strategy, and
+   - `docs/development/release.md` for versioning, release, and publishing.
 4. `SECURITY.md` governs vulnerability reporting. Accepted specifications,
    ADRs, and the applicable security rules govern security-sensitive behavior.
 5. This file governs how an AI Coding Agent applies those sources, plans work,
@@ -269,7 +270,10 @@ inside an authorized task and do not change any boundary above.
 | Push | Explicit approval required | Never directly to `main`; never force-push. |
 | Create a pull request | Explicit approval required | Drafting the description is allowed; submission needs approval. |
 | Merge a pull request | Prohibited | Performed by a human owner or authorized repository process. |
+| Prepare or validate a release | Allowed | Only within an authorized release-preparation task and the binding release guide. |
+| Create or push a release tag | Prohibited | Release tags are created and pushed by a human owner. |
 | Trigger a release or publish | Prohibited | Outside the AI Coding Agent's authority. |
+| Approve a publishing environment | Prohibited | Deployment approval remains human-owned. |
 | Change branch protection or repository rules | Prohibited | Repository administration remains human-owned. |
 | Introduce a security exception | Explicit approval required | Requires a human security decision and any necessary ADR/SPEC update. |
 
@@ -380,6 +384,15 @@ when they:
 Do not artificially unify identities. An AI Coding Agent never changes Git
 identity configuration unless the user explicitly requests and approves the
 exact values and scope.
+
+## Release responsibilities
+
+The binding versioning, release, and publishing process is defined in
+[Release & Publishing](docs/development/release.md). An AI Coding Agent may
+prepare and validate release files when explicitly authorized. It never merges
+the release pull request, creates or pushes the release tag, starts or reruns
+the Release workflow, approves a GitHub Environment, invokes publishing, or
+creates the GitHub Release.
 
 ## Quality gates
 
@@ -528,5 +541,6 @@ The human owner remains accountable for every decision and external action.
 - `docs/development/definition-of-done.md` for completion criteria and quality
   checks.
 - `docs/development/testing.md` for testing strategy.
+- `docs/development/release.md` for versioning, release, and publishing.
 - The remaining documents under `docs/development/` for tooling and
   contributor-oriented workflow details.

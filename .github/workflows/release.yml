@@ -1,0 +1,284 @@
+name: Release
+
+# Release is deliberately separate from CI and Build:
+# Validate -> Quality -> Build/Verify -> Publish -> GitHub Release.
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Registry environment for a deliberate manual publication
+        required: true
+        default: testpypi
+        type: choice
+        options:
+          - testpypi
+          - pypi
+
+concurrency:
+  group: release-${{ github.ref }}-${{ inputs.target || 'pypi' }}
+  cancel-in-progress: false
+
+# Read-only is the default. Only publish can request an OIDC token, and only
+# github-release can write the GitHub Release after publication succeeds.
+permissions:
+  contents: read
+
+jobs:
+  validate-release:
+    name: validate-release
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.context.outputs.version }}
+      tag: ${{ steps.context.outputs.tag }}
+      publish_target: ${{ steps.context.outputs.publish_target }}
+      prerelease: ${{ steps.context.outputs.prerelease }}
+    steps:
+      - name: Checkout complete history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: "0.12.0"
+          python-version: "3.13"
+          enable-cache: true
+
+      - name: Resolve release context
+        id: context
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          REF_NAME: ${{ github.ref_name }}
+          REF_TYPE: ${{ github.ref_type }}
+          REQUESTED_TARGET: ${{ inputs.target }}
+        run: |
+          set -euo pipefail
+          version="$(uv version --short)"
+
+          if [ "$EVENT_NAME" = "push" ]; then
+            publish_target="pypi"
+            tag="$REF_NAME"
+          elif [ "$REQUESTED_TARGET" = "testpypi" ]; then
+            if [ "$REF_TYPE" != "branch" ] || [ "$REF_NAME" != "main" ]; then
+              echo "TestPyPI dispatches must run from the main branch." >&2
+              exit 1
+            fi
+            publish_target="testpypi"
+            tag="v$version"
+          elif [ "$REQUESTED_TARGET" = "pypi" ]; then
+            if [ "$REF_TYPE" != "tag" ]; then
+              echo "Manual PyPI dispatches must run from the release tag." >&2
+              exit 1
+            fi
+            publish_target="pypi"
+            tag="$REF_NAME"
+          else
+            echo "Unsupported publish target: $REQUESTED_TARGET" >&2
+            exit 1
+          fi
+
+          prerelease="false"
+          if [[ "$version" =~ (a|b|rc)[0-9]+$ ]]; then
+            prerelease="true"
+          fi
+
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "publish_target=$publish_target" >> "$GITHUB_OUTPUT"
+          echo "prerelease=$prerelease" >> "$GITHUB_OUTPUT"
+
+      - name: Validate tag and version sources
+        env:
+          RELEASE_TAG: ${{ steps.context.outputs.tag }}
+        run: uv run --locked python .github/scripts/validate_release.py --tag "$RELEASE_TAG"
+
+      - name: Confirm release commit is on main
+        env:
+          RELEASE_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin main:refs/remotes/origin/main
+          git merge-base --is-ancestor "$RELEASE_SHA" refs/remotes/origin/main
+
+  quality-test:
+    name: quality-test
+    needs: validate-release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: "0.12.0"
+          python-version: "3.13"
+          enable-cache: true
+
+      - name: Install dependencies (locked)
+        run: uv sync --locked
+
+      - name: Check formatting
+        run: uv run ruff format --check .
+
+      - name: Lint
+        run: uv run ruff check .
+
+      - name: Type check
+        run: uv run mypy src/logrhythm_sdk
+
+      - name: Test
+        run: uv run pytest
+
+  build-verify:
+    name: build-verify
+    needs: [validate-release, quality-test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: "0.12.0"
+          python-version: "3.13"
+          enable-cache: true
+
+      - name: Install dependencies (locked)
+        run: uv sync --locked
+
+      - name: Build wheel and source distribution
+        run: uv build --no-sources
+
+      - name: Create isolated verification environment
+        run: uv venv .verify-venv
+
+      - name: Install wheel into the isolated environment
+        run: uv pip install --python .verify-venv "$(find dist -name '*.whl')"
+
+      - name: Verify package
+        run: uv run python .github/scripts/verify_package.py --installed-python .verify-venv/bin/python
+
+      - name: Create SHA-256 checksums
+        working-directory: dist
+        run: sha256sum -- *.whl *.tar.gz > SHA256SUMS
+
+      - name: Extract curated release notes
+        env:
+          RELEASE_TAG: ${{ needs.validate-release.outputs.tag }}
+        run: >-
+          uv run --locked python .github/scripts/validate_release.py
+          --tag "$RELEASE_TAG"
+          --notes-output release-notes.md
+
+      - name: Upload verified release artifacts
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: release-packages
+          path: |
+            dist/*.whl
+            dist/*.tar.gz
+            dist/SHA256SUMS
+            release-notes.md
+          retention-days: 7
+          if-no-files-found: error
+
+  publish:
+    name: publish
+    needs: [validate-release, build-verify]
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ needs.validate-release.outputs.publish_target }}
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Install uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: "0.12.0"
+          python-version: "3.13"
+          enable-cache: false
+
+      - name: Download verified release artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: release-packages
+          path: release-artifacts
+
+      - name: Verify SHA-256 checksums
+        working-directory: release-artifacts/dist
+        run: sha256sum --check SHA256SUMS
+
+      - name: Publish with OIDC Trusted Publishing
+        env:
+          PUBLISH_TARGET: ${{ needs.validate-release.outputs.publish_target }}
+        run: |
+          set -euo pipefail
+          if [ "$PUBLISH_TARGET" = "testpypi" ]; then
+            uv publish \
+              --publish-url https://test.pypi.org/legacy/ \
+              --check-url https://test.pypi.org/simple/ \
+              --trusted-publishing always \
+              --no-attestations \
+              release-artifacts/dist/*.whl \
+              release-artifacts/dist/*.tar.gz
+          else
+            uv publish \
+              --check-url https://pypi.org/simple/ \
+              --trusted-publishing always \
+              --no-attestations \
+              release-artifacts/dist/*.whl \
+              release-artifacts/dist/*.tar.gz
+          fi
+
+  github-release:
+    name: github-release
+    needs: [validate-release, publish]
+    if: ${{ needs.validate-release.outputs.publish_target == 'pypi' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download published release artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: release-packages
+          path: release-artifacts
+
+      - name: Verify SHA-256 checksums
+        working-directory: release-artifacts/dist
+        run: sha256sum --check SHA256SUMS
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ needs.validate-release.outputs.tag }}
+          PRERELEASE: ${{ needs.validate-release.outputs.prerelease }}
+        run: |
+          set -euo pipefail
+          release_flags=()
+          if [ "$PRERELEASE" = "true" ]; then
+            release_flags+=(--prerelease --latest=false)
+          fi
+          gh release create "$RELEASE_TAG" \
+            release-artifacts/dist/*.whl \
+            release-artifacts/dist/*.tar.gz \
+            release-artifacts/dist/SHA256SUMS \
+            --verify-tag \
+            --title "$RELEASE_TAG" \
+            --notes-file release-artifacts/release-notes.md \
+            "${release_flags[@]}"

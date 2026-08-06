@@ -38,7 +38,7 @@ Every PR description states, at minimum:
 - **Quality check results** — confirmation that `ruff format --check`,
   `ruff check`, `mypy`, and `pytest` all pass (see
   [Definition of Done](definition-of-done.md)). The `CI / quality` and
-  `CI / test` checks (see [GitHub Actions: CI & Build](ci.md)) confirm this
+  `CI / test` checks (see [GitHub Actions: CI, Build & Release](ci.md)) confirm this
   automatically once the PR is open — restating it in the description is
   still expected, since the checks run after the description is written.
 - **Documentation impact** — which docs were updated in the same change, or an
@@ -73,7 +73,7 @@ A PR may be merged only once:
 
 - All four required quality commands pass. This is now automatically
   confirmed server-side by `CI / quality` and `CI / test` (see
-  [GitHub Actions: CI & Build](ci.md)), in addition to the local pre-commit
+  [GitHub Actions: CI, Build & Release](ci.md)), in addition to the local pre-commit
   hooks from [Pre-Commit & Local Code Quality Automation](pre-commit.md) —
   still restated and reported in the PR / completion report.
 - At least one review has been completed against the
@@ -93,8 +93,8 @@ A PR may be merged only once:
 
 Concrete branch protection / ruleset recommendations — including the required
 status checks `CI / quality` and `CI / test` now that
-[GitHub Actions: CI & Build](ci.md) exists — are documented in
-[GitHub Actions: CI & Build, Branch Protection / Rulesets recommendations](ci.md#branch-protection--rulesets-recommendations).
+[GitHub Actions: CI, Build & Release](ci.md) exists — are documented in
+[GitHub Actions, Branch Protection / Rulesets recommendations](ci.md#branch-protection--rulesets-recommendations).
 These are **not** configured through the GitHub API or UI as part of any
 phase so far; they are applied by hand, per that page.
 
@@ -103,7 +103,7 @@ phase so far; they are applied by hand, per that page.
 - [Branch Types & Branch Strategy](branching.md)
 - [Commit Strategy](commits.md)
 - [Definition of Done](definition-of-done.md)
-- [GitHub Actions: CI & Build](ci.md) — the `CI / quality` and `CI / test`
+- [GitHub Actions: CI, Build & Release](ci.md) — the `CI / quality` and `CI / test`
   checks, and branch protection recommendations.
 - [`AGENTS.md`, Push and pull requests](../../AGENTS.md#push-and-pull-requests) —
   AI Coding Agent authority for PR-related actions.

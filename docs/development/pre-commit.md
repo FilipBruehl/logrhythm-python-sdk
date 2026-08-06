@@ -8,7 +8,7 @@ checks on demand, outside of a commit. It complements
 [Definition of Done](definition-of-done.md) (the checklist this automation
 partially enforces). This page is local-only; the same hooks now also run
 server-side on every pull request and relevant push — see
-[GitHub Actions: CI & Build](ci.md).
+[GitHub Actions: CI, Build & Release](ci.md).
 
 ## Installation
 
@@ -104,7 +104,7 @@ Runs on every `git commit`, via `.git/hooks/pre-commit`. Configured hooks:
 | `debug-statements` | `pre-commit/pre-commit-hooks` | Blocks committing stray Python debugger/breakpoint statements. |
 | `gitleaks` | `gitleaks/gitleaks` | Secret detection — see [Secret Detection](#secret-detection). |
 | `uv-lock` | `astral-sh/uv-pre-commit` | Keeps `uv.lock` from being committed out of date — see [uv Integration](#uv-integration). |
-| `actionlint` | `rhysd/actionlint` | Validates GitHub Actions workflow files under `.github/workflows/` — see [GitHub Actions: CI & Build](ci.md#actionlint). |
+| `actionlint` | `rhysd/actionlint` | Validates GitHub Actions workflow files under `.github/workflows/` — see [GitHub Actions: CI, Build & Release](ci.md#actionlint). |
 | `markdownlint-cli2` | `DavidAnson/markdownlint-cli2` | Markdown style/consistency checking, check-only — see [Templates, Markdownlint](templates.md#markdownlint). |
 | `mypy` (local) | this repo | Static type checking, matching `mypy src/logrhythm_sdk`. |
 
@@ -295,8 +295,8 @@ uv run pre-commit install --hook-type commit-msg
   automation partially enforces.
 - [`AGENTS.md`](../../AGENTS.md) — vendor-neutral commit, push, quality, and
   security governance that this automation partially enforces.
-- [GitHub Actions: CI & Build](ci.md#commit-message-job) — the server-side
+- [GitHub Actions: CI, Build & Release](ci.md#commit-message-job) — the server-side
   counterpart to commit-message validation.
-- [GitHub Actions: CI & Build](ci.md) — the same hooks running server-side.
+- [GitHub Actions: CI, Build & Release](ci.md) — the same hooks running server-side.
 - [Repository Templates & Markdown Tooling](templates.md) — the
   `markdownlint-cli2` configuration and manual `--fix` invocation in detail.

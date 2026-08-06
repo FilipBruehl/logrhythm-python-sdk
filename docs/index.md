@@ -53,6 +53,11 @@ LogRhythm SIEM REST APIs.
   how far each endpoint has progressed from not-yet-inventoried to implemented.
 - [Developer Workflow](development/workflow.md) — contributor-oriented navigation
   for branching, commits, pull requests, readiness/completion criteria, and testing.
+- [Release & Publishing](development/release.md) — Semantic Versioning,
+  changelog, release PRs, TestPyPI/PyPI Trusted Publishing, GitHub
+  Environments, GitHub Releases, and release responsibilities.
+- [Changelog](../CHANGELOG.md) — curated release history following Keep a
+  Changelog.
 - [AI Coding Agent Governance](../AGENTS.md) — the single, vendor-neutral source
   of truth for AI Coding Agent roles, lifecycle, context recovery, authority,
   Git safety, quality gates, security, and completion reports.
@@ -77,9 +82,9 @@ LogRhythm SIEM REST APIs.
   (`pre-commit run --all-files`), and troubleshooting.
 - [Development: Testing](development/testing.md) — how the test suite is organized,
   and testing rules by change type.
-- [GitHub Actions: CI & Build](development/ci.md) — the server-side `CI / quality`
-  → `CI / test` pipeline, the separate build/package-verification workflow,
-  actionlint, SHA-pinning, and Branch Protection recommendations.
+- [GitHub Actions: CI, Build & Release](development/ci.md) — server-side CI,
+  separate package verification, the protected release pipeline, actionlint,
+  SHA-pinning, and Branch Protection recommendations.
 - [Repository Templates & Markdown Tooling](development/templates.md) — the
   pull request template, GitHub Issue Forms, document templates (ADR, SPEC,
   API Resource), Template Governance, and markdownlint.
@@ -100,6 +105,7 @@ src/logrhythm_sdk/   Importable package (src layout)
 tests/unit/          Unit tests
 tests/integration/   Integration tests (added once there is something to integrate with)
 docs/                This documentation
+CHANGELOG.md          Curated release history
 AGENTS.md             Vendor-neutral AI Development governance
 CLAUDE.md             Claude Code adapter
 CODEX.md              Codex adapter

@@ -3,8 +3,7 @@ name: Build
 # Packaging verification only: confirms the SDK builds and installs
 # correctly. This workflow never publishes anything — see
 # docs/development/ci.md#build-vs-publish and Phase A.3.7 (Release &
-# Publishing, not yet implemented) for where an eventual publish step will
-# live, separately from this workflow.
+# Publishing) and release.yml for the separate, gated publish process.
 
 on:
   pull_request:
@@ -66,7 +65,7 @@ jobs:
 
       # --- Build: produce the wheel and source distribution. ---
       - name: Build distributions
-        run: uv build
+        run: uv build --no-sources
 
       # --- Verify: confirm the built artifacts are correct, before they are
       # ever uploaded or trusted. ---

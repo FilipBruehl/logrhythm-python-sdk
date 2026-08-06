@@ -21,8 +21,10 @@ author.
   touched.
 - [API Coverage Matrix](../coverage/api-coverage.md) is updated for any
   endpoint-level implementation work.
-- `CHANGELOG.md` is updated for user-visible changes, once the SDK has
-  user-visible functionality.
+- `CHANGELOG.md` is updated under `Unreleased` for every user-visible change.
+- A release-preparation change satisfies the version, changelog, build,
+  verification, and release-readiness requirements in
+  [Release & Publishing](release.md).
 
 ## Architecture conformance
 
@@ -65,7 +67,7 @@ uv run pytest
 These are enforced automatically, twice over: locally via git hooks (see
 [Pre-Commit & Local Code Quality Automation](pre-commit.md)) and server-side
 via the `CI / quality` and `CI / test` status checks (see
-[GitHub Actions: CI & Build](ci.md)). Running them locally first, and
+[GitHub Actions: CI, Build & Release](ci.md)). Running them locally first, and
 reporting the results, is still expected — the automation is a backstop, not
 a substitute for checking before reporting a task done.
 
@@ -93,5 +95,6 @@ occurred. See [`AGENTS.md`](../../AGENTS.md#completion-reports).
 - [Definition of Ready](definition-of-ready.md)
 - [Testing Rules](testing.md#testing-rules-by-change-type)
 - [Architecture Governance](../../AGENTS.md#architecture-governance)
-- [GitHub Actions: CI & Build](ci.md)
+- [GitHub Actions: CI, Build & Release](ci.md)
+- [Release & Publishing](release.md)
 - [`AGENTS.md`](../../AGENTS.md) — binding AI Development governance.

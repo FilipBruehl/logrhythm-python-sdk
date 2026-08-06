@@ -103,7 +103,7 @@ hooks and the `CI / commit-message` job.
 
 The implementation and its special cases are documented in
 [Pre-Commit & Local Code Quality Automation](pre-commit.md#commit-message-validation)
-and [GitHub Actions: CI & Build](ci.md#commit-message-job).
+and [GitHub Actions: CI, Build & Release](ci.md#commit-message-job).
 
 ## Changing the settings
 
@@ -122,4 +122,4 @@ Any broader governance change belongs in `AGENTS.md` and remains human-owned.
 - [`AGENTS.md`](../../AGENTS.md) — binding vendor-neutral governance.
 - [`CLAUDE.md`](../../CLAUDE.md) — repository-root Claude Code adapter.
 - [Pre-Commit](pre-commit.md) — repository-wide local automation.
-- [CI & Build](ci.md) — repository-wide server-side automation.
+- [CI, Build & Release](ci.md) — repository-wide server-side automation.

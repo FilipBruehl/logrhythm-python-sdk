@@ -77,6 +77,17 @@ independently verifies the package builds and installs correctly (never
 publishing anything) — see
 [docs/development/ci.md](docs/development/ci.md).
 
+## Versioning and releases
+
+The project uses Semantic Versioning with Python-compatible version strings.
+`pyproject.toml` is the canonical version source, Git tags use `v<version>`,
+and [`CHANGELOG.md`](CHANGELOG.md) follows Keep a Changelog. Build, publish,
+and GitHub Release creation are separate, gated stages.
+
+See [Release & Publishing](docs/development/release.md) for version updates,
+the dedicated release PR, TestPyPI/PyPI Trusted Publishing, GitHub
+Environments, release responsibilities, and installation verification.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the short version, and the

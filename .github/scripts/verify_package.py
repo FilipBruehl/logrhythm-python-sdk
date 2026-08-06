@@ -1,7 +1,8 @@
 """Verify a built ``logrhythm-python-sdk`` distribution.
 
-CI-only helper for the build workflow (see ``.github/workflows/build.yml``
-and ``docs/development/ci.md``). It is not part of the published SDK and is
+Infrastructure helper shared by the build and release workflows (see
+``.github/workflows/build.yml``, ``.github/workflows/release.yml``, and
+``docs/development/ci.md``). It is not part of the published SDK and is
 never imported by it. It uses only the Python standard library — no new
 dependency, runtime or development, is introduced for this check.
 
