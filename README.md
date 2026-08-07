@@ -4,9 +4,11 @@ A typed Python SDK for the LogRhythm SIEM REST APIs.
 
 ## Status
 
-**Early foundation stage — pre-alpha.** This repository currently contains project
-scaffolding only: package layout, tooling configuration, documentation structure, and
-a minimal importable package. There is **no** functional API client, authentication,
+**Early foundation stage — pre-alpha.** This repository contains project scaffolding
+(package layout, tooling configuration, documentation structure) and the SDK's
+exception foundation ([SPEC-007](docs/specifications/exceptions.md)): the public
+exception hierarchy rooted at `LogRhythmSdkError`, exported from
+`logrhythm_sdk.exceptions`. There is **no** functional API client, authentication,
 HTTP transport, TLS handling, or configuration loading yet. Nothing in this SDK can be
 used to talk to a LogRhythm instance at this time.
 
@@ -114,10 +116,11 @@ adapters may be added later only when a real tool-specific need exists.
 ## Architecture (planned)
 
 The SDK is designed around a central high-level facade backed by a shared `core`
-(transport, configuration, authentication, TLS, logging) and a set of API modules,
-each following the same internal structure (a `client.py` per API area, with
-`resource.py`, models, filters, sorting, and options organized per resource). None
-of this is implemented yet beyond the package skeleton — see
+(exceptions, transport, configuration, authentication, TLS, logging) and a set of
+API modules, each following the same internal structure (a `client.py` per API
+area, with `resource.py`, models, filters, sorting, and options organized per
+resource). Of this, only the exception hierarchy (`core/exceptions.py`, exported
+via `logrhythm_sdk.exceptions`) is implemented so far — see
 [docs/architecture/overview.md](docs/architecture/overview.md) for the full picture,
 [docs/architecture/components.md](docs/architecture/components.md) for a component
 diagram, and [docs/specifications/](docs/specifications/) for the numbered Design
@@ -133,7 +136,7 @@ Specifications that govern how these components are designed — starting with
 [SPEC-008 — Models](docs/specifications/models.md),
 [SPEC-009 — Filters, Pagination, Sorting and Options](docs/specifications/filters-and-options.md),
 and [SPEC-010 — API Modules](docs/specifications/api-modules.md) (all currently
-`Accepted`, not yet implemented; see
+`Accepted`; see
 [docs/specifications/README.md](docs/specifications/README.md) for the full,
 linked index). Per-endpoint progress is tracked in
 [docs/coverage/api-coverage.md](docs/coverage/api-coverage.md), which is currently an
