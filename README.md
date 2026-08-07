@@ -133,7 +133,7 @@ Specifications that govern how these components are designed — starting with
 [SPEC-008 — Models](docs/specifications/models.md),
 [SPEC-009 — Filters, Pagination, Sorting and Options](docs/specifications/filters-and-options.md),
 and [SPEC-010 — API Modules](docs/specifications/api-modules.md) (all currently
-`Draft`, not implemented; see
+`Accepted`, not yet implemented; see
 [docs/specifications/README.md](docs/specifications/README.md) for the full,
 linked index). Per-endpoint progress is tracked in
 [docs/coverage/api-coverage.md](docs/coverage/api-coverage.md), which is currently an

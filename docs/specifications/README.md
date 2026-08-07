@@ -26,17 +26,17 @@ specifications:
 
 | ID | Title | Status | File |
 | --- | --- | --- | --- |
-| SPEC-000 | Design Principles | Draft | [design-principles.md](design-principles.md) |
-| SPEC-001 | SDK Client | Draft | [sdk-client.md](sdk-client.md) |
-| SPEC-002 | Configuration | Draft | [configuration.md](configuration.md) |
-| SPEC-003 | Authentication | Draft | [authentication.md](authentication.md) |
-| SPEC-004 | TLS | Draft | [tls.md](tls.md) |
-| SPEC-005 | Transport | Draft | [transport.md](transport.md) |
-| SPEC-006 | Logging | Draft | [logging.md](logging.md) |
-| SPEC-007 | Exception Handling | Draft | [exceptions.md](exceptions.md) |
-| SPEC-008 | Models | Draft | [models.md](models.md) |
-| SPEC-009 | Filters, Pagination, Sorting and Options | Draft | [filters-and-options.md](filters-and-options.md) |
-| SPEC-010 | API Modules | Draft | [api-modules.md](api-modules.md) |
+| SPEC-000 | Design Principles | Accepted | [design-principles.md](design-principles.md) |
+| SPEC-001 | SDK Client | Accepted | [sdk-client.md](sdk-client.md) |
+| SPEC-002 | Configuration | Accepted | [configuration.md](configuration.md) |
+| SPEC-003 | Authentication | Accepted | [authentication.md](authentication.md) |
+| SPEC-004 | TLS | Accepted | [tls.md](tls.md) |
+| SPEC-005 | Transport | Accepted | [transport.md](transport.md) |
+| SPEC-006 | Logging | Accepted | [logging.md](logging.md) |
+| SPEC-007 | Exception Handling | Accepted | [exceptions.md](exceptions.md) |
+| SPEC-008 | Models | Accepted | [models.md](models.md) |
+| SPEC-009 | Filters, Pagination, Sorting and Options | Accepted | [filters-and-options.md](filters-and-options.md) |
+| SPEC-010 | API Modules | Accepted | [api-modules.md](api-modules.md) |
 
 ## Where this fits
 
@@ -118,7 +118,8 @@ or `In Review` until the gap is closed.
 ## Change process
 
 1. Propose the specification (new file) or the change (edit to an existing file) as
-   part of a small, reviewable change, per [CLAUDE.md](../../CLAUDE.md). The
+   part of a small, reviewable change, per
+   [`AGENTS.md`, Working agreements](../../AGENTS.md#working-agreements). The
    [Specification template](../templates/specification-template.md) is a
    starting-point skeleton for a new file — see
    [Repository Templates](../development/templates.md) — but this page
@@ -127,7 +128,7 @@ or `In Review` until the gap is closed.
 2. State the status at the top of the file at all times, per the status model above.
 3. If a proposed change would contradict or replace an existing ADR's decision, raise
    a new or updated ADR first — a specification implements a decision, it does not
-   make one silently. See [CLAUDE.md](../../CLAUDE.md), "Documentation duties".
+   make one silently. See [Architecture Governance](../../AGENTS.md#architecture-governance).
 4. Once implementation reveals that a specification does not match reality (a gap,
    an error, or a necessary adjustment), update the specification in the same change
    that adjusts the code, rather than letting the two drift apart.

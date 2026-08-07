@@ -2,7 +2,7 @@
 
 ## Status
 
-Draft.
+Accepted.
 
 This document consolidates rules already implied by the project's
 [ADRs](../adr/README.md) and [Vision](../vision.md), and adds concrete
@@ -10,8 +10,8 @@ implementation-level conventions that future [Design Specifications](README.md) 
 follow. It is a specification, not an ADR: it describes agreed working rules, not a
 one-off architectural decision. Any rule below that turns out to be architecturally
 significant enough to need its own rationale and history is still recorded separately
-as an ADR under `docs/adr/`, per [CLAUDE.md](../../CLAUDE.md) — this document does not
-replace that process.
+as an ADR under `docs/adr/`, per [ADR Policy](../adr/README.md#when-an-adr-is-required)
+— this document does not replace that process.
 
 ## Purpose
 
@@ -93,7 +93,8 @@ see [Component Model](../architecture/components.md) for that.
 - **Readability over brevity.** Clear, slightly longer code beats a clever one-liner
   that takes longer to parse than to write.
 - **Typing is mandatory.** All code under `src/logrhythm_sdk` is fully typed and
-  checked with mypy in strict mode; see [CLAUDE.md](../../CLAUDE.md).
+  checked with mypy in strict mode; see
+  [ADR-0003](../adr/0003-quality-tooling.md).
 - **Google-style docstrings.** Every public module, class, and function documents
   itself in Google docstring format.
 - **No hidden magic.** No metaclass tricks, dynamic attribute injection, or import-time

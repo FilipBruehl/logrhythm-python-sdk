@@ -20,35 +20,35 @@ LogRhythm SIEM REST APIs.
   architecture and implementation rules that future specifications build on.
 - [SPEC-001 — SDK Client](specifications/sdk-client.md) — the `LogRhythmClient`
   composition root: responsibilities, public shape, ownership, and lifecycle
-  (currently `Draft`, not implemented).
+  (currently `Accepted`, not implemented).
 - [SPEC-002 — Configuration](specifications/configuration.md) — the `Configuration`
   component: sources, validation, secrets handling, and integration with
-  `LogRhythmClient` (currently `Draft`, not implemented).
+  `LogRhythmClient` (currently `Accepted`, not implemented).
 - [SPEC-003 — Authentication](specifications/authentication.md) — how authentication
   information is represented, its integration with `Configuration` and
-  `LogRhythmClient`, and secret handling (currently `Draft`, not implemented).
+  `LogRhythmClient`, and secret handling (currently `Accepted`, not implemented).
 - [SPEC-004 — TLS](specifications/tls.md) — secure defaults, certificate and
-  hostname verification, and trust store configuration (currently `Draft`, not
+  hostname verification, and trust store configuration (currently `Accepted`, not
   implemented).
 - [SPEC-005 — Transport](specifications/transport.md) — the SDK's single HTTP
   boundary: URL resolution, HTTP client management, authentication and TLS
-  integration, response handling, and redaction (currently `Draft`, not
+  integration, response handling, and redaction (currently `Accepted`, not
   implemented).
 - [SPEC-006 — Logging](specifications/logging.md) — structured events, request IDs,
   the logger hierarchy, and the Transport/API-module logging split (currently
-  `Draft`, not implemented).
+  `Accepted`, not implemented).
 - [SPEC-007 — Exception Handling](specifications/exceptions.md) — the public
   exception hierarchy, HTTP-to-exception mapping, exception context, and
-  redaction (currently `Draft`, not implemented).
+  redaction (currently `Accepted`, not implemented).
 - [SPEC-008 — Models](specifications/models.md) — the Pydantic v2 model
   hierarchy, request/response validation strictness, aliasing, and UTC date/time
-  normalization (currently `Draft`, not implemented).
+  normalization (currently `Accepted`, not implemented).
 - [SPEC-009 — Filters, Pagination, Sorting and Options](specifications/filters-and-options.md) —
   filter/pagination/sorting/options models, query and header serialization, and
-  conflict handling (currently `Draft`, not implemented).
+  conflict handling (currently `Accepted`, not implemented).
 - [SPEC-010 — API Modules](specifications/api-modules.md) — the seven API modules,
   the client/resource hierarchy, dependency injection, and the high-level vs. Raw
-  API split (currently `Draft`, not implemented).
+  API split (currently `Accepted`, not implemented).
 - [API Coverage Matrix](coverage/api-coverage.md) — tracks, per LogRhythm API area,
   how far each endpoint has progressed from not-yet-inventoried to implemented.
 - [Developer Workflow](development/workflow.md) — contributor-oriented navigation
