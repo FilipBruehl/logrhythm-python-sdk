@@ -1,9 +1,9 @@
 # SPEC-009 — Filters, Pagination, Sorting and Options
 
 | Field | Value |
-|---|---|
+| --- | --- |
 | ID | SPEC-009 |
-| Status | Draft |
+| Status | Accepted |
 | Phase | A.2.10 |
 | Component | Filters, Pagination, Sorting and Options |
 | Depends on | [SPEC-000](design-principles.md), [SPEC-005](transport.md), [SPEC-006](logging.md), [SPEC-007](exceptions.md), [SPEC-008](models.md) |
@@ -11,12 +11,12 @@
 
 ## Status
 
-Draft — target architecture only, not implemented. This specification has not yet
-been reviewed against the [Review Criteria](README.md#review-criteria) in
-[Design Specifications](README.md) and is not binding. No implementation may start
-from this Draft; see the status model in [Design Specifications](README.md). A
-small number of questions this specification would normally answer are,
-deliberately, left open — see [Open Questions](#open-questions).
+Accepted — target architecture, not yet implemented. This specification has been
+reviewed against the [Review Criteria](README.md#review-criteria) in
+[Design Specifications](README.md) and is binding for implementation; see the
+status model in [Design Specifications](README.md). A small number of questions
+this specification would normally answer are, deliberately, left open — see
+[Open Questions](#open-questions).
 
 ## Purpose
 

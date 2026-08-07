@@ -17,7 +17,7 @@ endpoints.
 ## Columns
 
 | Column | Meaning |
-|---|---|
+| --- | --- |
 | API | The LogRhythm API area (Administration, AI Engine Cache Drilldown, Metrics, AI Engine, Alarm, Case, or Search — see [SPEC-010, Supported APIs](../specifications/api-modules.md#supported-apis)). |
 | Area | A sub-area or resource group within that API, once known (e.g. a resource category). |
 | Endpoint | The specific documented endpoint (method + path), once inventoried. |
@@ -32,7 +32,7 @@ endpoints.
 ## Status values
 
 | Status | Meaning |
-|---|---|
+| --- | --- |
 | `Not inventoried` | The endpoint has not yet been catalogued from official documentation. |
 | `Planned` | Catalogued and intended for implementation, not yet started. |
 | `Specification ready` | An `Accepted` Design Specification exists for this endpoint. |
@@ -51,7 +51,7 @@ area's official documentation has been catalogued per
 [API Implementation Workflow](../development/api-implementation-workflow.md).
 
 | API | Area | Endpoint | Specification | Models | Implementation | Tests | Documentation | Status | Notes |
-|---|---|---|---|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Administration API | – | – | – | – | – | – | – | Not inventoried | Awaiting official documentation inventory. |
 | AI Engine Cache Drilldown API | – | – | – | – | – | – | – | Not inventoried | Awaiting official documentation inventory. |
 | Metrics API | – | – | – | – | – | – | – | Not inventoried | Awaiting official documentation inventory. |

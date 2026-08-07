@@ -1,0 +1,197 @@
+name: API Endpoint
+description: >-
+  Plan, collaborate on, or gather vendor information for a LogRhythm API
+  endpoint before or during implementation.
+title: "api: "
+labels:
+  - api-endpoint
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This form is a planning and collaboration tool for a documented
+        LogRhythm endpoint. It never replaces the
+        [Design Specifications](../../docs/specifications/README.md), an
+        [ADR](../../docs/adr/README.md), official vendor documentation, the
+        [API Coverage Matrix](../../docs/coverage/api-coverage.md), or tests
+        — see
+        [Template Governance](../../docs/development/templates.md#template-governance)
+        and
+        [API Implementation Workflow](../../docs/development/api-implementation-workflow.md).
+
+        See
+        [When to use this form](../../docs/development/templates.md#api-endpoint-issue)
+        for whether this is Required, Recommended, or Optional for your
+        situation.
+
+  - type: dropdown
+    id: vendor-api
+    attributes:
+      label: Vendor API
+      description: The LogRhythm API area, per SPEC-010's seven supported areas.
+      options:
+        - Administration API
+        - AI Engine Cache Drilldown API
+        - Metrics API
+        - AI Engine API
+        - Alarm API
+        - Case API
+        - Search API
+    validations:
+      required: true
+
+  - type: input
+    id: resource
+    attributes:
+      label: Resource
+      description: The business resource this endpoint belongs to, e.g. "hosts", "entities".
+    validations:
+      required: true
+
+  - type: input
+    id: endpoint-name
+    attributes:
+      label: Endpoint name
+      description: A short, descriptive name for the endpoint, e.g. "List hosts".
+    validations:
+      required: true
+
+  - type: dropdown
+    id: http-method
+    attributes:
+      label: HTTP method
+      options:
+        - GET
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+    validations:
+      required: true
+
+  - type: input
+    id: path
+    attributes:
+      label: Path
+      description: The documented relative path, e.g. "/lr-admin-api/hosts".
+    validations:
+      required: true
+
+  - type: input
+    id: vendor-documentation
+    attributes:
+      label: Vendor documentation
+      description: Link to (or citation of) the official LogRhythm documentation page this is based on.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: request-example
+    attributes:
+      label: Request example available?
+      options:
+        - "Yes"
+        - "No"
+        - "Available privately (not postable here)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: response-example
+    attributes:
+      label: Response example available?
+      options:
+        - "Yes"
+        - "No"
+        - "Available privately (not postable here)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: error-example
+    attributes:
+      label: Error example available?
+      options:
+        - "Yes"
+        - "No"
+        - "Available privately (not postable here)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: examples
+    attributes:
+      label: Examples
+      description: >-
+        Paste sanitized request/response/error examples here, if postable.
+        Never include real credentials, tokens, hostnames, or customer
+        data — see [SECURITY.md](../../SECURITY.md).
+      render: json
+    validations:
+      required: false
+
+  - type: textarea
+    id: auth-tls-notes
+    attributes:
+      label: Auth / TLS peculiarities
+      description: Anything about this endpoint's authentication or TLS behavior that differs from the SDK's documented defaults.
+    validations:
+      required: false
+
+  - type: textarea
+    id: pagination
+    attributes:
+      label: Pagination
+      description: Documented pagination mechanism, if any (or "none documented").
+    validations:
+      required: false
+
+  - type: textarea
+    id: filtering
+    attributes:
+      label: Filtering
+      description: Documented filter parameters, if any.
+    validations:
+      required: false
+
+  - type: textarea
+    id: sorting
+    attributes:
+      label: Sorting
+      description: Documented sortable fields/parameters, if any.
+    validations:
+      required: false
+
+  - type: input
+    id: planned-method-name
+    attributes:
+      label: Planned SDK method name
+      description: e.g. "hosts.list", following SPEC-010's endpoint-naming conventions.
+    validations:
+      required: false
+
+  - type: dropdown
+    id: coverage-status
+    attributes:
+      label: API Coverage status
+      description: Matches the status values in docs/coverage/api-coverage.md.
+      options:
+        - Not inventoried
+        - Planned
+        - Specification ready
+        - In progress
+        - Partial
+        - Implemented
+        - Verified
+        - Blocked
+        - Not supported
+    validations:
+      required: true
+
+  - type: textarea
+    id: open-questions
+    attributes:
+      label: Open questions
+      description: Anything ambiguous, undocumented, or still undecided — never filled in with a guess.
+    validations:
+      required: false

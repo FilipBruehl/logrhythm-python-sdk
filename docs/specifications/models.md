@@ -1,9 +1,9 @@
 # SPEC-008 — Models
 
 | Field | Value |
-|---|---|
+| --- | --- |
 | ID | SPEC-008 |
-| Status | Draft |
+| Status | Accepted |
 | Phase | A.2.9 |
 | Component | Models |
 | Depends on | [SPEC-000](design-principles.md), [SPEC-001](sdk-client.md), [SPEC-002](configuration.md), [SPEC-003](authentication.md), [SPEC-005](transport.md), [SPEC-006](logging.md), [SPEC-007](exceptions.md) |
@@ -11,12 +11,12 @@
 
 ## Status
 
-Draft — target architecture only, not implemented. This specification has not yet
-been reviewed against the [Review Criteria](README.md#review-criteria) in
-[Design Specifications](README.md) and is not binding. No implementation may start
-from this Draft; see the status model in [Design Specifications](README.md). A
-small number of questions this specification would normally answer are,
-deliberately, left open — see [Open Questions](#open-questions).
+Accepted — target architecture, not yet implemented. This specification has been
+reviewed against the [Review Criteria](README.md#review-criteria) in
+[Design Specifications](README.md) and is binding for implementation; see the
+status model in [Design Specifications](README.md). A small number of questions
+this specification would normally answer are, deliberately, left open — see
+[Open Questions](#open-questions).
 
 ## Purpose
 
@@ -32,7 +32,9 @@ error body as "a separate, structured error object" without defining it either.
 **Decision: version 1 uses Pydantic v2, exclusively**, for every model in the SDK —
 public and internal, request and response. No `dataclasses` are used anywhere in
 this architecture. This is a foundational decision that everything else in this
-specification builds on.
+specification builds on — see
+[ADR-0005](../adr/0005-pydantic-v2-models.md) for the full decision and its
+alternatives.
 
 ## Scope
 
@@ -486,5 +488,6 @@ This specification, and by extension `Models` itself, explicitly does not cover:
 - [SPEC-007 — Exception Handling](exceptions.md)
 - [Architecture Overview](../architecture/overview.md)
 - [Component Model](../architecture/components.md)
-- No existing ADR (see [docs/adr/](../adr/README.md)) is specific to model
-  architecture; none is referenced here as directly applicable.
+- [ADR-0005 — Use Pydantic v2 for SDK models](../adr/0005-pydantic-v2-models.md) —
+  the Pydantic decision [Purpose](#purpose) and [Base Models](#base-models) rely
+  on.

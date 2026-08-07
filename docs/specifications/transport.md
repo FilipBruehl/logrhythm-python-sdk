@@ -1,9 +1,9 @@
 # SPEC-005 — Transport
 
 | Field | Value |
-|---|---|
+| --- | --- |
 | ID | SPEC-005 |
-| Status | Draft |
+| Status | Accepted |
 | Phase | A.2.6 |
 | Component | Transport |
 | Depends on | [SPEC-000](design-principles.md), [SPEC-001](sdk-client.md), [SPEC-002](configuration.md), [SPEC-003](authentication.md), [SPEC-004](tls.md) |
@@ -11,12 +11,12 @@
 
 ## Status
 
-Draft — target architecture only, not implemented. This specification has not yet
-been reviewed against the [Review Criteria](README.md#review-criteria) in
-[Design Specifications](README.md) and is not binding. No implementation may start
-from this Draft; see the status model in [Design Specifications](README.md). A small
-number of questions this specification would normally answer are, deliberately, left
-open — see [Open Questions](#open-questions).
+Accepted — target architecture, not yet implemented. This specification has been
+reviewed against the [Review Criteria](README.md#review-criteria) in
+[Design Specifications](README.md) and is binding for implementation; see the
+status model in [Design Specifications](README.md). A small number of questions
+this specification would normally answer are, deliberately, left open — see
+[Open Questions](#open-questions).
 
 ## Purpose
 
@@ -113,7 +113,9 @@ explicitly deferred — see [Non-Goals](#non-goals) and
 ## Transport Model
 
 **Decision: version 1 uses [httpx](https://www.python-httpx.org/) as the underlying
-HTTP library.** API modules must never depend on httpx directly, at any point —
+HTTP library** — see
+[ADR-0006](../adr/0006-httpx-transport.md) for the full decision and its
+alternatives. API modules must never depend on httpx directly, at any point —
 they depend exclusively on the SDK's own transport abstraction.
 
 **Decision: the SDK owns a dedicated `HttpTransport`.** It fully encapsulates:
@@ -272,7 +274,7 @@ Request-specific headers
 **Status codes:**
 
 | Range | Treatment |
-|---|---|
+| --- | --- |
 | `2xx` | Success. |
 | `3xx` | Treated as an error — version 1 does not follow redirects by default (see below), so a redirect response is not a normal outcome. |
 | `4xx` / `5xx` | Recognized as HTTP-level errors by `Transport`; translated into SDK exceptions later, by a future exception-handling specification (see [Error Behaviour](#error-behaviour)). |
@@ -529,5 +531,5 @@ This specification, and by extension `Transport` itself, explicitly does not cov
 - [SPEC-004 — TLS](tls.md)
 - [Architecture Overview](../architecture/overview.md)
 - [Component Model](../architecture/components.md)
-- No existing ADR (see [docs/adr/](../adr/README.md)) is specific to transport
-  architecture; none is referenced here as directly applicable.
+- [ADR-0006 — Use HTTPX as HTTP transport library](../adr/0006-httpx-transport.md) —
+  the HTTP library decision [Transport Model](#transport-model) relies on.

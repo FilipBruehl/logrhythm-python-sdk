@@ -1,0 +1,137 @@
+name: CI
+
+# Quality and test pipeline. See docs/development/ci.md for the full picture,
+# including local equivalents of every check run here.
+#
+# Deliberately excluded from this workflow (see docs/development/ci.md):
+# publishing and releases (see release.yml), tag-based triggers, and packaging
+# verification (see build.yml).
+
+on:
+  pull_request:
+    branches:
+      - main
+      - "integration/**"
+  push:
+    branches:
+      - main
+      - "integration/**"
+  workflow_dispatch:
+
+# Cancel a superseded run for the same workflow + ref/PR, so pushing again
+# doesn't leave stale runs queued. `github.workflow` keeps this group
+# namespaced separately from build.yml's concurrency group.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+# Least privilege: read-only by default, no write scopes for pull-requests,
+# packages, releases, deployments, or OIDC id-tokens. Neither job needs more.
+permissions:
+  contents: read
+
+jobs:
+  commit-message:
+    name: commit-message
+    runs-on: ubuntu-latest
+    steps:
+      # Full history (not the fetch-depth: 1 the other jobs use) is required
+      # here, and only here, to resolve an arbitrary base..head range -- see
+      # docs/development/ci.md#ci-commit-range.
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: "0.12.0"
+          python-version: "3.13"
+          enable-cache: true
+
+      - name: Install dependencies (locked)
+        run: uv sync --locked
+
+      # Values come only from GitHub-controlled SHA fields (never free-text
+      # like a PR title), and are passed through `env:` rather than
+      # interpolated directly into the script, per
+      # docs/development/ci.md#least-privilege--permissions.
+      - name: Determine commit range
+        id: range
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PUSH_BEFORE_SHA: ${{ github.event.before }}
+          CURRENT_SHA: ${{ github.sha }}
+        run: |
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            echo "base=$PR_BASE_SHA" >> "$GITHUB_OUTPUT"
+            echo "head=$PR_HEAD_SHA" >> "$GITHUB_OUTPUT"
+          elif [ "$EVENT_NAME" = "push" ]; then
+            echo "base=$PUSH_BEFORE_SHA" >> "$GITHUB_OUTPUT"
+            echo "head=$CURRENT_SHA" >> "$GITHUB_OUTPUT"
+          else
+            echo "base=" >> "$GITHUB_OUTPUT"
+            echo "head=$CURRENT_SHA" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Validate commit messages
+        env:
+          BASE_SHA: ${{ steps.range.outputs.base }}
+          HEAD_SHA: ${{ steps.range.outputs.head }}
+        run: uv run python .github/scripts/validate_commits.py --base "$BASE_SHA" --head "$HEAD_SHA"
+
+  quality:
+    name: quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: "0.12.0"
+          python-version: "3.13"
+          enable-cache: true
+
+      - name: Install dependencies (locked)
+        run: uv sync --locked
+
+      - name: Run pre-commit (quality gates)
+        run: uv run pre-commit run --all-files --show-diff-on-failure
+
+  test:
+    name: test
+    needs: [commit-message, quality]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: "0.12.0"
+          python-version: "3.13"
+          enable-cache: true
+
+      - name: Install dependencies (locked)
+        run: uv sync --locked
+
+      # `--cov-report=xml` is appended on top of pyproject.toml's own
+      # [tool.pytest.ini_options] addopts (which already sets
+      # --cov=src/logrhythm_sdk --cov-report=term-missing), so both the
+      # terminal and XML reports are produced without duplicating the
+      # project's central pytest/pytest-cov configuration here.
+      - name: Run tests with coverage
+        run: uv run pytest --cov-report=xml

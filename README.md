@@ -35,10 +35,28 @@ architecture.
 
 ```powershell
 uv sync
+uv run pre-commit install
+uv run pre-commit install --hook-type pre-push
+uv run pre-commit install --hook-type commit-msg
 ```
 
 This installs the project along with its development dependencies (Ruff, mypy,
-pytest, pytest-cov) into a local virtual environment.
+pytest, pytest-cov, pre-commit, conventional-pre-commit) into a local virtual
+environment, then installs the local git hooks that run formatting/linting/
+type-checks and secret detection on every commit, Conventional Commit message
+validation on every commit, and the test suite on every push — see
+[docs/development/pre-commit.md](docs/development/pre-commit.md).
+
+## Dependencies
+
+The SDK's runtime dependency baseline is now in place, ahead of the runtime
+implementation that will use it: **Pydantic v2** (models), **HTTPX** (HTTP
+transport), and **PyYAML** (YAML configuration files) — see
+[docs/development/dependencies.md](docs/development/dependencies.md) and
+[ADR-0005](docs/adr/0005-pydantic-v2-models.md),
+[ADR-0006](docs/adr/0006-httpx-transport.md), and
+[ADR-0007](docs/adr/0007-configuration-file-formats.md) for the reasoning
+behind each. No code uses them yet — see [Status](#status).
 
 ## Quality checks
 
@@ -49,6 +67,49 @@ uv run ruff check .            # linting
 uv run mypy src/logrhythm_sdk  # static type checking
 uv run pytest                  # tests + coverage
 ```
+
+These same checks (minus `pytest`) run automatically at commit time, and
+`pytest` runs automatically at push time, via the local git hooks — see
+[docs/development/pre-commit.md](docs/development/pre-commit.md). Server-side,
+every pull request and relevant push must pass `CI / commit-message`,
+`CI / quality`, and `CI / test`; a separate workflow
+independently verifies the package builds and installs correctly (never
+publishing anything) — see
+[docs/development/ci.md](docs/development/ci.md).
+
+## Versioning and releases
+
+The project uses Semantic Versioning with Python-compatible version strings.
+`pyproject.toml` is the canonical version source, Git tags use `v<version>`,
+and [`CHANGELOG.md`](CHANGELOG.md) follows Keep a Changelog. Build, publish,
+and GitHub Release creation are separate, gated stages.
+
+See [Release & Publishing](docs/development/release.md) for version updates,
+the dedicated release PR, TestPyPI/PyPI Trusted Publishing, GitHub
+Environments, release responsibilities, and installation verification.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the short version, and the
+[Developer Workflow](docs/development/workflow.md) for contributor-oriented
+workflow documentation.
+
+AI Coding Agents use [AGENTS.md](AGENTS.md) as the single, vendor-neutral
+source of truth for AI Development governance. Tool adapters may add only
+tool-specific integration details; the currently available adapters are
+[CLAUDE.md](CLAUDE.md) and [CODEX.md](CODEX.md).
+
+The adapter architecture is intentionally one-way:
+
+```text
+Repository → AGENTS.md → tool adapter → concrete AI Coding Agent
+```
+
+Different tools, including Claude Code and Codex, may work on the repository;
+these names are illustrative only. Every AI Coding Agent follows the same
+AGENTS.md rules, assumes no proprietary prior knowledge, and leaves enough
+repository-backed context for another Coding Agent to take over. Additional
+adapters may be added later only when a real tool-specific need exists.
 
 ## Architecture (planned)
 
@@ -72,7 +133,7 @@ Specifications that govern how these components are designed — starting with
 [SPEC-008 — Models](docs/specifications/models.md),
 [SPEC-009 — Filters, Pagination, Sorting and Options](docs/specifications/filters-and-options.md),
 and [SPEC-010 — API Modules](docs/specifications/api-modules.md) (all currently
-`Draft`, not implemented; see
+`Accepted`, not yet implemented; see
 [docs/specifications/README.md](docs/specifications/README.md) for the full,
 linked index). Per-endpoint progress is tracked in
 [docs/coverage/api-coverage.md](docs/coverage/api-coverage.md), which is currently an

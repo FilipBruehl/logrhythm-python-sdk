@@ -1,0 +1,87 @@
+name: Build
+
+# Packaging verification only: confirms the SDK builds and installs
+# correctly. This workflow never publishes anything — see
+# docs/development/ci.md#build-vs-publish and Phase A.3.7 (Release &
+# Publishing) and release.yml for the separate, gated publish process.
+
+on:
+  pull_request:
+    branches:
+      - main
+      - "integration/**"
+    paths:
+      - "src/**"
+      - "pyproject.toml"
+      - "uv.lock"
+      - "README.md"
+      - ".pre-commit-config.yaml"
+      - ".github/workflows/build.yml"
+      - ".github/scripts/verify_package.py"
+  push:
+    branches:
+      - main
+    paths:
+      - "src/**"
+      - "pyproject.toml"
+      - "uv.lock"
+      - "README.md"
+      - ".pre-commit-config.yaml"
+      - ".github/workflows/build.yml"
+      - ".github/scripts/verify_package.py"
+  workflow_dispatch:
+
+# Cancel a superseded run for the same workflow + ref/PR. `github.workflow`
+# keeps this group namespaced separately from ci.yml's concurrency group.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+# Least privilege: read-only by default, no write scopes for pull-requests,
+# packages, releases, deployments, or OIDC id-tokens.
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: "0.12.0"
+          python-version: "3.13"
+          enable-cache: true
+
+      - name: Install dependencies (locked)
+        run: uv sync --locked
+
+      # --- Build: produce the wheel and source distribution. ---
+      - name: Build distributions
+        run: uv build --no-sources
+
+      # --- Verify: confirm the built artifacts are correct, before they are
+      # ever uploaded or trusted. ---
+      - name: Create isolated verification environment
+        run: uv venv .verify-venv
+
+      - name: Install wheel into the isolated environment
+        run: uv pip install --python .verify-venv "$(find dist -name '*.whl')"
+
+      - name: Verify package
+        run: uv run python .github/scripts/verify_package.py --installed-python .verify-venv/bin/python
+
+      - name: Upload distribution artifacts
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: distribution-packages
+          path: dist/*
+          retention-days: 7
+          if-no-files-found: error

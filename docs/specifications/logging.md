@@ -1,9 +1,9 @@
 # SPEC-006 — Logging
 
 | Field | Value |
-|---|---|
+| --- | --- |
 | ID | SPEC-006 |
-| Status | Draft |
+| Status | Accepted |
 | Phase | A.2.7 |
 | Component | Logging |
 | Depends on | [SPEC-000](design-principles.md), [SPEC-001](sdk-client.md), [SPEC-002](configuration.md), [SPEC-005](transport.md) |
@@ -11,12 +11,12 @@
 
 ## Status
 
-Draft — target architecture only, not implemented. This specification has not yet
-been reviewed against the [Review Criteria](README.md#review-criteria) in
-[Design Specifications](README.md) and is not binding. No implementation may start
-from this Draft; see the status model in [Design Specifications](README.md). A
-number of questions this specification would normally answer are, deliberately, left
-open — see [Open Questions](#open-questions).
+Accepted — target architecture, not yet implemented. This specification has been
+reviewed against the [Review Criteria](README.md#review-criteria) in
+[Design Specifications](README.md) and is binding for implementation; see the
+status model in [Design Specifications](README.md). A number of questions this
+specification would normally answer are, deliberately, left open — see
+[Open Questions](#open-questions).
 
 ## Purpose
 

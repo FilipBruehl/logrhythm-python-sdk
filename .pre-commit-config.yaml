@@ -1,0 +1,140 @@
+# Local code-quality automation for logrhythm-python-sdk.
+# See docs/development/pre-commit.md for installation, usage, and troubleshooting.
+#
+# Hooks are explicitly pinned to the `pre-commit` git-hook stage unless noted
+# otherwise, so that `pre-commit install` (commit-time),
+# `pre-commit install --hook-type pre-push` (push-time), and
+# `pre-commit install --hook-type commit-msg` (commit-message-time) each run
+# only the hooks intended for that stage.
+
+repos:
+  # Formatting and linting (Ruff) — mirrors the project's required quality
+  # commands (`ruff format --check .`, `ruff check .`).
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.1
+    hooks:
+      - id: ruff-format
+        stages: [pre-commit]
+      - id: ruff-check
+        stages: [pre-commit]
+
+  # General file hygiene.
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+        stages: [pre-commit]
+      - id: end-of-file-fixer
+        stages: [pre-commit]
+      - id: mixed-line-ending
+        stages: [pre-commit]
+      - id: check-merge-conflict
+        stages: [pre-commit]
+      - id: check-added-large-files
+        stages: [pre-commit]
+      - id: check-yaml
+        stages: [pre-commit]
+      - id: check-toml
+        stages: [pre-commit]
+      - id: debug-statements
+        stages: [pre-commit]
+
+  # Secret detection — established default gitleaks configuration, no
+  # project-specific rules or exceptions.
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
+        stages: [pre-commit]
+
+  # Official uv/pre-commit integration: keeps uv.lock from being committed out
+  # of date with pyproject.toml.
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.12.1
+    hooks:
+      - id: uv-lock
+        stages: [pre-commit]
+
+  # Validates GitHub Actions workflow files (.github/workflows/*.yml) — the
+  # same check the CI quality job runs, per docs/development/ci.md.
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.12
+    hooks:
+      - id: actionlint
+        stages: [pre-commit]
+
+  # Markdown style/consistency checking — check-only at the pre-commit stage,
+  # never auto-fixes there. See docs/development/templates.md#markdownlint
+  # for rule-configuration rationale (.markdownlint.jsonc).
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: v0.23.2
+    hooks:
+      - id: markdownlint-cli2
+        stages: [pre-commit]
+
+      # Manual-only: never runs automatically (not in [pre-commit] or
+      # [pre-push]) — a developer opts in explicitly, per
+      # docs/development/templates.md#manual-full-repository-lint.
+      - id: markdownlint-cli2
+        name: markdownlint-cli2 (--fix)
+        args: ["--fix"]
+        stages: [manual]
+
+  # mypy runs against the project's own environment (via `uv run`) rather than
+  # an isolated mirror environment, so it sees the actual installed runtime
+  # dependencies (e.g. Pydantic) without duplicating them as
+  # `additional_dependencies`.
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: uv run mypy src/logrhythm_sdk
+        language: system
+        types: [python]
+        pass_filenames: false
+        stages: [pre-commit]
+
+      # Pre-push only: the full test suite. No other checks run at this stage.
+      - id: pytest
+        name: pytest
+        entry: uv run pytest
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]
+
+      # Commit-msg only: exact-lowercase commit-type check. Runs before
+      # conventional-pre-commit below to catch a gap that tool's own default
+      # (and --strict) mode leaves open: it does not reject a valid type in
+      # the wrong case (e.g. `Feat(config): ...`), confirmed empirically —
+      # see docs/development/pre-commit.md#commit-message-validation. The
+      # allowed-type list and extraction/casing logic live in the single,
+      # shared .github/scripts/commit_types.py module, imported (not
+      # re-implemented) by .github/scripts/validate_commits.py as well, so
+      # the local hook and CI never diverge on this rule.
+      - id: commit-type-lowercase
+        name: commit-type-lowercase
+        entry: uv run python .github/scripts/commit_types.py
+        language: system
+        stages: [commit-msg]
+
+      # Commit-msg only: Conventional Commit message validation, matching the
+      # exact allowed-type list in docs/development/commits.md (restated here
+      # because this is a third-party tool's own CLI argument list, not
+      # importable from .github/scripts/commit_types.py — that module remains
+      # the one normative, importable source for Python-side code). Deliberately
+      # no `--strict`: strict mode also rejects merge and fixup!/squash!
+      # commits outright, which would block normal local work (see
+      # docs/development/pre-commit.md#commit-message-validation for the
+      # empirically tested behavior this relies on). `--scopes`/
+      # `--force-scope` are deliberately omitted too — scopes stay optional
+      # and unconstrained to a fixed enum, per
+      # docs/development/commits.md#recommended-scopes. Runs via the project's
+      # own uv-managed environment (language: system), the same
+      # uv.lock-pinned version `.github/scripts/validate_commits.py` uses —
+      # not pre-commit's own isolated mirror environment.
+      - id: conventional-pre-commit
+        name: conventional-pre-commit
+        entry: uv run conventional-pre-commit feat fix docs refactor test chore perf style build ci revert
+        language: system
+        stages: [commit-msg]

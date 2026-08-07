@@ -1,9 +1,9 @@
 # SPEC-001 — SDK Client
 
 | Field | Value |
-|---|---|
+| --- | --- |
 | ID | SPEC-001 |
-| Status | Draft |
+| Status | Accepted |
 | Phase | A.2.2 |
 | Component | SDK Client |
 | Depends on | [SPEC-000](design-principles.md) |
@@ -11,10 +11,10 @@
 
 ## Status
 
-Draft. This specification has not yet been reviewed against the
+Accepted. This specification has been reviewed against the
 [Review Criteria](README.md#review-criteria) in
-[Design Specifications](README.md) and is not binding. No implementation may start
-from this Draft; see the status model in [Design Specifications](README.md).
+[Design Specifications](README.md) and is binding for implementation; see the
+status model in [Design Specifications](README.md).
 
 ## Purpose
 

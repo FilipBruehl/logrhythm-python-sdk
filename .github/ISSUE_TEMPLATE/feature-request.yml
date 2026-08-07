@@ -1,0 +1,68 @@
+name: Feature Request
+description: Propose a new capability or behavior change for the SDK.
+title: "feat: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This form is a planning and collaboration tool. It never replaces a
+        [Design Specification](../../docs/specifications/README.md) or an
+        [ADR](../../docs/adr/README.md) — see
+        [Template Governance](../../docs/development/templates.md#template-governance).
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What problem does this solve? What is currently missing or awkward?
+    validations:
+      required: true
+
+  - type: textarea
+    id: desired-behavior
+    attributes:
+      label: Desired behavior
+      description: What should the SDK do instead?
+    validations:
+      required: true
+
+  - type: input
+    id: affected-component
+    attributes:
+      label: Affected API / core component
+      description: >-
+        e.g. an API module (Administration, Alarm, ...), or a core component
+        (Configuration, Transport, Logging, Models, ...) — see
+        docs/architecture/overview.md.
+    validations:
+      required: true
+
+  - type: textarea
+    id: public-api-impact
+    attributes:
+      label: Public API impact
+      description: >-
+        Does this add, change, or remove anything a consumer of the SDK sees
+        (client methods, models, exceptions)? Say "none" if not applicable.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other ways to solve the same problem, and why they were not proposed instead.
+    validations:
+      required: false
+
+  - type: textarea
+    id: spec-adr-relevance
+    attributes:
+      label: SPEC / ADR relevance
+      description: >-
+        Does this touch an existing SPEC or ADR? Does it look like it would
+        need a new one? See docs/adr/README.md#when-an-adr-is-required.
+    validations:
+      required: false

@@ -43,5 +43,5 @@ dmypy.json
 Thumbs.db
 desktop.ini
 
-# Claude Code local settings (machine-specific, not shared)
+# Tool-specific local settings (machine-specific, not shared)
 .claude/settings.local.json
