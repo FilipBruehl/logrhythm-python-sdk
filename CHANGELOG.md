@@ -10,7 +10,15 @@ with Python-compatible version strings.
 
 ### Added
 
-<!-- Add new capabilities here. -->
+- Exception foundation (SPEC-007): the SDK's public exception hierarchy,
+  rooted at `LogRhythmSdkError`, covering `ConfigurationError`,
+  `ClientStateError` (including `ApiNotConfiguredError`, per SPEC-010),
+  `TransportError`, `SerializationError`, `ModelError`, and `ApiError` with
+  their minimum documented subclasses. Published from
+  `logrhythm_sdk.exceptions`; `LogRhythmSdkError` is additionally re-exported
+  from the package root. HTTP status mapping, vendor error body parsing,
+  redaction integration, and third-party exception translation are not part
+  of this change — they follow with the Transport and Logging layers.
 
 ### Changed
 
