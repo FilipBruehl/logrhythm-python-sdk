@@ -39,7 +39,9 @@ LogRhythm SIEM REST APIs.
   `Accepted`, not implemented).
 - [SPEC-007 — Exception Handling](specifications/exceptions.md) — the public
   exception hierarchy, HTTP-to-exception mapping, exception context, and
-  redaction (currently `Accepted`, not implemented).
+  redaction (currently `Accepted`; the exception hierarchy is implemented —
+  see [`logrhythm_sdk.exceptions`](../src/logrhythm_sdk/exceptions.py) —
+  HTTP mapping and redaction integration are not).
 - [SPEC-008 — Models](specifications/models.md) — the Pydantic v2 model
   hierarchy, request/response validation strictness, aliasing, and UTC date/time
   normalization (currently `Accepted`, not implemented).
