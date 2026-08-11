@@ -42,10 +42,10 @@ alternatives.
 
 - Request models, response models, and internal models.
 - A small, shared base hierarchy.
-- Common properties every model has (immutability, strict typing, validation).
+- Common properties every model has (immutability, typing, validation).
 - Manufacturer field aliasing.
 - Serialization behavior (Python, API, and JSON representations).
-- Validation strictness, separated by model family.
+- Validation policies, separated by model family.
 - Enum handling.
 - Date/time normalization.
 - The universal LogRhythm error body as a model.
@@ -70,8 +70,8 @@ referenced only):
 
 - represents every request, response, and internal data structure in the SDK as a
   typed, validated Pydantic model (see [Base Models](#base-models)).
-- enforces strict validation on outgoing data and appropriately tolerant validation
-  on incoming data (see [Request Models](#request-models) and
+- enforces deliberate validation on outgoing data and appropriately tolerant
+  validation on incoming data (see [Request Models](#request-models) and
   [Response Models](#response-models)).
 - maps manufacturer field names to SDK field names explicitly (see
   [Aliases](#aliases)).
@@ -97,14 +97,15 @@ referenced only):
   [SPEC-009](filters-and-options.md#purpose).
 - does not know about concrete API endpoints.
 - does not decide what gets logged — see [SPEC-006](logging.md#purpose).
-- does not raise or define exceptions itself — model validation failures surface
-  as [SPEC-007](exceptions.md#model-errors)'s `ModelError` family, not as
-  something `Models` defines independently.
+- does not raise or define exceptions itself — request and response boundaries
+  translate model validation failures to
+  [SPEC-007](exceptions.md#model-errors)'s `ModelError` family; the model base
+  classes do not define or perform that translation.
 
 ## Model Families
 
 Every model belongs to one of three families, distinguished by what they represent
-and how strictly they are validated:
+and how they are validated:
 
 - **Request models** — data the SDK sends to LogRhythm. See
   [Request Models](#request-models).
@@ -124,14 +125,16 @@ validation needs (see [Request Models](#request-models) vs.
 **Decision: the base hierarchy stays deliberately small.** Conceptually:
 
 ```text
-BaseModel
-    ↓
-SdkModel
-    ↓
+pydantic.BaseModel
+└── SdkModel
     ├── RequestModel
     ├── ResponseModel
     └── InternalModel
 ```
+
+`SdkModel` inherits directly from Pydantic's `BaseModel`. There is no intermediate
+base class. `RequestModel`, `ResponseModel`, and `InternalModel` are concrete policy
+base classes, not abstract interfaces.
 
 `SdkModel` carries whatever behavior is genuinely common to every model in the SDK.
 Further base classes are added **only** where there is real, shared behavior to
@@ -155,20 +158,56 @@ way for `TransportProtocol` in [SPEC-005](transport.md#transport-model).
 No Python class definitions, method signatures, or attributes are given here —
 consistent with every other specification in this series.
 
+### Common Pydantic Configuration
+
+**Decision: the shared `SdkModel` configuration is deliberately minimal.** With the
+currently supported Pydantic v2 API, its common configuration is conceptually:
+
+```python
+ConfigDict(
+    frozen=True,
+    validate_by_name=True,
+    validate_by_alias=True,
+)
+```
+
+The behavior is normative: model instances are frozen, and both a Python field name
+and its explicitly declared alias are accepted by regular construction and
+validation. The separate `validate_by_name` and `validate_by_alias` settings express
+this behavior precisely; the older combined `populate_by_name` form is not used.
+
+`SdkModel` does **not** enable Pydantic strict mode globally. Models use Pydantic's
+normal validation semantics unless a concrete model, field, or documented API
+contract requires stricter validation. The absence of global `strict=True` is a
+deliberate decision, not an unresolved default. Likewise, the common configuration
+does not proactively enable `validate_assignment`, `arbitrary_types_allowed`,
+`use_enum_values`, `serialize_by_alias`, or an `alias_generator`.
+
+The family-specific extra-field policies are:
+
+| Model family | Pydantic policy | Behavior |
+| --- | --- | --- |
+| `RequestModel` | `extra="forbid"` | Reject unknown request fields. |
+| `ResponseModel` | `extra="allow"` | Allow and retain unknown response fields. |
+| `InternalModel` | `extra="forbid"` | Reject unknown internal fields. |
+
 ## Request Models
 
 Request models represent data the SDK is about to send. Bindingly:
 
-- **Validate strictly.**
-- **Reject unknown fields** — a request model does not silently accept a field it
-  does not recognize.
+- **Validate every known field.** Pydantic's normal validation semantics apply by
+  default; a concrete model or field uses stricter validation where its documented
+  contract requires it.
+- **Reject unknown fields** using Pydantic's `extra="forbid"` policy — a request
+  model does not silently accept a field it does not recognize.
 - **Use explicit manufacturer aliases** (see [Aliases](#aliases)).
 - **Serialize using manufacturer field names only** — never the SDK's internal
   Python field names (see [Serialization](#serialization)).
 - **Do not send unset fields by default** — see [Partial Updates](#partial-updates).
 - **Distinguish `unset` from `None`** — see [Partial Updates](#partial-updates).
-- **No automatic type coercion.** A caller supplying the wrong type gets a
-  validation failure, not a silent conversion.
+- **Do not introduce loose, custom coercion.** Any stricter type requirement is
+  expressed explicitly on the concrete model or field rather than through a global
+  `SdkModel` strict mode.
 
 **Create, Update, Delete, and Upsert:**
 
@@ -188,18 +227,21 @@ Request models represent data the SDK is about to send. Bindingly:
 Response models represent data LogRhythm returns. Bindingly:
 
 - **Validate known fields.**
-- **Allow unknown fields** — an undocumented or newly added field from the server
-  does not fail validation.
-- **Retain unknown fields** — they are not silently discarded; see
-  [Public API](#public-api) regarding their stability.
+- **Allow and retain unknown fields** using Pydantic's `extra="allow"` policy — an
+  undocumented or newly added field from the server does not fail validation and is
+  not silently discarded; see [Public API](#public-api) regarding its stability.
+- **Use Pydantic-native extra handling.** Retained fields remain available through
+  Pydantic's native model behavior and are included in regular model serialization.
+  There is no separate SDK container such as `unknown_fields`, `additional_fields`,
+  or `vendor_extensions`.
 - **Use manufacturer aliases** (see [Aliases](#aliases)), the same as request
   models.
 - **Normalize only specific, documented special cases** — never a general, loose
   type-coercion policy. Response models are tolerant of *shape* (unknown fields)
   but not casually tolerant of *type*.
 
-This asymmetry — strict on the way out, tolerant (but not loose) on the way in — is
-deliberate: outgoing data is entirely under the SDK's control and should be
+This asymmetry — controlled on the way out, tolerant (but not loose) on the way in —
+is deliberate: outgoing data is entirely under the SDK's control and should be
 correct by construction, while incoming data comes from a system the SDK does not
 control and must not break on fields it does not yet know about.
 
@@ -226,26 +268,44 @@ final list):
 model does not, by itself, make something publicly exported — see
 [Public API](#public-api).
 
+**Internal models reject unknown fields** using Pydantic's `extra="forbid"` policy.
+Because the SDK controls these structures, an unknown field is an internal modeling
+or programming error, not a forward-compatibility case.
+
 ## Validation
 
-- **Request models validate strictly**, with no automatic type coercion (see
+- **Request models reject unknown fields** and validate known fields according to
+  their documented types and any field- or model-specific strictness (see
   [Request Models](#request-models)).
-- **Response models validate strictly for known fields**, per documented shape, with
-  normalization limited to specific, documented special cases (see
+- **Response models allow and retain unknown fields**, while validating known fields
+  according to their documented types and any specific normalization rules (see
   [Response Models](#response-models)).
 - **Presence, nullability, and type are tracked independently for every field.** A
   field being required or optional (presence), a field being allowed to be `None`
   (nullability), and a field's type are three separate, deliberately distinguished
   properties — none is inferred from another.
-- A validation failure surfaces as [SPEC-007](exceptions.md#model-errors)'s
-  `RequestValidationError` or `ResponseValidationError`, depending on which side of
-  the request/response boundary it occurred on — `Models` does not define a
-  competing error mechanism of its own.
+- The model base classes expose Pydantic's regular validation behavior and do not
+  override its construction or validation methods to wrap every
+  `pydantic.ValidationError`.
+- At a request boundary, a `pydantic.ValidationError` from model validation is
+  translated to
+  [SPEC-007](exceptions.md#model-errors)'s `RequestValidationError`.
+- At a response boundary, a `pydantic.ValidationError` from model validation is
+  translated to
+  [SPEC-007](exceptions.md#model-errors)'s `ResponseValidationError`.
+- An internal-model validation failure remains the underlying Pydantic validation
+  failure unless a later, concrete boundary specification requires an SDK exception.
+  There is no precautionary `InternalValidationError`.
 
 ## Immutability
 
 **Decision: every model is immutable.** A model is never mutated after creation;
 changing a model's data always produces a **new** object.
+
+This is enforced through Pydantic's native `frozen=True` configuration on
+`SdkModel`. No separate mutation-control or deep-freeze infrastructure is introduced.
+The model instance is frozen; arbitrary mutable Python objects nested within a field
+are not required to become recursively immutable.
 
 Suitable factory or helper methods may be provided for this purpose — for example,
 something like `from_existing(...)` or `with_changes(...)`. **The concrete API for
@@ -266,6 +326,12 @@ reviewable, consistent with
 principle — an automatic, blanket transform would make the actual wire field name
 non-obvious from reading the model.
 
+For a field with an explicit alias, both its Python field name and that alias are
+accepted by regular model construction and `model_validate(...)`. The model's Python
+attribute remains the Python field name. For example, a field declared conceptually
+as `alarm_rule_id` with alias `alarmRuleID` accepts either name as input and is
+accessed as `model.alarm_rule_id` after validation.
+
 ## Serialization
 
 Models conceptually distinguish three representations:
@@ -277,7 +343,13 @@ Models conceptually distinguish three representations:
 - **JSON representation** — the serialized wire form of the API representation.
 
 **Requests are serialized using manufacturer aliases** — never the SDK's internal
-field names (see [Request Models](#request-models)).
+field names (see [Request Models](#request-models)). This is an explicit action at
+the request serialization boundary, which uses `model_dump(by_alias=True)`.
+
+Ordinary `model_dump()` uses Python field names. Explicit
+`model_dump(by_alias=True)` uses declared aliases. `SdkModel` therefore does not set
+`serialize_by_alias=True`: accepting aliases as input does not silently change the
+default Python representation or serialization behavior.
 
 ## Enums
 
@@ -285,7 +357,9 @@ field names (see [Request Models](#request-models)).
 `IntEnum`. **Enums are strict in both directions** — constructing an enum from an
 unknown value, and encountering an unknown value while validating incoming data,
 both produce a validation failure rather than silently passing an unrecognized
-value through.
+value through. Enum fields remain enum instances inside models; `SdkModel` does not
+set `use_enum_values=True`. Conversion to a primitive wire value belongs to the
+applicable serialization boundary.
 
 ## Date and Time
 
@@ -294,12 +368,19 @@ UTC `datetime`.**
 
 - **Naive datetimes are always rejected** — a value with no timezone information is
   never accepted as-is.
-- **On input, values are normalized to UTC.**
+- **Timezone-aware UTC values are accepted.**
+- **Timezone-aware values with another offset are accepted and normalized to UTC.**
 - **The original offset is not retained** once normalized — only the UTC instant
   is kept.
+- **The internal value remains timezone-aware.**
 - **On output, each API endpoint's expected format is used for serialization** —
   the internal UTC representation does not imply a single fixed wire format across
   every endpoint.
+
+The concrete Pydantic v2 mechanism is an implementation detail. It must stay small,
+explicit, reusable, fully typed, and independently testable, and must use Pydantic's
+native types or validator building blocks where suitable. This decision does not
+introduce a separate general-purpose date/time parser or class hierarchy.
 
 ## Universal LogRhythm Error Model
 
@@ -376,10 +457,12 @@ remaining unchanged across releases.
 Model construction and validation follow Fail Fast, per
 [SPEC-000](design-principles.md#implementation-principles): an invalid model is
 never partially constructed or silently accepted — validation either succeeds
-completely or fails immediately, surfacing as the appropriate
-[SPEC-007](exceptions.md#model-errors) exception. `Models` does not introduce any
-exception to Fail Fast the way [SPEC-006](logging.md#failure-behaviour) does for
-logging — there is no category of model failure that is allowed to pass silently.
+completely or fails immediately. The base models preserve Pydantic's native
+validation failure; the request and response boundaries perform the corresponding
+translation to [SPEC-007](exceptions.md#model-errors)'s `RequestValidationError` or
+`ResponseValidationError`. `Models` does not introduce any exception to Fail Fast
+the way [SPEC-006](logging.md#failure-behaviour) does for logging — there is no
+category of model failure that is allowed to pass silently.
 
 ## Testability
 
@@ -407,7 +490,7 @@ signature. Placeholder values only; no real secrets or response data.
 class):**
 
 ```text
-# Request model: strict, rejects unknown fields, sends manufacturer aliases only
+# Request model: rejects unknown fields, sends manufacturer aliases only
 CreateHostRequest:
     name: str
     entity_id: int          # alias: entityId
@@ -437,15 +520,14 @@ updated_host = existing_host.with_changes(name="new-name")
 
 These are explicitly undecided. They must not be resolved silently by
 implementation; each requires an explicit decision (and, where architecturally
-significant, an ADR) before it can move out of this list.
+significant, an ADR) before it can move out of this list. None of the remaining
+questions blocks implementation of the shared model foundation; each applies only
+when its later concrete use case enters scope.
 
 - **Concrete factory/update methods.** The exact API for producing a modified copy
   of an immutable model (see [Immutability](#immutability)) — for example, whether
   it is named `with_changes(...)`, something else, or follows a different pattern
   entirely.
-- **Final `SdkModel` configuration.** The complete, concrete Pydantic
-  configuration shared by every model, beyond the properties already decided in
-  [Base Models](#base-models).
 - **Field-specific special-case normalization.** Which individual response fields
   receive documented special-case normalization (see
   [Response Models](#response-models)), and what that normalization does, on a
