@@ -156,7 +156,7 @@ consistent with every other specification in this series.
 - **API modules supply only relative endpoint paths.** Absolute URLs from an API
   module are not accepted.
 - The base (host, and other connection information from
-  [SPEC-002](configuration.md#configuration-model)'s "Connection information" group)
+  [SPEC-002](configuration.md#system-endpoint)'s system endpoint)
   is combined with the relative path to produce the actual request URL.
 - The allowed endpoint scheme is governed by
   [ADR-0008](../adr/0008-require-https-for-sdk-managed-endpoints.md). `Transport`
@@ -269,9 +269,11 @@ Request-specific headers
 - Version 1 supports four timeout categories: **connect**, **read**, **write**, and
   **pool**.
 - Timeouts are **active by default** — there is no unbounded/infinite request.
-- The concrete default values for each category are an
-  [Open Question](#open-questions); that timeouts exist, are categorized this way,
-  and are never absent, is not.
+- The defaults are **10.0 seconds for connect**, **120.0 seconds for read**,
+  **120.0 seconds for write**, and **10.0 seconds for pool**. Each category is
+  independently configurable through
+  [SPEC-002](configuration.md#timeouts), and every resolved value is finite and
+  greater than zero.
 
 ## Response Handling
 
@@ -485,8 +487,6 @@ These are explicitly undecided. They must not be resolved silently by
 implementation; each requires an explicit decision (and, where architecturally
 significant, an ADR) before it can move out of this list.
 
-- **Concrete timeout default values.** The actual numeric defaults for connect,
-  read, write, and pool timeouts (see [Timeout Handling](#timeout-handling)).
 - **Response size limits.** Whether `Transport` enforces any limit on response body
   size.
 - **Maximum redirect count.** Only relevant if/when configurable redirect-following

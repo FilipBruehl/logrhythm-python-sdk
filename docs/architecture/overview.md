@@ -100,8 +100,8 @@ Configuration will be loadable from YAML, JSON, or TOML sources (not implemented
 this phase). Planned configuration concerns:
 
 - **Authentication** — bearer token authentication.
-- **Connection settings** — global defaults (e.g. base host, timeouts) with the
-  ability to override them per API module.
+- **Connection settings** — one HTTPS base host and global port for all API modules,
+  plus shared timeout settings. Per-API hosts and ports are not part of version 1.
 - **API paths** — each API module ships static, sensible default paths, with optional
   overrides for non-standard deployments.
 - **TLS** — three supported modes: verification against the system trust store,

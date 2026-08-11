@@ -73,8 +73,8 @@ explicitly deferred — see [Non-Goals](#non-goals) and
   a third-party base class (see [Exception Hierarchy](#exception-hierarchy)).
 - carries structured, machine-usable diagnostic context (see
   [Exception Context](#exception-context)).
-- chains known technical causes using `raise ... from ...`, preserving `__cause__`
-  (see [Exception Chaining](#exception-chaining)).
+- chains known, secret-free technical causes using `raise ... from ...`, preserving
+  `__cause__` (see [Exception Chaining](#exception-chaining)).
 - redacts sensitive data from all exception context, consistently with
   [SPEC-005](transport.md#redaction) and [SPEC-006](logging.md#redaction) (see
   [Redaction](#redaction)).
@@ -136,14 +136,20 @@ series.
 - `ConfigurationValidationError` — a resolved value failed validation (see
   [SPEC-002, Error Behaviour](configuration.md#error-behaviour): missing required
   values, invalid values, conflicting values, unknown fields, invalid
-  combinations).
+  combinations). For credential-bearing `Configuration`, both direct programmatic
+  construction and file loading expose this sanitized SDK exception rather than an
+  input-bearing Pydantic validation exception; see
+  [SPEC-002, Pydantic Validation Boundary](configuration.md#pydantic-validation-boundary).
 - `LoggingConfigurationError` — the specific case
   [SPEC-006](logging.md#failure-behaviour) already establishes: SDK-owned logging
-  is enabled but its file path is missing, invalid, unwritable, or its handler
-  cannot be initialized. This subclass exists because
+  is enabled but its file path is missing, a structurally valid path is unusable or
+  unwritable, or its handler cannot be initialized. This subclass exists because
   [SPEC-006](logging.md#failure-behaviour) singles this case out as a mandatory
   Fail Fast failure at client/configuration initialization, distinct from ordinary
-  configuration validation.
+  configuration validation. Missing `file` is detected at Configuration
+  construction; filesystem usability, writability, and handler initialization are
+  checked only when logging infrastructure is built. Structurally invalid logging
+  field values remain `ConfigurationValidationError` cases.
 
 ## Client State Errors
 
@@ -322,8 +328,20 @@ An `ApiError` may carry a sanitized excerpt of the response body. Bindingly:
 
 ## Exception Chaining
 
-**Decision: known technical causes are chained using `raise ... from ...`.** The
-original cause remains available via `__cause__` — it is not discarded.
+**Decision: known technical causes are normally chained using
+`raise ... from ...`.** The original cause remains available via `__cause__` when
+it and all transitively reachable data are known to be secret-free.
+
+**Security-sensitive exception translation is the binding exception to that
+preference.** A lower-level exception that contains or may retain credentials,
+configuration input, request/response content, or other secrets is not exposed as
+`__cause__` or `__context__`. Translation must discard that raw exception and raise
+the sanitized SDK exception outside its active handling context, or use an
+equivalent mechanism that makes no input-bearing exception publicly reachable.
+This applies in particular to Configuration's Pydantic and parser errors; rendered
+masking alone is insufficient because structured error APIs can retain raw input.
+The exposed exception may have no cause/context or only a separately sanitized,
+secret-free one.
 
 **Decision: only known infrastructure errors are translated.** `Exceptions`
 translates specific, expected underlying error types (e.g. a specific httpx
@@ -362,6 +380,8 @@ Secrets must never appear in:
 - exception messages
 - context fields (see [Exception Context](#exception-context))
 - response snippets (see [Response Snippets](#response-snippets))
+- `__cause__`, `__context__`, structured lower-level error data, or any transitively
+  reachable exception object
 
 This is not a new rule — it is [SPEC-005](transport.md#redaction)'s and
 [SPEC-006](logging.md#redaction)'s existing requirement, applied to exceptions as
@@ -411,8 +431,8 @@ code itself is "valid" in some independent sense.
   [SPEC-000](design-principles.md#testability).
 - Tests can construct any public exception directly, with placeholder context.
 - Exception chaining (see [Exception Chaining](#exception-chaining)) must be
-  testable — a test can assert that `__cause__` is set as expected for a known
-  translated error.
+  testable — a test can assert that `__cause__` is set as expected for a known,
+  secret-free translated error and is not exposed for an input-bearing error.
 - Redaction of exception context (see [Redaction](#redaction)) must be
   independently testable, consistent with
   [SPEC-005](transport.md#testability) and [SPEC-006](logging.md#testability).

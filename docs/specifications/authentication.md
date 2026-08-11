@@ -14,9 +14,8 @@
 Accepted — target architecture, not yet implemented. This specification has been
 reviewed against the [Review Criteria](README.md#review-criteria) in
 [Design Specifications](README.md) and is binding for implementation; see the
-status model in [Design Specifications](README.md). Several questions this
-specification would normally answer are, deliberately, left open — see
-[Open Questions](#open-questions).
+status model in [Design Specifications](README.md). The version 1 authentication
+input is closed; future mechanisms remain non-binding.
 
 ## Purpose
 
@@ -89,24 +88,21 @@ Authentication information:
 
 ## Authentication Model
 
-This section describes the conceptual role of authentication information within the
-SDK — not concrete fields, and not a Python class.
+This section describes the role of authentication information within the SDK.
 
 Authentication information is the credential material the SDK will eventually need
 to prove identity to LogRhythm. Structurally, [SPEC-002](configuration.md) already
 anticipates this: its
-[Configuration Model](configuration.md#configuration-model) names
+[Configuration Schema](configuration.md#configuration-schema) names
 "Authentication-related inputs" as one of the groups a resolved `Configuration`
 holds. `Authentication`, as described by this specification, **is** that group —
 this specification does not introduce a second, separate place for authentication
 information to live outside `Configuration`.
 
-For version 1, that credential material is a bearer token (see
-[Supported Authentication Types](#supported-authentication-types)). This
-specification decides the mechanism, not the token's concrete representation within
-`Authentication`/`Configuration` — that remains conceptual here, consistent with
-[SPEC-002](configuration.md#configuration-model)'s own restraint from inventing field
-names.
+For version 1, that credential material is the required
+`logrhythm.authentication.bearer_token` field defined by
+[SPEC-002](configuration.md#authentication). It uses Pydantic `SecretStr`; there is
+no plain-string or separately owned credential representation.
 
 ## Supported Authentication Types
 
@@ -116,13 +112,10 @@ for version 1.** [Architecture Overview](../architecture/overview.md) already na
 specification adopts that as a binding decision for its own scope — version 1 of the
 SDK supports exactly one authentication mechanism, bearer token.
 
-This decision covers only **which mechanism** the SDK supports. It does **not**
-decide, and explicitly defers to a future Transport specification:
-
-- how a bearer token is concretely attached to a request (e.g. as an `Authorization`
-  header) — see [Non-Goals](#non-goals).
-- the exact internal representation of the token value within
-  `Authentication`/`Configuration` — see [Authentication Model](#authentication-model).
+This decision covers **which mechanism** the SDK supports. How a bearer token is
+attached to a request (e.g. as an `Authorization` header) remains Transport's
+responsibility — see [Non-Goals](#non-goals). The token's safe Configuration
+representation is owned by [SPEC-002](configuration.md#authentication).
 
 API Key, Basic Authentication, and Client Certificate Authentication are explicitly
 **not** part of version 1. They remain possible future mechanisms — see
@@ -136,7 +129,7 @@ nothing further about them.
 - `Authentication`, as described here, does not process, parse, or interpret that
   information itself; it is represented, not acted upon.
 - Because a resolved `Configuration` is immutable
-  ([SPEC-002](configuration.md#immutability-and-mutation)), the authentication
+  ([SPEC-002](configuration.md#immutability-and-lifecycle)), the authentication
   information it holds is immutable for the same reason and by the same mechanism —
   this specification introduces no separate immutability rule of its own.
 - **Decision: `Authentication` is not a standalone SDK object.** It is the
@@ -151,16 +144,16 @@ nothing further about them.
 `LogRhythmClient` (see [SPEC-001](sdk-client.md)) never receives authentication
 information directly or independently. It obtains it only indirectly, as part of the
 `Configuration` it is constructed with or resolves via `from_config(...)` (see
-[SPEC-002, Integration with LogRhythmClient](configuration.md#integration-with-logrhythmclient)).
+[SPEC-002, Public and Internal Interface](configuration.md#public-and-internal-interface)).
 
 - **No ownership.** `LogRhythmClient` does not separately own authentication
   information; whatever ownership applies is `Configuration`'s, per
-  [SPEC-002](configuration.md#integration-with-logrhythmclient).
+  [SPEC-002](configuration.md#public-and-internal-interface).
 - **No resources.** There is nothing here for `LogRhythmClient` to acquire or
   release.
 - **No lifecycle responsibility.** `LogRhythmClient` has no lifecycle duty toward
   authentication information beyond what it already has toward `Configuration` as a
-  whole (none — see [SPEC-002, No lifecycle resources](configuration.md#integration-with-logrhythmclient)).
+  whole (none — see [SPEC-002, Immutability and Lifecycle](configuration.md#immutability-and-lifecycle)).
 
 ## Secret Handling
 
@@ -168,15 +161,24 @@ information directly or independently. It obtains it only indirectly, as part of
 - Authentication information must never appear in `repr()` or any other default
   string representation.
 - Authentication information must never appear in exceptions or error messages.
+- Authentication information must never remain reachable through structured error
+  data, exception causes, or exception contexts.
 - Copies of authentication information must be kept to the minimum necessary.
 - Authentication information must not be serialized unintentionally.
 
 These follow directly from [SPEC-000](design-principles.md)'s security principles
 and restate, for authentication information specifically, the same rules
-[SPEC-002](configuration.md#secrets) already states for secrets held in
+[SPEC-002](configuration.md#secret-safety) already states for secrets held in
 `Configuration` generally — this specification does not introduce a different or
 additional rule. No decision about secret-manager integration is made here; see
 [Future Extensions](#future-extensions-non-binding).
+
+Because `Configuration` contains this credential, its supported programmatic and
+file-based construction paths apply the sanitized component boundary defined by
+[SPEC-002](configuration.md#pydantic-validation-boundary). A raw, input-bearing
+Pydantic or parser exception is internal validation detail and is never preserved as
+a publicly reachable cause or context. `SecretStr` and hidden rendered Pydantic
+inputs remain defense in depth, not the sole secret-safety mechanism.
 
 ## Validation
 
@@ -197,12 +199,10 @@ Explicitly **not** in scope:
 - No login tests.
 - No reachability checks.
 
-[SPEC-002](configuration.md#validation) names "future Authentication/Transport
-specifications" as the eventual home for server-side validation of configuration
-values. This specification clarifies that `Authentication`, as described here, is
-**not** where that happens; if it happens anywhere, it belongs to a future Transport
-(or equivalent) specification. This is a narrowing of an intentionally open forward
-reference in SPEC-002, not a contradiction of it.
+[SPEC-002](configuration.md#validation) likewise excludes remote credential checks
+from Configuration resolution. Credential acceptance is observable only through a
+real request made later by Transport; Authentication defines no separate preflight
+or server-validation step.
 
 ## Lifecycle
 
@@ -214,7 +214,7 @@ Authentication information has:
 
 Its lifecycle is entirely governed by `Configuration`'s — see
 [Integration with Configuration](#integration-with-configuration) and
-[SPEC-002](configuration.md#immutability-and-mutation).
+[SPEC-002](configuration.md#immutability-and-lifecycle).
 
 ## Testability
 
@@ -229,19 +229,18 @@ Its lifecycle is entirely governed by `Configuration`'s — see
 
 ## Examples
 
-Pseudocode only — illustrative of intended usage, not a committed API surface, not a
-real implementation, and not a claim about the token's concrete representation.
-Placeholder values only; no real credentials.
+Pseudocode only — illustrative of intended usage, not a class signature or real
+implementation. Placeholder values only; no real credentials.
 
 **Authentication information (a bearer token) as part of `Configuration`:**
 
 ```python
 configuration = Configuration(
-    connection=...,
-    authentication=...,  # placeholder for the bearer token value (version 1's
-    # decided mechanism); its exact internal representation is not decided here
-    tls=...,
-    logging=...,
+    logrhythm={
+        "base_url": "https://example.invalid",
+        "port": 8501,
+        "authentication": {"bearer_token": "placeholder-token"},
+    }
 )
 ```
 
@@ -256,14 +255,8 @@ client = LogRhythmClient(configuration)
 
 ## Open Questions
 
-These are explicitly undecided. They must not be resolved silently by
-implementation; each requires an explicit decision (and, where architecturally
-significant, an ADR) before it can move out of this list.
-
-- **Credential typing.** Whether the bearer token is strictly typed (e.g. a
-  dedicated wrapper type) or represented generically (e.g. a plain string) within
-  `Authentication`/`Configuration` (see
-  [Authentication Model](#authentication-model)).
+There are no remaining open questions for the version 1 authentication input. The
+previous credential-typing question is closed by SPEC-002's `SecretStr` decision.
 
 ## Future Extensions (non-binding)
 

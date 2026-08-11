@@ -109,22 +109,20 @@ Two ways of obtaining a `LogRhythmClient` are in scope for this specification:
    obtaining a `LogRhythmClient`: see [Dependency Injection](#dependency-injection)
    and [Ownership](#ownership).
 2. **`from_config(...)`.** A **convenience factory**, not an independent
-   architectural mechanism. It accepts a configuration source, builds the required
-   shared infrastructure internally, and then constructs the client the same way
-   direct construction does. Its sole purpose is to simplify the standard case —
-   callers who do not need to supply their own infrastructure — by handling that
-   internal creation for them. The exact accepted input shape (an already-parsed
-   configuration object, a file path, or something else) depends on a future
-   Configuration specification and is not decided here.
+   architectural mechanism. It accepts one configuration-file path, uses the
+   internal loader defined by [SPEC-002](configuration.md#public-and-internal-interface),
+   builds the required shared infrastructure, and then constructs the client the
+   same way direct construction does. Its sole purpose is to simplify the standard
+   case — callers who do not need to supply their own infrastructure — by handling
+   that internal creation for them.
 
 `from_config(...)` does not replace or bypass direct construction: it is built on top
 of it. Whenever a caller needs to supply a specific instance of a shared component
 (for example, to inject a mock transport in tests), direct construction is used
 instead of, or alongside, `from_config(...)`.
 
-Additional factory methods (for example, constructing directly from a file path or
-from environment variables) are **not** decided by this specification — see
-[Open Questions](#open-questions) and [Future Extensions](#future-extensions-non-binding).
+No additional public Configuration loader or environment-based client factory is
+part of version 1; see [SPEC-002](configuration.md#configuration-sources).
 
 ## Dependency Injection
 
@@ -267,12 +265,12 @@ significant, an ADR) before it can move out of this list.
 - **Reuse after `close()`.** Whether a closed client can be reused/reopened, or must
   be discarded and replaced with a new instance.
 
-Two questions previously listed here have since been settled or superseded by
-later specifications and are tracked there instead, not duplicated here:
-"additional factory methods beyond `from_config(...)`" is now
-[SPEC-002](configuration.md#open-questions)'s "Additional factory/loader methods"
-open question; "lazy vs. eager API module creation" is decided —
-[SPEC-010](api-modules.md#lifecycle) establishes that every API client is
+Two questions previously listed here have since been settled by later
+specifications and are not duplicated here. SPEC-002's
+[Configuration Sources](configuration.md#configuration-sources) and
+[Public and Internal Interface](configuration.md#public-and-internal-interface)
+close the version 1 factory/loader surface. SPEC-010's
+[Lifecycle](api-modules.md#lifecycle) establishes that every API client is
 constructed eagerly.
 
 ## Future Extensions (non-binding)

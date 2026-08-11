@@ -35,10 +35,10 @@ with LogRhythmClient.from_config("config.toml") as client:
     client.admin.hosts.list()
 ```
 
-(The configuration file extension above is illustrative only — the concrete file
-format remains an open question in [SPEC-002](configuration.md#open-questions), not
-decided here.) Directly constructing an individual API client or `Resource` is not
-the regular way a caller uses the SDK — see [Public API](#public-api).
+The `.toml` extension above is one of the formats fixed by
+[SPEC-002](configuration.md#file-loading) and ADR-0007. Directly constructing an
+individual API client or `Resource` is not the regular way a caller uses the SDK —
+see [Public API](#public-api).
 
 ## Scope
 
@@ -281,9 +281,10 @@ apis:
 ```
 
 **Every API client always exists** — see [Client Hierarchy](#client-hierarchy) and
-[Lifecycle](#lifecycle). An API area that is not configured, or explicitly
-disabled, produces a local `ApiNotConfiguredError` when used — **without any
-network access.**
+[Lifecycle](#lifecycle). The input `apis` block or an individual API entry may be
+omitted, but [SPEC-002](configuration.md#api-configuration) resolves all seven API
+areas explicitly with `enabled=false` and `path=None`. A disabled API produces a
+local `ApiNotConfiguredError` when used — **without any network access.**
 
 **Decision: `ApiNotConfiguredError` is a `ClientStateError`, not a
 `ConfigurationError`.** Conceptual hierarchy:
@@ -294,11 +295,11 @@ LogRhythmSdkError
     └── ApiNotConfiguredError
 ```
 
-The overall `Configuration` can be entirely valid while a single API area is still
-missing or disabled — the failure is not about `Configuration` being invalid, it
-is about the state of one API client at the moment it is used. It only becomes
-observable when that API area is actually accessed, not while `Configuration` is
-being resolved. This makes it a local state error of the API client, consistent
+The overall `Configuration` is valid while one or more API areas are disabled — the
+failure is not about `Configuration` being invalid, it is about the state of one
+API client at the moment it is used. It only becomes observable when that API area
+is actually accessed, not while `Configuration` is being resolved. This makes it a
+local state error of the API client, consistent
 with [SPEC-007](exceptions.md#client-state-errors)'s existing framing of
 `ClientStateError` as covering "invalid use of `LogRhythmClient` itself,
 independent of any particular request." [SPEC-007](exceptions.md#client-state-errors)
@@ -306,12 +307,20 @@ already frames its listed subclasses as a **minimum**, not an exhaustive set, so
 adding `ApiNotConfiguredError` here does not contradict it — this specification
 does not otherwise modify [SPEC-007](exceptions.md)'s hierarchy.
 
-**Two distinct states, both handled by the same `ApiNotConfiguredError`:**
+**Two input-source cases, both resolved as disabled and handled by the same
+`ApiNotConfiguredError`:**
 
-- **Not configured** — the API area's entry is entirely absent from
-  `Configuration`. Conceptually: `configured = false`, `enabled = false`.
-- **Explicitly disabled** — the API area's entry is present, but disabled.
-  Conceptually: `configured = true`, `enabled = false`.
+- **Not supplied** — the API area's entry was absent from the active input source.
+  The resolved entry exists with `enabled=false`; diagnostic context may report
+  `configured=false`.
+- **Explicitly disabled** — the API area's entry was supplied with
+  `enabled=false`. The resolved entry has the same effective state; diagnostic
+  context may report `configured=true`.
+
+Here, `configured` records source presence for diagnostics; it does not mean object
+presence and does not create a third resolved enablement state. A path is invalid on
+either disabled form. With `enabled=true`, an omitted path means the API module's
+documented canonical default path is used, as defined under [API Paths](#api-paths).
 
 **For both states, identically:**
 
@@ -621,9 +630,8 @@ with LogRhythmClient.from_config("config.toml") as client:
 ```python
 with LogRhythmClient.from_config("config.toml") as client:
     client.search.query(...)
-    # → ApiNotConfiguredError, whether `search` is absent from Configuration
-    # entirely (not configured) or present but disabled (explicitly disabled) —
-    # see API Configuration
+    # → ApiNotConfiguredError, whether `search` was omitted from the input or was
+    # explicitly disabled; resolved Configuration contains it in both cases
 ```
 
 **The Raw API — advanced, lower stability, same security architecture:**

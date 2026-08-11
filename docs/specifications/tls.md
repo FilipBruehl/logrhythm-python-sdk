@@ -120,9 +120,9 @@ Conceptually, the TLS area covers:
   *not* extend to cipher suite selection, which this specification does not
   prescribe).
 
-No concrete field names, types, or a Python class are defined here — consistent with
-[SPEC-002](configuration.md#configuration-model)'s own restraint from inventing field
-names for the groups it anticipates.
+The concrete `tls.verify` and `tls.ca_bundle` fields are defined by
+[SPEC-002](configuration.md#tls). They remain a nested part of `Configuration`, not
+a standalone public TLS object.
 
 ## Secure Defaults
 
@@ -139,7 +139,7 @@ The following are binding architectural decisions, not open questions:
 These follow directly from [SPEC-000](design-principles.md)'s "TLS verification on
 by default" and "Prefer secure defaults" principles, and from
 [Architecture Overview](../architecture/overview.md), which already names this same
-default. [SPEC-002](configuration.md#defaults) already cites this exact default as
+default. [SPEC-002](configuration.md#tls) exposes this exact default as
 its one already-decided concrete default value; this specification does not
 re-decide it, only elaborates it for TLS specifically.
 
@@ -207,9 +207,13 @@ Using the insecure mode (see [Certificate Verification](#certificate-verificatio
 to work around a self-signed certificate is explicitly discouraged by this
 specification.
 
-**Accepted path types.** Conceptually, a custom CA bundle path is accepted as
-either a `str` or a `pathlib.Path` — no other representation is defined. Relative
-paths are permitted and are resolved relative to the current working directory.
+**Accepted path types.** A custom CA bundle path is accepted as either a `str` or a
+`pathlib.Path` and is resolved to an absolute `Path`. For file-based configuration,
+a relative path resolves against the configuration file's directory. For direct
+programmatic construction, it resolves against the process current working
+directory at construction/validation time. Absolute paths remain unchanged. This
+source-aware policy is defined by
+[SPEC-002](configuration.md#relative-path-resolution).
 Which concrete file format(s) the bundle itself may contain (e.g. whether only PEM
 is supported) is an [Open Question](#open-questions).
 
@@ -217,11 +221,11 @@ is supported) is an [Open Question](#open-questions).
 
 - [Configuration](configuration.md) (see [SPEC-002](configuration.md)) holds the
   TLS-related information — as its "TLS-related inputs" group (see
-  [SPEC-002, Configuration Model](configuration.md#configuration-model)).
+  [SPEC-002, Configuration Schema](configuration.md#configuration-schema)).
 - `TLS`, as described here, does not process or act on that information itself; it
   is represented, not enforced (see [TLS Model](#tls-model)).
 - Because a resolved `Configuration` is immutable
-  ([SPEC-002](configuration.md#immutability-and-mutation)), the TLS-related
+  ([SPEC-002](configuration.md#immutability-and-lifecycle)), the TLS-related
   information it holds is immutable for the same reason and by the same
   mechanism — this specification introduces no separate immutability rule of its
   own.
@@ -235,17 +239,17 @@ is supported) is an [Open Question](#open-questions).
 `LogRhythmClient` (see [SPEC-001](sdk-client.md)) never receives TLS-related
 configuration directly or independently. It obtains it only indirectly, as part of
 the `Configuration` it is constructed with or resolves via `from_config(...)` (see
-[SPEC-002, Integration with LogRhythmClient](configuration.md#integration-with-logrhythmclient)).
+[SPEC-002, Public and Internal Interface](configuration.md#public-and-internal-interface)).
 
 - **No ownership.** `LogRhythmClient` does not separately own TLS-related
   configuration; whatever ownership applies is `Configuration`'s, per
-  [SPEC-002](configuration.md#integration-with-logrhythmclient).
+  [SPEC-002](configuration.md#public-and-internal-interface).
 - **No resources.** There is nothing here for `LogRhythmClient` to acquire or
   release.
 - **No lifecycle responsibility.** `LogRhythmClient` has no lifecycle duty toward
   TLS-related configuration beyond what it already has toward `Configuration` as a
   whole (none — see
-  [SPEC-002, No lifecycle resources](configuration.md#integration-with-logrhythmclient)).
+  [SPEC-002, Immutability and Lifecycle](configuration.md#immutability-and-lifecycle)).
 
 ## Validation
 
@@ -311,19 +315,19 @@ generally.
 
 ## Examples
 
-Pseudocode only — illustrative of intended usage, not a committed API surface, not a
-real implementation, and not a claim about any concrete field name, library, or file
-format. Placeholder values only; no real certificates or hosts.
+Pseudocode only — illustrative of intended usage, not a class signature or real
+implementation. Placeholder values only; no real certificates or hosts.
 
 **Default, secure TLS (no explicit TLS configuration needed):**
 
 ```python
 configuration = Configuration(
-    connection=...,
-    authentication=...,
-    tls=...,  # defaults apply: certificate + hostname verification enabled,
-    # system trust store
-    logging=...,
+    logrhythm={
+        "base_url": "https://example.invalid",
+        "port": 8501,
+        "authentication": {"bearer_token": "placeholder-token"},
+        # tls omitted: certificate + hostname verification enabled, system trust
+    }
 )
 ```
 
@@ -331,9 +335,12 @@ configuration = Configuration(
 
 ```python
 configuration = Configuration(
-    ...,
-    tls=...,  # a custom CA bundle path (str or pathlib.Path); replaces the system
-    # trust store; existence/readability checked locally at Configuration creation
+    logrhythm={
+        "base_url": "https://example.invalid",
+        "port": 8501,
+        "authentication": {"bearer_token": "placeholder-token"},
+        "tls": {"ca_bundle": "certs/test-ca.pem"},
+    }
 )
 ```
 
@@ -341,12 +348,15 @@ configuration = Configuration(
 
 ```python
 configuration = Configuration(
-    ...,
-    tls=...,  # explicit, deliberate opt-out of verification — never the default;
-    # reserved for exceptional cases (e.g. test/lab environments); produces a clear
-    # warning at client creation / transport initialization, without secrets or
-    # target URLs in the warning text
+    logrhythm={
+        "base_url": "https://example.invalid",
+        "port": 8501,
+        "authentication": {"bearer_token": "placeholder-token"},
+        "tls": {"verify": False},
+    }
 )
+# This explicit exceptional opt-out produces a secret- and URL-free warning later,
+# at client creation / transport initialization. It never permits plain HTTP.
 ```
 
 ## Open Questions
