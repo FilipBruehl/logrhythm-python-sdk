@@ -73,3 +73,4 @@ ADR (and any dependent SPEC update) exists.
 | [0005](0005-pydantic-v2-models.md) | Use Pydantic v2 for SDK models | Accepted |
 | [0006](0006-httpx-transport.md) | Use HTTPX as HTTP transport library | Accepted |
 | [0007](0007-configuration-file-formats.md) | Support YAML, JSON, and TOML configuration files | Accepted |
+| [0008](0008-require-https-for-sdk-managed-endpoints.md) | Require HTTPS for SDK-managed LogRhythm endpoints | Accepted |

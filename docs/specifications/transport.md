@@ -158,6 +158,10 @@ consistent with every other specification in this series.
 - The base (host, and other connection information from
   [SPEC-002](configuration.md#configuration-model)'s "Connection information" group)
   is combined with the relative path to produce the actual request URL.
+- The allowed endpoint scheme is governed by
+  [ADR-0008](../adr/0008-require-https-for-sdk-managed-endpoints.md). `Transport`
+  receives an already-validated HTTPS origin and does not silently rewrite an
+  unsupported scheme.
 - **Query parameters are handled structurally** — as a structured mapping the caller
   supplies, not as a manually concatenated string. `Transport` is responsible for
   correct encoding.

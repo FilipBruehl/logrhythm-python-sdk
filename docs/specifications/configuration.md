@@ -111,7 +111,9 @@ related settings, not as a Python class. At minimum, it separates:
   tied to a specific API module or shared-infrastructure concern.
 - **Connection information** — inputs such as the target host and general connection
   behavior (e.g. timeouts), already anticipated at a high level in
-  [Architecture Overview](../architecture/overview.md).
+  [Architecture Overview](../architecture/overview.md). The allowed scheme for
+  SDK-managed LogRhythm endpoints is governed by
+  [ADR-0008](../adr/0008-require-https-for-sdk-managed-endpoints.md).
 - **Authentication-related inputs** — the raw input(s) a future Authentication
   specification will need (e.g. a credential value). This specification defines only
   that `Configuration` has a structural place for such input, not how authentication
@@ -512,3 +514,6 @@ explicitly does not cover:
 - [ADR-0007 — Support YAML, JSON, and TOML configuration files](../adr/0007-configuration-file-formats.md) —
   the binding configuration file format decision [Configuration Sources](#configuration-sources)
   relies on.
+- [ADR-0008 — Require HTTPS for SDK-managed LogRhythm endpoints](../adr/0008-require-https-for-sdk-managed-endpoints.md) —
+  the binding transport-scheme policy that the future concrete connection schema
+  must apply.

@@ -155,6 +155,9 @@ Certificate verification is enabled by default (see
 [Secure Defaults](#secure-defaults)). This specification defines only the
 architectural shape of that decision, not the verification algorithm itself, which
 belongs to a future Transport specification (see [Non-Goals](#non-goals)).
+The endpoint-scheme policy is a separate concern governed by
+[ADR-0008](../adr/0008-require-https-for-sdk-managed-endpoints.md); disabling
+verification does not permit plain HTTP.
 
 **An insecure mode — explicit opt-out of certificate verification — is permitted,**
 under firm constraints that are binding, not open questions:
