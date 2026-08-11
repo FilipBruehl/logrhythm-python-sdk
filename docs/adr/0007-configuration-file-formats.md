@@ -12,7 +12,7 @@ explicitly open question, even though the
 [Architecture Overview](../architecture/overview.md#planned-configuration) already
 named YAML, JSON, and TOML as target formats without treating that as binding. A
 binding decision is needed before `Configuration`'s file-loading path (see
-[SPEC-002, Integration with LogRhythmClient](../specifications/configuration.md#integration-with-logrhythmclient))
+[SPEC-002, Public and Internal Interface](../specifications/configuration.md#public-and-internal-interface))
 can be implemented.
 
 ## Alternatives considered

@@ -532,7 +532,7 @@ Fail Fast.
 **Decision: if SDK-owned logging is enabled and any of the following holds**:
 
 - no file path is present,
-- the path is invalid,
+- a structurally valid path is unusable,
 - the path is not writable, or
 - the file handler cannot be initialized,
 
@@ -540,6 +540,14 @@ Fail Fast.
 not an open question. Runtime failures that occur while writing to an already
 correctly initialized log are, as stated above, non-fatal: they do not cause the
 SDK's actual operation to fail.
+
+The exception boundary is [SPEC-007](exceptions.md#configuration-errors)'s existing
+`LoggingConfigurationError`. Absence of `file` while SDK-owned logging is enabled is
+known without filesystem access and is raised at Configuration construction. A
+structurally valid file path is checked for filesystem usability, writability, and
+handler initialization only when logging infrastructure is built. Both boundaries
+use `LoggingConfigurationError`; neither case is reclassified as ordinary
+`ConfigurationValidationError`.
 
 ## Performance
 
@@ -556,7 +564,7 @@ Asynchronous logging is not part of version 1 (see
 
 ## Configuration Integration
 
-[SPEC-002](configuration.md#configuration-model) already anticipates this: its
+[SPEC-002](configuration.md#configuration-schema) defines this concretely: its
 Configuration Model names "Logging-related inputs" as one of the groups a resolved
 `Configuration` holds (file path, format, level, rotation parameters, conceptually).
 
@@ -570,10 +578,11 @@ component that uses it) than to how authentication or TLS inputs are merely
 represented and passed along.
 
 Because a resolved `Configuration` is immutable
-([SPEC-002](configuration.md#immutability-and-mutation)), logging settings cannot
-change after resolution without resolving a new `Configuration`. No concrete field
-names are defined here, consistent with
-[SPEC-002](configuration.md#configuration-model)'s own restraint.
+([SPEC-002](configuration.md#immutability-and-lifecycle)), logging settings cannot
+change after resolution without resolving a new `Configuration`. Their concrete
+configuration fields are defined by
+[SPEC-002](configuration.md#logging-configuration); this specification remains the
+source of truth for logging semantics and defaults.
 
 ## Validation
 
@@ -582,7 +591,12 @@ Consistent with [SPEC-002](configuration.md#validation)'s categories:
 - **At `Configuration` resolution** (syntactic/structural/semantic-local only): for
   example, that the log level is one of the known values (see
   [Log Levels](#log-levels)), and that the format is one of `Text`/`JSON` (see
-  [Formats](#formats)).
+  [Formats](#formats)). Unknown keys, invalid types or enums, invalid numeric bounds,
+  and a syntactically invalid file-path value are ordinary
+  `ConfigurationValidationError` cases.
+- **At Configuration construction, but outside ordinary schema validation:** if
+  SDK-owned logging is enabled and `file` is absent, construction fails as
+  `LoggingConfigurationError` without touching the filesystem.
 - **Not** validated at `Configuration` resolution: whether the log file path is
   actually usable. Confirming that requires real I/O, which
   [SPEC-002](configuration.md#validation) deliberately excludes from
@@ -591,8 +605,9 @@ Consistent with [SPEC-002](configuration.md#validation)'s categories:
   infrastructure is actually built, as part of `LogRhythmClient`/`Configuration`
   initialization (see [Ownership](#ownership) and
   [Failure Behaviour](#failure-behaviour)): if SDK-owned logging is enabled and the
-  path is missing, invalid, unwritable, or the handler cannot be initialized,
-  initialization fails per Fail Fast — this is now decided, not an open question.
+  structurally valid path is unusable or unwritable, or the handler cannot be
+  initialized, initialization fails as `LoggingConfigurationError` per Fail Fast —
+  this is now decided, not an open question.
 - No network validation, and no validation of a remote destination — version 1 has
   none (see [Non-Goals](#non-goals)).
 
@@ -612,16 +627,19 @@ Consistent with [SPEC-002](configuration.md#validation)'s categories:
 
 ## Examples
 
-Pseudocode only — illustrative of intended usage, not a committed API surface, not a
-real implementation, and not a claim about any concrete field name, class, or
-library detail. Placeholder values only; no real secrets or file paths.
+Pseudocode only — illustrative of intended usage, not a class signature or real
+implementation. Placeholder values only; no real secrets or production file paths.
 
-**Default file-based logging (no explicit logging configuration needed):**
+**Explicitly enabled file-based logging:**
 
 ```python
+configuration = Configuration(
+    logrhythm=placeholder_logrhythm_settings,
+    logging={"enabled": True, "file": "sdk.log"},
+)
 client = LogRhythmClient(configuration)
-# LogRhythmClient creates and owns the logging infrastructure internally, using the
-# "Logging-related inputs" from `configuration` (file path, format, level).
+# The path has already been resolved by Configuration. LogRhythmClient later creates
+# and owns the logging infrastructure. Without enabled=True, SDK logging is disabled.
 ```
 
 **Dependency injection for tests (a fake logger, no real file involved):**

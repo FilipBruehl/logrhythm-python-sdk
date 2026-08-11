@@ -295,7 +295,11 @@ or programming error, not a forward-compatibility case.
   [SPEC-007](exceptions.md#model-errors)'s `ResponseValidationError`.
 - An internal-model validation failure remains the underlying Pydantic validation
   failure unless a later, concrete boundary specification requires an SDK exception.
-  There is no precautionary `InternalValidationError`.
+  There is no precautionary `InternalValidationError`. The credential-bearing
+  public `Configuration` component is one such concrete boundary: SPEC-002 requires
+  sanitized `ConfigurationValidationError` or `LoggingConfigurationError` output
+  without exposing its raw Pydantic failure. That specialization does not alter any
+  other `InternalModel`.
 
 ## Immutability
 
