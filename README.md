@@ -8,9 +8,11 @@ A typed Python SDK for the LogRhythm SIEM REST APIs.
 (package layout, tooling configuration, documentation structure) and the SDK's
 exception foundation ([SPEC-007](docs/specifications/exceptions.md)): the public
 exception hierarchy rooted at `LogRhythmSdkError`, exported from
-`logrhythm_sdk.exceptions`. There is **no** functional API client, authentication,
-HTTP transport, TLS handling, or configuration loading yet. Nothing in this SDK can be
-used to talk to a LogRhythm instance at this time.
+`logrhythm_sdk.exceptions`. The shared Pydantic model foundation from
+[SPEC-008](docs/specifications/models.md) is also implemented. There is **no**
+functional API client, authentication, HTTP transport, TLS handling, configuration
+loading, or concrete API model yet. Nothing in this SDK can be used to talk to a
+LogRhythm instance at this time.
 
 ## Planned API coverage
 
@@ -51,14 +53,14 @@ validation on every commit, and the test suite on every push — see
 
 ## Dependencies
 
-The SDK's runtime dependency baseline is now in place, ahead of the runtime
-implementation that will use it: **Pydantic v2** (models), **HTTPX** (HTTP
-transport), and **PyYAML** (YAML configuration files) — see
+The SDK's runtime dependency baseline is in place: **Pydantic v2** powers the shared
+model foundation, while **HTTPX** (HTTP transport) and **PyYAML** (YAML configuration
+files) remain ahead of the runtime implementation that will use them — see
 [docs/development/dependencies.md](docs/development/dependencies.md) and
 [ADR-0005](docs/adr/0005-pydantic-v2-models.md),
 [ADR-0006](docs/adr/0006-httpx-transport.md), and
-[ADR-0007](docs/adr/0007-configuration-file-formats.md) for the reasoning
-behind each. No code uses them yet — see [Status](#status).
+[ADR-0007](docs/adr/0007-configuration-file-formats.md) for the reasoning behind each.
+See [Status](#status) for the current implementation boundary.
 
 ## Quality checks
 
@@ -119,8 +121,9 @@ The SDK is designed around a central high-level facade backed by a shared `core`
 (exceptions, transport, configuration, authentication, TLS, logging) and a set of
 API modules, each following the same internal structure (a `client.py` per API
 area, with `resource.py`, models, filters, sorting, and options organized per
-resource). Of this, only the exception hierarchy (`core/exceptions.py`, exported
-via `logrhythm_sdk.exceptions`) is implemented so far — see
+resource). Of this, the exception hierarchy (`core/exceptions.py`, exported via
+`logrhythm_sdk.exceptions`) and the shared model foundation (`core/models`) are
+implemented so far — see
 [docs/architecture/overview.md](docs/architecture/overview.md) for the full picture,
 [docs/architecture/components.md](docs/architecture/components.md) for a component
 diagram, and [docs/specifications/](docs/specifications/) for the numbered Design

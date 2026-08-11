@@ -10,6 +10,10 @@ with Python-compatible version strings.
 
 ### Added
 
+- Shared Pydantic model foundation (SPEC-008): immutable `SdkModel`,
+  `RequestModel`, `ResponseModel`, and `InternalModel` bases with explicit alias
+  handling, request/internal extra-field rejection, response extra-field
+  retention, and reusable timezone-aware UTC normalization.
 - Exception foundation (SPEC-007): the SDK's public exception hierarchy,
   rooted at `LogRhythmSdkError`, covering `ConfigurationError`,
   `ClientStateError` (including `ApiNotConfiguredError`, per SPEC-010),
