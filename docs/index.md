@@ -3,8 +3,9 @@
 Welcome to the documentation for `logrhythm-python-sdk`, a typed Python SDK for the
 LogRhythm SIEM REST APIs.
 
-> **Status:** early foundation stage. No API clients, authentication, transport, or
-> configuration handling are implemented yet. See [Vision](vision.md) and the
+> **Status:** early foundation stage. The exception and shared model foundations are
+> implemented; no API clients, authentication, transport, configuration handling,
+> or concrete API models exist yet. See [Vision](vision.md) and the
 > [Architecture Overview](architecture/overview.md) for what is planned.
 
 ## Where to start
@@ -44,7 +45,8 @@ LogRhythm SIEM REST APIs.
   HTTP mapping and redaction integration are not).
 - [SPEC-008 — Models](specifications/models.md) — the Pydantic v2 model
   hierarchy, request/response validation strictness, aliasing, and UTC date/time
-  normalization (currently `Accepted`, not implemented).
+  normalization (currently `Accepted`; the shared model foundation is implemented,
+  but concrete API models are not).
 - [SPEC-009 — Filters, Pagination, Sorting and Options](specifications/filters-and-options.md) —
   filter/pagination/sorting/options models, query and header serialization, and
   conflict handling (currently `Accepted`, not implemented).

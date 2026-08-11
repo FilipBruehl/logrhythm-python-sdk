@@ -2,13 +2,13 @@
 
 > **Status of this document:** target architecture, largely not implemented. This
 > diagram describes the intended component structure of the SDK, consistent with
-> [Architecture Overview](overview.md). None of the components drawn below have a
-> runtime implementation yet. The SDK's exception hierarchy (SPEC-007) is
-> implemented (`logrhythm_sdk.core.exceptions`, exported via
-> `logrhythm_sdk.exceptions`), but — like `Redaction` (see
-> [SPEC-005](../specifications/transport.md#redaction)) — is not itself drawn as a
-> node here; this diagram is a high-level sketch, not an exhaustive enumeration of
-> every `core` utility.
+> [Architecture Overview](overview.md). No concrete API model or other component
+> drawn below has a runtime implementation yet. The SDK's exception hierarchy
+> (SPEC-007) and shared model foundation (SPEC-008) are implemented under
+> `logrhythm_sdk.core`, with exceptions exported via `logrhythm_sdk.exceptions`.
+> Neither is drawn as a node here; like `Redaction` (see
+> [SPEC-005](../specifications/transport.md#redaction)), these are `core` utilities
+> omitted from the high-level diagram.
 
 ## Purpose
 
