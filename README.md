@@ -9,10 +9,28 @@ A typed Python SDK for the LogRhythm SIEM REST APIs.
 exception foundation ([SPEC-007](docs/specifications/exceptions.md)): the public
 exception hierarchy rooted at `LogRhythmSdkError`, exported from
 `logrhythm_sdk.exceptions`. The shared Pydantic model foundation from
-[SPEC-008](docs/specifications/models.md) is also implemented. There is **no**
-functional API client, authentication, HTTP transport, TLS handling, configuration
-loading, or concrete API model yet. Nothing in this SDK can be used to talk to a
-LogRhythm instance at this time.
+[SPEC-008](docs/specifications/models.md) and the immutable Configuration Foundation
+from [SPEC-002](docs/specifications/configuration.md) are also implemented. There is
+**no** functional API client, authentication-header runtime, HTTP transport, TLS
+runtime, logging runtime, or concrete API model yet. Nothing in this SDK can be used
+to talk to a LogRhythm instance at this time.
+
+The public configuration surface supports resolved programmatic construction:
+
+```python
+from logrhythm_sdk.configuration import Configuration
+
+configuration = Configuration(
+    logrhythm={
+        "base_url": "https://example.invalid",
+        "port": 8501,
+        "authentication": {"bearer_token": "placeholder-token"},
+    }
+)
+```
+
+The internal file loader supports UTF-8 YAML, JSON, and TOML for the later client
+factory. It is not a separate public API.
 
 ## Planned API coverage
 
@@ -54,8 +72,8 @@ validation on every commit, and the test suite on every push — see
 ## Dependencies
 
 The SDK's runtime dependency baseline is in place: **Pydantic v2** powers the shared
-model foundation, while **HTTPX** (HTTP transport) and **PyYAML** (YAML configuration
-files) remain ahead of the runtime implementation that will use them — see
+model and configuration foundations, and **PyYAML** parses YAML configuration files.
+**HTTPX** remains ahead of the transport runtime that will use it — see
 [docs/development/dependencies.md](docs/development/dependencies.md) and
 [ADR-0005](docs/adr/0005-pydantic-v2-models.md),
 [ADR-0006](docs/adr/0006-httpx-transport.md), and
@@ -122,8 +140,9 @@ The SDK is designed around a central high-level facade backed by a shared `core`
 API modules, each following the same internal structure (a `client.py` per API
 area, with `resource.py`, models, filters, sorting, and options organized per
 resource). Of this, the exception hierarchy (`core/exceptions.py`, exported via
-`logrhythm_sdk.exceptions`) and the shared model foundation (`core/models`) are
-implemented so far — see
+`logrhythm_sdk.exceptions`), shared model foundation (`core/models`), and
+Configuration Foundation (`core/configuration`, exported via
+`logrhythm_sdk.configuration`) are implemented so far — see
 [docs/architecture/overview.md](docs/architecture/overview.md) for the full picture,
 [docs/architecture/components.md](docs/architecture/components.md) for a component
 diagram, and [docs/specifications/](docs/specifications/) for the numbered Design
