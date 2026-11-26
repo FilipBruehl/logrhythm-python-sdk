@@ -1,10 +1,12 @@
 # Architecture Overview
 
 > **Status of this document:** this describes the **target architecture** for the SDK.
-> Almost none of it is implemented yet. This foundation phase only ships the package
-> skeleton (`logrhythm_sdk` and `logrhythm_sdk.core`, both currently empty of logic).
-> Sections below are written in the future tense on purpose; nothing here should be
-> read as "already available."
+> The repository already includes implemented foundations for exceptions
+> ([SPEC-007](../specifications/exceptions.md)), shared models
+> ([SPEC-008](../specifications/models.md)), and configuration
+> ([SPEC-002](../specifications/configuration.md)). The remaining runtime layers
+> (logging runtime, authentication runtime, TLS runtime, transport runtime, SDK
+> client runtime, and API modules) are still planned and not available yet.
 
 ## Goals of this document
 
@@ -53,13 +55,15 @@ contain API-specific logic itself.
 ### `core`: shared infrastructure
 
 `logrhythm_sdk.core` is the only place shared, cross-API logic is allowed to live.
-Planned responsibilities (none implemented yet):
+Partially implemented and planned responsibilities:
 
-- **Transport** — the underlying HTTP client used by all API modules.
-- **Configuration** — loading and validating connection settings.
-- **Authentication** — attaching bearer tokens to outgoing requests.
-- **TLS handling** — certificate verification behavior.
-- **Logging** — structured, secret-redacting logging.
+- **Configuration** — foundation models and internal file loading are implemented; runtime client integration is planned.
+- **Exceptions** — the public exception hierarchy foundation is implemented.
+- **Models** — shared Pydantic model foundation is implemented.
+- **Transport** — planned (runtime not implemented).
+- **Authentication** — planned (runtime not implemented).
+- **TLS handling** — planned (runtime not implemented).
+- **Logging** — planned as a runtime layer; infrastructure foundation follows roadmap order.
 
 API modules depend on `core`; `core` never depends on a specific API module.
 
@@ -96,8 +100,8 @@ they understand the shape of all of them.
 
 ## Planned configuration
 
-Configuration will be loadable from YAML, JSON, or TOML sources (not implemented in
-this phase). Planned configuration concerns:
+Configuration foundation supports resolved models plus internal UTF-8 YAML, JSON, and
+TOML loading for later client integration. Planned follow-up concerns include:
 
 - **Authentication** — bearer token authentication.
 - **Connection settings** — one HTTPS base host and global port for all API modules,
@@ -110,7 +114,7 @@ this phase). Planned configuration concerns:
 
 ## Planned logging
 
-File-based logging will support both plain text and JSON output. All logging is
+File-based logging is planned to support both plain text and JSON output. All logging is
 expected to pass through secret-redaction so that bearer tokens and other credentials
 are never written to log output, regardless of log level or format.
 

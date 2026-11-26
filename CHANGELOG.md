@@ -32,7 +32,14 @@ with Python-compatible version strings.
 
 ### Changed
 
-<!-- Add changes to existing behavior here. -->
+- Documentation and governance alignment for the Core Foundations phase:
+  - established a central [Development Roadmap](docs/development/roadmap.md) with
+    Phase A completion and the approved B.1.1-B.1.10 order (including B.1.4 as the
+    next Logging Foundation step);
+  - updated architecture and specification implementation-status documentation for
+    implemented foundations (Configuration, Exceptions, Models);
+  - integrated roadmap navigation into repository docs and updated AI coding-agent Git
+    governance with explicit pre-action approval/safety rules.
 
 ### Deprecated
 

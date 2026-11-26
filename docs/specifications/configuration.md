@@ -7,14 +7,16 @@
 | Phase | A.2.3 |
 | Component | Configuration |
 | Depends on | [SPEC-000](design-principles.md), [SPEC-001](sdk-client.md), [SPEC-003](authentication.md), [SPEC-004](tls.md), [SPEC-005](transport.md), [SPEC-006](logging.md), [SPEC-007](exceptions.md), [SPEC-008](models.md), [SPEC-010](api-modules.md), [ADR-0007](../adr/0007-configuration-file-formats.md), [ADR-0008](../adr/0008-require-https-for-sdk-managed-endpoints.md) |
-| Implementation | Not implemented |
+| Implementation | Foundation implemented (B.1.3); runtime integration pending |
 
 ## Status
 
-Accepted — target architecture, not yet implemented. This specification has been
-reviewed against the [Review Criteria](README.md#review-criteria) and is binding for
-the Configuration Foundation implementation. Its version 1 schema, sources,
-validation boundaries, and integration surface are closed.
+Accepted — foundation partially implemented. This specification has been reviewed
+against the [Review Criteria](README.md#review-criteria) and is binding for
+implementation. The Configuration Foundation scope (resolved model foundation plus
+internal file-loading boundary) is implemented; runtime integration that depends on
+the SDK client and transport/authentication/TLS/logging runtime layers remains
+pending.
 
 ## Purpose
 

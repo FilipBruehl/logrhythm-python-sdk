@@ -21,7 +21,8 @@ summary.
   [Contributing](contributing.md) for local setup and the required quality
   commands, then [Pre-Commit](pre-commit.md) to install the local git hooks.
 - **About to start implementation work?** Check
-  [Definition of Ready](definition-of-ready.md) first.
+  [Definition of Ready](definition-of-ready.md) first, and align with the current
+  [Development Roadmap](roadmap.md).
 - **About to open a branch?** See
   [Branch Types & Branch Strategy](branching.md).
 - **About to commit?** See [Commit Strategy](commits.md).
@@ -54,6 +55,7 @@ summary.
 | [Definition of Done](definition-of-done.md) | When a work package is complete. |
 | [Testing](testing.md) | Test suite layout, coverage target, and rules by change type. |
 | [Release & Publishing](release.md) | Versioning, changelog, release PR, Trusted Publishing, GitHub Environments, release pipeline, and responsibilities. |
+| [Development Roadmap](roadmap.md) | Versioned implementation order, phase status, and scope boundaries for roadmap entries. |
 | [`AGENTS.md`](../../AGENTS.md) | Vendor-neutral AI Development governance: authority, lifecycle, context recovery, Git safety, quality gates, and reporting. |
 | [Claude Code: Technical Settings](claude-code.md) | Tool-specific mechanics of `.claude/settings.json`; no general project rules. |
 | [ADR Policy](../adr/README.md#when-an-adr-is-required) | When a new ADR is required, and when it isn't. |

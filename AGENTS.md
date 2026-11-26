@@ -267,14 +267,15 @@ inside an authorized task and do not change any boundary above.
 | Create or supersede an ADR | Explicit approval required | The AI Coding Agent may draft only the explicitly approved decision. |
 | Create or switch branches | Explicit approval required | Only an explicitly named supported branch. |
 | Create a commit | Explicit approval required | Approval is per commit and follows satisfaction of the Definition of Done. |
-| Push | Explicit approval required | Never directly to `main`; never force-push. |
+| Push | Explicit approval required | Never directly to `main`. Force-push needs separate explicit approval and must respect repository safeguards. |
 | Create a pull request | Explicit approval required | Drafting the description is allowed; submission needs approval. |
-| Merge a pull request | Prohibited | Performed by a human owner or authorized repository process. |
+| Merge a pull request | Explicit approval required | Only for non-release pull requests, and only after explicit operation-specific approval and branch-safety verification. |
+| Merge a release pull request | Prohibited | Human-only action per [Release & Publishing](docs/development/release.md). |
 | Prepare or validate a release | Allowed | Only within an authorized release-preparation task and the binding release guide. |
 | Create or push a release tag | Prohibited | Release tags are created and pushed by a human owner. |
 | Trigger a release or publish | Prohibited | Outside the AI Coding Agent's authority. |
 | Approve a publishing environment | Prohibited | Deployment approval remains human-owned. |
-| Change branch protection or repository rules | Prohibited | Repository administration remains human-owned. |
+| Change branch protection, rulesets, repository permissions, or bypass configuration | Prohibited | Repository security administration remains human-owned, even with explicit approval. |
 | Introduce a security exception | Explicit approval required | Requires a human security decision and any necessary ADR/SPEC update. |
 
 "Allowed" does not expand the user's request. It means the activity may be
@@ -326,6 +327,16 @@ are defined in [Branch Types & Branch Strategy](docs/development/branching.md).
 An AI Coding Agent follows that workflow but creates or switches to a branch
 only after the user names or confirms the exact branch.
 
+Before any state-changing Git action (including fetch/pull, branch creation or
+switch, worktree changes, staging, commit, push, PR creation, rebase, merge, or
+branch deletion), an AI Coding Agent must:
+
+1. explain the purpose,
+2. name the affected branches, commits, or worktrees,
+3. list the intended command(s) or repository action(s),
+4. explain expected effects, and
+5. wait for explicit approval for that specific action or clearly bounded action group.
+
 The repository workflow requires a merged branch to be deleted. An AI Coding
 Agent performs that deletion only after explicit, operation-specific human
 approval.
@@ -351,26 +362,65 @@ a commit.
   [Pull Requests](docs/development/pull-requests.md).
 - Push only on explicit instruction.
 - Never push directly to `main`.
-- Never force-push.
+- Force-push is allowed only with separate, operation-specific explicit approval
+  and only if current repository safeguards allow it.
 - Preparing a pull request description is allowed; creating the pull request
   requires explicit instruction.
-- An AI Coding Agent never merges the pull request.
+- Merging a non-release pull request requires explicit, operation-specific
+  human approval.
+- Merging a release pull request is prohibited for AI Coding Agents and remains
+  human-owned, per [Release & Publishing](docs/development/release.md#ai-coding-agent-responsibility).
+
+### Pull request safety checks
+
+Before creating a pull request, the AI Coding Agent verifies and reports:
+
+- base branch,
+- compare branch,
+- expected commits,
+- expected scope of changed files, and
+- alignment with the explicitly approved task scope.
+
+Before any merge, the same base/compare verification is repeated.
+
+For the current Core Foundations integration effort, individual foundation work
+targets `integration/core-foundations` as integration base rather than `main`,
+until that integration branch is itself ready for merge.
 
 ### Destructive and history-rewriting operations
 
 Never perform the following without explicit, operation-specific human
-approval; some remain outside normal AI Coding Agent authority entirely:
+approval:
 
 - `git reset --hard`
 - destructive `git clean`
 - `git restore` or checkout operations that discard work
 - `git commit --amend`
-- branch deletion
+- branch deletion (including forced deletion)
 - `git rebase`
 - tag deletion
-- hook bypasses such as `--no-verify` or `SKIP=<hook-id>`
+- removal of non-integrated changes
 
-Force-push is prohibited even when another workflow would normally use it.
+These actions are permitted only when explicitly approved for that specific
+operation, remain inside the authorized task scope, and do not bypass active
+repository safeguards.
+
+### Repository security administration
+
+The following actions are always human-owned and prohibited for AI Coding
+Agents, including when explicit approval for ordinary Git actions exists:
+
+- changes to branch protection;
+- changes to repository rulesets;
+- changes to repository permissions;
+- changes to repository bypass configurations; and
+- disabling or bypassing repository security mechanisms.
+
+Hook bypasses such as `--no-verify` or `SKIP=<hook-id>` are prohibited.
+
+AI Coding Agents may analyze current settings, identify blockers, and recommend
+required administrative changes, but may not perform those administrative
+changes directly.
 
 ## Git identities
 
@@ -389,10 +439,11 @@ exact values and scope.
 
 The binding versioning, release, and publishing process is defined in
 [Release & Publishing](docs/development/release.md). An AI Coding Agent may
-prepare and validate release files when explicitly authorized. It never merges
-the release pull request, creates or pushes the release tag, starts or reruns
+prepare and validate release files when explicitly authorized. It never creates
+or pushes the release tag, starts or reruns
 the Release workflow, approves a GitHub Environment, invokes publishing, or
-creates the GitHub Release.
+creates the GitHub Release. Release pull-request merges are human-owned per
+[Release & Publishing](docs/development/release.md#ai-coding-agent-responsibility).
 
 ## Quality gates
 
@@ -519,7 +570,7 @@ An AI Coding Agent does not:
 - infer undocumented vendor behavior,
 - treat Draft specifications as implementation authority,
 - administer repository settings or branch protection,
-- merge pull requests,
+- merge pull requests without explicit approval and required branch-safety verification,
 - publish packages or trigger releases,
 - manufacture credentials or identities,
 - bypass verification or safety controls, or
