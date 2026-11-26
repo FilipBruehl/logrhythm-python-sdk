@@ -59,6 +59,8 @@ LogRhythm SIEM REST APIs.
   how far each endpoint has progressed from not-yet-inventoried to implemented.
 - [Developer Workflow](development/workflow.md) — contributor-oriented navigation
   for branching, commits, pull requests, readiness/completion criteria, and testing.
+- [Development Roadmap](development/roadmap.md) — versioned implementation order and
+  phase/status tracking; planning context only (not an implementation authorization).
 - [Release & Publishing](development/release.md) — Semantic Versioning,
   changelog, release PRs, TestPyPI/PyPI Trusted Publishing, GitHub
   Environments, GitHub Releases, and release responsibilities.

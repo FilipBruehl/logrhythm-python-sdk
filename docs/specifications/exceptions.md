@@ -7,14 +7,16 @@
 | Phase | A.2.8 |
 | Component | Exceptions |
 | Depends on | [SPEC-000](design-principles.md), [SPEC-001](sdk-client.md), [SPEC-002](configuration.md), [SPEC-005](transport.md), [SPEC-006](logging.md) |
-| Implementation | Not implemented |
+| Implementation | Foundation implemented (B.1.1); runtime integrations pending |
 
 ## Status
 
-Accepted — target architecture, not yet implemented. This specification has been
-reviewed against the [Review Criteria](README.md#review-criteria) in
+Accepted — foundation partially implemented. This specification has been reviewed
+against the [Review Criteria](README.md#review-criteria) in
 [Design Specifications](README.md) and is binding for implementation; see the
-status model in [Design Specifications](README.md). A small number of questions
+status model in [Design Specifications](README.md). The exception hierarchy
+foundation is implemented; runtime integration areas (for example full HTTP/transport
+mapping and logging-runtime interaction) remain pending. A small number of questions
 this specification would normally answer are, deliberately, left open — see
 [Open Questions](#open-questions).
 

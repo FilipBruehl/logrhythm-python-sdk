@@ -114,7 +114,8 @@ Environments, release responsibilities, and installation verification.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the short version, and the
 [Developer Workflow](docs/development/workflow.md) for contributor-oriented
-workflow documentation.
+workflow documentation. The implementation order and current phase state are tracked in
+[Development Roadmap](docs/development/roadmap.md).
 
 AI Coding Agents use [AGENTS.md](AGENTS.md) as the single, vendor-neutral
 source of truth for AI Development governance. Tool adapters may add only
