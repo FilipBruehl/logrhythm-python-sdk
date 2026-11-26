@@ -3,9 +3,10 @@
 Welcome to the documentation for `logrhythm-python-sdk`, a typed Python SDK for the
 LogRhythm SIEM REST APIs.
 
-> **Status:** early foundation stage. The exception and shared model foundations are
-> implemented; no API clients, authentication, transport, configuration handling,
-> or concrete API models exist yet. See [Vision](vision.md) and the
+> **Status:** early foundation stage. The exception, shared model, and Configuration
+> foundations are implemented; no API clients, authentication-header runtime,
+> transport, TLS runtime, logging runtime, or concrete API models exist yet. See
+> [Vision](vision.md) and the
 > [Architecture Overview](architecture/overview.md) for what is planned.
 
 ## Where to start
@@ -24,7 +25,8 @@ LogRhythm SIEM REST APIs.
   (currently `Accepted`, not implemented).
 - [SPEC-002 — Configuration](specifications/configuration.md) — the `Configuration`
   component: sources, validation, secrets handling, and integration with
-  `LogRhythmClient` (currently `Accepted`, not implemented).
+  `LogRhythmClient` (currently `Accepted`; the Configuration models and internal
+  file loader are implemented, while the client factory is not).
 - [SPEC-003 — Authentication](specifications/authentication.md) — how authentication
   information is represented, its integration with `Configuration` and
   `LogRhythmClient`, and secret handling (currently `Accepted`, not implemented).

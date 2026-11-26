@@ -10,6 +10,12 @@ with Python-compatible version strings.
 
 ### Added
 
+- Configuration Foundation (SPEC-002): immutable resolved Pydantic models for the
+  system endpoint, bearer credential, TLS and timeout settings, logging settings,
+  and all seven API areas; plus an internal UTF-8 YAML/JSON/TOML loader with
+  duplicate-key detection, source-aware path resolution, safe exception mapping,
+  and credential-safe validation errors. The only new public surface is
+  `logrhythm_sdk.configuration.Configuration`.
 - Shared Pydantic model foundation (SPEC-008): immutable `SdkModel`,
   `RequestModel`, `ResponseModel`, and `InternalModel` bases with explicit alias
   handling, request/internal extra-field rejection, response extra-field

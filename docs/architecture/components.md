@@ -2,11 +2,12 @@
 
 > **Status of this document:** target architecture, largely not implemented. This
 > diagram describes the intended component structure of the SDK, consistent with
-> [Architecture Overview](overview.md). No concrete API model or other component
-> drawn below has a runtime implementation yet. The SDK's exception hierarchy
-> (SPEC-007) and shared model foundation (SPEC-008) are implemented under
+> [Architecture Overview](overview.md). Of the components drawn below, the resolved
+> `Configuration` models and internal file loader are implemented; the client,
+> logging runtime, transport, and API modules are not. The SDK's exception hierarchy
+> (SPEC-007) and shared model foundation (SPEC-008) are also implemented under
 > `logrhythm_sdk.core`, with exceptions exported via `logrhythm_sdk.exceptions`.
-> Neither is drawn as a node here; like `Redaction` (see
+> They are not drawn as nodes here; like `Redaction` (see
 > [SPEC-005](../specifications/transport.md#redaction)), these are `core` utilities
 > omitted from the high-level diagram.
 
@@ -126,4 +127,5 @@ Alarm, Case, Search — see
 - It does not define class names, method signatures, or attributes.
 - It does not define the configuration file format, transport library, or logging
   format — those are separate, future design specifications.
-- It does not imply that any of these components currently exist in code.
+- It does not imply that components other than `Configuration` currently exist in
+  code.
